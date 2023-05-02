@@ -2,11 +2,13 @@ package com.example.scenchive;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@EnableJpaAuditing
 @SpringBootApplication
 public class ScenchiveApplication {
 
