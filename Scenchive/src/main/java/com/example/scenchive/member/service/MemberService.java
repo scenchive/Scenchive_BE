@@ -1,8 +1,8 @@
-package com.example.scenchive.service;
+package com.example.scenchive.member.service;
 
-import com.example.scenchive.domain.Member;
-import com.example.scenchive.domain.MemberRepository;
-import com.example.scenchive.web.MemberForm;
+import com.example.scenchive.member.repository.Member;
+import com.example.scenchive.member.repository.MemberRepository;
+import com.example.scenchive.member.dto.MemberForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

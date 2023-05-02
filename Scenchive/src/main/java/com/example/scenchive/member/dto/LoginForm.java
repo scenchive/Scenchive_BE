@@ -1,4 +1,4 @@
-package com.example.scenchive.web;
+package com.example.scenchive.member.dto;
 
 import jakarta.validation.constraints.Email;
 import lombok.Getter;

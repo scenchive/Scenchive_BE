@@ -1,18 +1,15 @@
-package com.example.scenchive.web;
+package com.example.scenchive.member.controller;
 
-import com.example.scenchive.domain.Member;
-import com.example.scenchive.service.LoginService;
-import com.example.scenchive.service.NotCorrespondingEmailException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import com.example.scenchive.member.dto.LoginForm;
+import com.example.scenchive.member.repository.Member;
+import com.example.scenchive.member.service.LoginService;
+import com.example.scenchive.member.service.NotCorrespondingEmailException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @RequiredArgsConstructor
 @Controller
@@ -20,7 +17,7 @@ public class LoginController {
     private final LoginService loginService;
 
     @PostMapping("/login")
-    @ResponseBody //포스트맨 테스트용, 지워야함
+    //@ResponseBody //포스트맨 테스트용
     public String login(@Valid @RequestBody LoginForm loginForm, BindingResult bindingResult) throws NotCorrespondingEmailException {
         if(bindingResult.hasErrors()){
             return "/loginform"; // 로그인 화면 URL 넣기

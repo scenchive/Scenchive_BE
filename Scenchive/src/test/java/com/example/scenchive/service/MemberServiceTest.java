@@ -1,7 +1,8 @@
 package com.example.scenchive.service;
 
-import com.example.scenchive.domain.MemberRepository;
-import com.example.scenchive.web.MemberForm;
+import com.example.scenchive.member.service.MemberService;
+import com.example.scenchive.member.repository.MemberRepository;
+import com.example.scenchive.member.dto.MemberForm;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
