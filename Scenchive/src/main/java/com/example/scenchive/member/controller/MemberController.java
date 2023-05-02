@@ -1,14 +1,13 @@
-package com.example.scenchive.web;
+package com.example.scenchive.member.controller;
 
-import com.example.scenchive.service.MemberService;
+import com.example.scenchive.member.dto.MemberForm;
+import com.example.scenchive.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @RequiredArgsConstructor
@@ -18,7 +17,7 @@ public class MemberController {
 
     //회원가입
     @PostMapping("/signup")
-    @ResponseBody //포스트맨 테스트용, 지워야함
+    //@ResponseBody //포스트맨 테스트용
     public String signup(@Valid @RequestBody MemberForm memberForm, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return "/signupform"; // 회원가입화면 URL 넣기

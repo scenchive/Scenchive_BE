@@ -1,4 +1,4 @@
-package com.example.scenchive.service;
+package com.example.scenchive.member.service;
 
 public class NotCorrespondingEmailException extends Exception {
     public NotCorrespondingEmailException() {

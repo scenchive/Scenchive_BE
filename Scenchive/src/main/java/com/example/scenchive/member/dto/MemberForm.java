@@ -1,6 +1,6 @@
-package com.example.scenchive.web;
+package com.example.scenchive.member.dto;
 
-import com.example.scenchive.domain.Member;
+import com.example.scenchive.member.repository.Member;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;

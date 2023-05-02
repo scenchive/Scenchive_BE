@@ -1,14 +1,14 @@
-package com.example.scenchive.service;
+package com.example.scenchive.member.service;
 
-import com.example.scenchive.domain.Member;
-import com.example.scenchive.domain.MemberRepository;
+import com.example.scenchive.member.repository.Member;
+import com.example.scenchive.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class LoginService {
