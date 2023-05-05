@@ -1,8 +1,12 @@
 package com.example.scenchive.comment.service;
 
+import com.example.scenchive.board.repository.BoardRepository;
 import com.example.scenchive.comment.Comment;
 import com.example.scenchive.comment.dto.CommentSaveDto;
 import com.example.scenchive.comment.repository.CommentRepository;
+import com.example.scenchive.member.exception.MemberException;
+import com.example.scenchive.member.exception.MemberExceptionType;
+import com.example.scenchive.member.repository.MemberRepository;
 import org.apache.catalina.security.SecurityUtil;
 
 import java.security.Security;
@@ -18,7 +22,7 @@ public class CommentServicelmpl implements CommentService {
     public void save(Long boardId, CommentSaveDto commentSaveDto) {
         Comment comment = commentSaveDto.toEntity();
 
-        comment.confirmMember(memberRepository.findByMemberid(SecurityUtil.getLoginMemberid()).orElseThrow(()
+        comment.confirmMember(memberRepository.findByName(SecurityUtil.getLoginMemberid()).orElseThrow(()
                 -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER)));
 
         comment.confirmBoard(boardRepository.findById(boardId).orElseThrow(()
@@ -31,7 +35,7 @@ public class CommentServicelmpl implements CommentService {
     public void saveReply(Long boardId, Long parentId, CommentSaveDto commentSaveDto) {
         Comment comment = commentSaveDto.toEntity();
 
-        comment.confirmMember(memberRepository.findByMemberid(SecurityUtil.getLoginMemberid()).orElseThrow(()
+        comment.confirmMember(memberRepository.findByName(SecurityUtil.getLoginMemberid()).orElseThrow(()
                 -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER)));
 
         comment.confirmBoard(boardRepository.findById(boardId).orElseThrow(()
