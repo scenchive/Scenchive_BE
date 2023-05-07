@@ -29,12 +29,19 @@ public class CommentServicelmpl implements CommentService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
 
+    private Member getLoggedInMember() {
+        List<Member> members = memberRepository.findByName(SecurityUtil.getLoginUsername());
+        if (members.isEmpty()) {
+            throw new MemberException(MemberExceptionType.NOT_FOUND_MEMBER);
+        }
+        return members.get(0);
+    }
+
     @Override
     public void save(Long boardId, CommentSaveDto commentSaveDto) {
         Comment comment = commentSaveDto.toEntity();
 
-        comment.confirmMember(memberRepository.findByName(SecurityUtil.getLoginUsername()).orElseThrow(()
-                -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER)));
+        comment.confirmMember(getLoggedInMember());
 
         comment.confirmBoard(boardRepository.findById(boardId).orElseThrow(()
                 -> new BoardException(BoardExceptionType.BOARD_NOT_FOUND)));
@@ -46,8 +53,7 @@ public class CommentServicelmpl implements CommentService {
     public void saveReply(Long boardId, Long parentId, CommentSaveDto commentSaveDto) {
         Comment comment = commentSaveDto.toEntity();
 
-        comment.confirmMember(memberRepository.findByName(SecurityUtil.getLoginUsername()).orElseThrow(()
-                -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER)));
+        comment.confirmMember(getLoggedInMember());
 
         comment.confirmBoard(boardRepository.findById(boardId).orElseThrow(()
                 -> new BoardException(BoardExceptionType.BOARD_NOT_FOUND)));
@@ -69,4 +75,15 @@ public class CommentServicelmpl implements CommentService {
         List<Comment> removableCommentList = comment.findRemovableList();
         commentRepository.deleteAll(removableCommentList);
     }
+
+    @Override
+    public Optional<Comment> findById(Long id) {
+        return commentRepository.findById(id);
+    }
+
+    @Override
+    public List<Comment> findAll() {
+        return commentRepository.findAll();
+    }
+
 }
