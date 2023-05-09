@@ -1,5 +1,6 @@
 package com.example.scenchive.member.service;
 
+import com.example.scenchive.member.exception.NotCorrespondingEmailException;
 import com.example.scenchive.member.repository.Member;
 import com.example.scenchive.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

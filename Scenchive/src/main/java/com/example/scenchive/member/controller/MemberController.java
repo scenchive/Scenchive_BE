@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @RequiredArgsConstructor
@@ -18,13 +19,11 @@ public class MemberController {
     //회원가입
     @PostMapping("/signup")
     //@ResponseBody //포스트맨 테스트용
-    public String signup(@Valid @RequestBody MemberForm memberForm, BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            return "/signupform"; // 회원가입화면 URL 넣기
+    public Long signup(@Valid @RequestBody MemberForm memberForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            bindingResult.reject("signupFail", "이메일 형식이 아니거나 닉네임이 입력되지 않았습니다.");
         }
 
-        memberService.save(memberForm);
-        return "/loginform"; // 로그인 화면 URL 넣기
+        return memberService.save(memberForm);
     }
-
 }
