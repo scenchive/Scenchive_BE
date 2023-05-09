@@ -23,6 +23,7 @@ public class Board extends BaseTimeEntity {
 
     private String title;
 
+    @Column(length=1000)
     private String body;
 
     @ManyToOne(fetch = FetchType.LAZY)

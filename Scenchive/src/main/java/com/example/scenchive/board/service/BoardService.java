@@ -5,6 +5,7 @@ import com.example.scenchive.board.repository.BoardRepository;
 import com.example.scenchive.board.dto.BoardListResponseDto;
 import com.example.scenchive.board.dto.BoardSaveRequestDto;
 import com.example.scenchive.board.dto.BoardUpdateRequestDto;
+import com.example.scenchive.board.repository.boardType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,4 +50,13 @@ public class BoardService {
                 .map(board->new BoardListResponseDto(board))
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<BoardListResponseDto> findByBoardtype(int boardtype_id){
+        boardType boardtype=new boardType(boardtype_id);
+        return boardRepository.findByBoardtype(boardtype).stream()
+                .map(board->new BoardListResponseDto(board))
+                .collect(Collectors.toList());
+    }
+
 }
