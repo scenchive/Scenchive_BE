@@ -12,7 +12,7 @@ public class BoardUpdateRequestDto {
 
     private String body;
 
-    private boardType boardtype;
+    private boardType boardtype; // 프론트에서 카테고리 수정 가능하도록
 
     @Builder
     public BoardUpdateRequestDto(String title, String body, boardType boardtype) {
