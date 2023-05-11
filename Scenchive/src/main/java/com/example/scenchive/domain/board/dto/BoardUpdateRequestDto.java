@@ -1,6 +1,6 @@
-package com.example.scenchive.board.dto;
+package com.example.scenchive.domain.board.dto;
 
-import com.example.scenchive.board.repository.boardType;
+import com.example.scenchive.domain.board.repository.boardType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

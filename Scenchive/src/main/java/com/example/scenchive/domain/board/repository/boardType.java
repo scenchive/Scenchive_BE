@@ -1,4 +1,4 @@
-package com.example.scenchive.board.repository;
+package com.example.scenchive.domain.board.repository;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -23,9 +23,7 @@ public class boardType {
     private List<Board> boards=new ArrayList<>();
     //다 쪽에서 FK를 가지고 일 쪽에서 mappedby, list객체 가짐
 
-    public boardType(int id) {
-        this.id = id;
-    }
+    public boardType(int id) {this.id = id;}
     public boardType(String boardtype_name) {
         this.boardtype_name = boardtype_name;
     }

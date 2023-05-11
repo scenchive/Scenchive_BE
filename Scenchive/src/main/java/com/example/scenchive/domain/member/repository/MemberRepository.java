@@ -1,6 +1,5 @@
-package com.example.scenchive.member.repository;
+package com.example.scenchive.domain.member.repository;
 
-import com.example.scenchive.member.repository.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

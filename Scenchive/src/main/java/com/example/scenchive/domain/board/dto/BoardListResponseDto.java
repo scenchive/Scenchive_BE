@@ -1,6 +1,6 @@
-package com.example.scenchive.board.dto;
+package com.example.scenchive.domain.board.dto;
 
-import com.example.scenchive.board.repository.Board;
+import com.example.scenchive.domain.board.repository.Board;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

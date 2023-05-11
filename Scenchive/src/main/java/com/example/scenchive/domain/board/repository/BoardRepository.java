@@ -1,4 +1,4 @@
-package com.example.scenchive.board.repository;
+package com.example.scenchive.domain.board.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
