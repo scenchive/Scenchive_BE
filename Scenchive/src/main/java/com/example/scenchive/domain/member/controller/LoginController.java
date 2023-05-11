@@ -1,9 +1,9 @@
 package com.example.scenchive.domain.member.controller;
 
 import com.example.scenchive.domain.member.dto.LoginForm;
+import com.example.scenchive.domain.member.exception.NotCorrespondingEmailException;
 import com.example.scenchive.domain.member.repository.Member;
 import com.example.scenchive.domain.member.service.LoginService;
-import com.example.scenchive.domain.member.service.NotCorrespondingEmailException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
