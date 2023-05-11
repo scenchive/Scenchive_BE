@@ -36,7 +36,7 @@ public class Board extends BaseTimeEntity {
     private boardType boardtype;
     //다 쪽에서 FK를 가지고 일 쪽에서 mappedby, list객체 가짐
 
-    @OneToMany(mappedBy = "post", cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "board", cascade = ALL, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
 
     //연관관계 메서드

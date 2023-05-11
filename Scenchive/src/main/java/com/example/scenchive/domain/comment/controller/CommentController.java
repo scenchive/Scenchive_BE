@@ -38,13 +38,11 @@ public class CommentController {
 
     @GetMapping("/comment/{boardId}")
     public Optional<Comment> findById(@PathVariable("boardId") Long id) {
-        commentService.findById(id);
-        return null; // TODO: redirect문 작성
+        return commentService.findById(id);
     }
 
     @GetMapping("/comment/")
     public List<Comment> findAll() {
-        commentService.findAll();
-        return null; // TODO: redirect문 작성
+        return commentService.findAll();
     }
 }

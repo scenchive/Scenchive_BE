@@ -1,48 +1,60 @@
 package com.example.scenchive.domain.board.controller;
 
+import com.example.scenchive.domain.board.dto.BoardListResponseDto;
+import com.example.scenchive.domain.board.dto.BoardResponseDto;
 import com.example.scenchive.domain.board.service.BoardService;
 import com.example.scenchive.domain.board.dto.BoardSaveRequestDto;
 import com.example.scenchive.domain.board.dto.BoardUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class BoardController {
 
     private final BoardService boardService;
 
     //게시물 등록
     @PostMapping("/board")
-  //  @ResponseBody //포스트맨 테스트용
-    public String save(@RequestBody BoardSaveRequestDto requestDto){
-        boardService.save(requestDto);
-        return "redirect:/boards"; //전체 게시판 조회창으로 넘어감
+    public Long save(@RequestBody BoardSaveRequestDto requestDto){
+        return boardService.save(requestDto);
     }
 
     //게시물 수정
     @PutMapping("/board/{id}")
-   // @ResponseBody //포스트맨 테스트용
-    public String update(@PathVariable("id") Long id, @RequestBody BoardUpdateRequestDto requestDto){
-        boardService.update(id, requestDto);
-        return "redirect:/boards"; //전체 게시판 조회창으로 넘어감
+    public Long update(@PathVariable("id") Long id, @RequestBody BoardUpdateRequestDto requestDto) {
+        return boardService.update(id, requestDto);
     }
 
     //게시물 삭제
     @DeleteMapping("/board/{id}")
-    //@ResponseBody //포스트맨 테스트용
-    public String delete(@PathVariable("id") Long id){
+    public Long delete(@PathVariable("id") Long id) {
         boardService.delete(id);
-        return "redirect:/boards"; //전체 게시판 조회창으로 넘어감
+        return id;
+    }
+
+    //개별 게시물 조회
+    @GetMapping("/board/{id}")
+    public BoardResponseDto post(@PathVariable Long id, Model model){
+        BoardResponseDto boardResponseDto=boardService.findById(id);
+        model.addAttribute("post", boardResponseDto);
+        return boardResponseDto;
     }
 
     //전체 게시판 조회
     @GetMapping("/boards") //API URL 수정..
-   // @ResponseBody //포스트맨 테스트용
-    public String boards(Model model){
-        model.addAttribute("board", boardService.findAllDesc());
-        return "view"; //전체 게시판 조회 화면 반환 , 추후 넣어야함
+    public List<BoardListResponseDto> boards(Model model) {
+        model.addAttribute("allboard", boardService.findAllDesc());
+        return boardService.findAllDesc();
+    }
+
+    //카테고리별 게시판 조회
+    @GetMapping("/boardtype/{id}")
+    public List<BoardListResponseDto> getTypeboard(@PathVariable("id") int id, Model model) {
+        model.addAttribute("typeboard", boardService.findByBoardtype(id));
+        return boardService.findByBoardtype(id);
     }
 }

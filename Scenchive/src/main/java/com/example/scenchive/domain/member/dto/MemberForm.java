@@ -2,7 +2,7 @@ package com.example.scenchive.domain.member.dto;
 
 import com.example.scenchive.domain.member.repository.Member;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class MemberForm {
     @Email
     private String email;
-    @NotEmpty(message = "닉네임 입력은 필수입니다.")
+    @NotBlank
     private String name;
 
     private int password;

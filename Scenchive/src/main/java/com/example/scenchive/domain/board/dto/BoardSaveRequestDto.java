@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class BoardSaveRequestDto {
-    private Member member;
+    private Member member; //member를 이렇게 전달해줘야하는지 ?? 확인 필요
     private String title;
     private String body;
     private boardType boardtype;
