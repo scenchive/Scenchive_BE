@@ -1,5 +1,6 @@
 package com.example.scenchive.board.service;
 
+import com.example.scenchive.board.dto.BoardResponseDto;
 import com.example.scenchive.board.repository.Board;
 import com.example.scenchive.board.repository.BoardRepository;
 import com.example.scenchive.board.dto.BoardListResponseDto;
@@ -42,6 +43,14 @@ public class BoardService {
         boardRepository.delete(board);
     }
 
+    //개별 게시물 조회 메소드
+    @Transactional
+    public BoardResponseDto findById(Long id){
+        Board board=boardRepository.findById(id)
+                .orElseThrow(()->new IllegalArgumentException("해당 게시글이 없습니다."));
+        return new BoardResponseDto(board);
+    }
+
     //게시판 전체 조회 메소드
     //findAllDesc()의 결과로 반환된 Board들을 BoardListResponseDto로 변환하고 List로 변환
     @Transactional(readOnly = true)
@@ -51,6 +60,7 @@ public class BoardService {
                 .collect(Collectors.toList());
     }
 
+    //카테고리별 게시판 조회 메소드
     @Transactional(readOnly = true)
     public List<BoardListResponseDto> findByBoardtype(int boardtype_id){
         boardType boardtype=new boardType(boardtype_id);
