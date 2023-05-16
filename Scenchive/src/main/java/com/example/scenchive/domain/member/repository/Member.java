@@ -1,6 +1,6 @@
-package com.example.scenchive.member.repository;
+package com.example.scenchive.domain.member.repository;
 
-import com.example.scenchive.board.repository.Board;
+import com.example.scenchive.domain.board.repository.Board;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-//
+
 @Getter
 @NoArgsConstructor
 @Entity

@@ -1,16 +1,16 @@
-package com.example.scenchive.board.controller;
+package com.example.scenchive.domain.board.controller;
 
-import com.example.scenchive.board.dto.BoardListResponseDto;
-import com.example.scenchive.board.dto.BoardResponseDto;
-import com.example.scenchive.board.service.BoardService;
-import com.example.scenchive.board.dto.BoardSaveRequestDto;
-import com.example.scenchive.board.dto.BoardUpdateRequestDto;
+import com.example.scenchive.domain.board.dto.BoardListResponseDto;
+import com.example.scenchive.domain.board.dto.BoardResponseDto;
+import com.example.scenchive.domain.board.service.BoardService;
+import com.example.scenchive.domain.board.dto.BoardSaveRequestDto;
+import com.example.scenchive.domain.board.dto.BoardUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-//
+
 @RequiredArgsConstructor
 @RestController
 public class BoardController {

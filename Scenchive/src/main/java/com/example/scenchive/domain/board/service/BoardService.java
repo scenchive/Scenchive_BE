@@ -1,19 +1,19 @@
-package com.example.scenchive.board.service;
+package com.example.scenchive.domain.board.service;
 
-import com.example.scenchive.board.dto.BoardResponseDto;
-import com.example.scenchive.board.repository.Board;
-import com.example.scenchive.board.repository.BoardRepository;
-import com.example.scenchive.board.dto.BoardListResponseDto;
-import com.example.scenchive.board.dto.BoardSaveRequestDto;
-import com.example.scenchive.board.dto.BoardUpdateRequestDto;
-import com.example.scenchive.board.repository.boardType;
+import com.example.scenchive.domain.board.dto.BoardResponseDto;
+import com.example.scenchive.domain.board.repository.Board;
+import com.example.scenchive.domain.board.repository.BoardRepository;
+import com.example.scenchive.domain.board.dto.BoardListResponseDto;
+import com.example.scenchive.domain.board.dto.BoardSaveRequestDto;
+import com.example.scenchive.domain.board.dto.BoardUpdateRequestDto;
+import com.example.scenchive.domain.board.repository.boardType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-//
+
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)

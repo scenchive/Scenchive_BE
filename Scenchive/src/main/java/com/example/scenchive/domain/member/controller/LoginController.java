@@ -1,16 +1,14 @@
-package com.example.scenchive.member.controller;
+package com.example.scenchive.domain.member.controller;
 
-import com.example.scenchive.member.dto.LoginForm;
-import com.example.scenchive.member.repository.Member;
-import com.example.scenchive.member.service.LoginService;
-import com.example.scenchive.member.exception.NotCorrespondingEmailException;
-import jakarta.validation.Valid;
+import com.example.scenchive.domain.member.dto.LoginForm;
+import com.example.scenchive.domain.member.exception.NotCorrespondingEmailException;
+import com.example.scenchive.domain.member.repository.Member;
+import com.example.scenchive.domain.member.service.LoginService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-//
+
 @RequiredArgsConstructor
 @RestController
 public class LoginController {

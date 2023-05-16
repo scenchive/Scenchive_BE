@@ -1,15 +1,14 @@
-package com.example.scenchive.member.service;
+package com.example.scenchive.domain.member.service;
 
-import com.example.scenchive.member.exception.NotCorrespondingEmailException;
-import com.example.scenchive.member.repository.Member;
-import com.example.scenchive.member.repository.MemberRepository;
+import com.example.scenchive.domain.member.repository.Member;
+import com.example.scenchive.domain.member.repository.MemberRepository;
+import com.example.scenchive.domain.member.exception.NotCorrespondingEmailException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-//
+
 @Transactional
 @RequiredArgsConstructor
 @Service

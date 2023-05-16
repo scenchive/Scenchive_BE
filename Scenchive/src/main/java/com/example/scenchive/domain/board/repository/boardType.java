@@ -1,13 +1,12 @@
-package com.example.scenchive.board.repository;
+package com.example.scenchive.domain.board.repository;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-//
+
 @Getter
 @NoArgsConstructor
 @Entity

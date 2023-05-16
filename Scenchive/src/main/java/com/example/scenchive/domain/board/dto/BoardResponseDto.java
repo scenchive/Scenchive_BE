@@ -1,12 +1,10 @@
-package com.example.scenchive.board.dto;
+package com.example.scenchive.domain.board.dto;
 
-import com.example.scenchive.board.repository.Board;
-import lombok.AllArgsConstructor;
+import com.example.scenchive.domain.board.repository.Board;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-//
+
 @Getter
 public class BoardResponseDto {
     private String boardtype_name; //카테고리
