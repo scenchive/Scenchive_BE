@@ -1,11 +1,18 @@
 package com.example.scenchive.domain.board.service;
 
+<<<<<<< HEAD
+=======
+import com.example.scenchive.domain.board.dto.BoardResponseDto;
+>>>>>>> ec40467c7df794ea71c04c6f89b508b5d8ec4fa2
 import com.example.scenchive.domain.board.repository.Board;
 import com.example.scenchive.domain.board.repository.BoardRepository;
 import com.example.scenchive.domain.board.dto.BoardListResponseDto;
 import com.example.scenchive.domain.board.dto.BoardSaveRequestDto;
 import com.example.scenchive.domain.board.dto.BoardUpdateRequestDto;
+<<<<<<< HEAD
 import com.example.scenchive.domain.board.dto.BoardResponseDto;
+=======
+>>>>>>> ec40467c7df794ea71c04c6f89b508b5d8ec4fa2
 import com.example.scenchive.domain.board.repository.boardType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
