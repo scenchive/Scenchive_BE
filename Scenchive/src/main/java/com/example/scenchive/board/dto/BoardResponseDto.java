@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-
+//
 @Getter
 public class BoardResponseDto {
     private String boardtype_name; //카테고리
