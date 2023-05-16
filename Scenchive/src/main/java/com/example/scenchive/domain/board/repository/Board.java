@@ -1,6 +1,5 @@
 package com.example.scenchive.domain.board.repository;
 
-import com.example.scenchive.domain.comment.repository.Comment;
 import com.example.scenchive.domain.BaseTimeEntity;
 import com.example.scenchive.domain.member.repository.Member;
 import jakarta.persistence.*;
@@ -37,8 +36,8 @@ public class Board extends BaseTimeEntity {
     private boardType boardtype;
     //다 쪽에서 FK를 가지고 일 쪽에서 mappedby, list객체 가짐
 
-    @OneToMany(mappedBy = "board", cascade = ALL, orphanRemoval = true)
-    private List<Comment> commentList = new ArrayList<>();
+//    @OneToMany(mappedBy = "board", cascade = ALL, orphanRemoval = true)
+////    private List<Comment> commentList = new ArrayList<>();
 
     //연관관계 메서드
     public void addMember(Member member){
@@ -52,9 +51,9 @@ public class Board extends BaseTimeEntity {
         boardtype.getBoards().add(this);
     }
 
-    public void addComment(Comment comment) {
-        commentList.add(comment);
-    }
+//    public void addComment(Comment comment) {
+//        commentList.add(comment);
+//    }
 
     @Builder
     public Board(Member member, String title, String body, boardType boardtype) {
