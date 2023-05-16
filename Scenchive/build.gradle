@@ -31,6 +31,10 @@ dependencies {
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.32'
 
+    // Spring Security 추가
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
 }
 
 tasks.named('test') {
