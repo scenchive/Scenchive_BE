@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name="boardType")
+@Table(name="board_type")
 public class boardType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
