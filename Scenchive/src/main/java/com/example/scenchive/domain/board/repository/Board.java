@@ -7,11 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static jakarta.persistence.CascadeType.ALL;
-
 @Getter
 @NoArgsConstructor
 @Entity
@@ -35,9 +30,6 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name="boardtype_id")
     private boardType boardtype;
     //다 쪽에서 FK를 가지고 일 쪽에서 mappedby, list객체 가짐
-
-//    @OneToMany(mappedBy = "board", cascade = ALL, orphanRemoval = true)
-////    private List<Comment> commentList = new ArrayList<>();
 
     //연관관계 메서드
     public void addMember(Member member){

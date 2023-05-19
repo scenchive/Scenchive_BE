@@ -15,12 +15,14 @@ public class LoginService {
     private final MemberRepository memberRepository;
 
     //검증 기능 동작함
-    public Member login(String email, String password) throws NotCorrespondingEmailException {
+    public Long login(String email, String password) throws NotCorrespondingEmailException {
         Optional<Member> findMember=memberRepository.findByEmail(email);
-        if(!findMember.orElseThrow(()->new NotCorrespondingEmailException("해당 이메일이 존재하지 않습니다.")).checkPassword(password)){
+        if(!findMember
+                .orElseThrow(()->new NotCorrespondingEmailException("해당 이메일이 존재하지 않습니다."))
+                .checkPassword(password)){
             throw new IllegalStateException("비밀번호가 틀렸습니다.");
         }
-        return findMember.get();
+        return findMember.get().getId();
     }
 
 }

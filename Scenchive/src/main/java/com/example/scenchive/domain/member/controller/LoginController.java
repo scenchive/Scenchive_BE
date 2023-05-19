@@ -18,11 +18,11 @@ public class LoginController {
     private final LoginService loginService;
 
     @PostMapping("/login")
-    public Member login(@RequestBody LoginForm loginForm) throws NotCorrespondingEmailException {
+    public Long login(@RequestBody LoginForm loginForm) throws NotCorrespondingEmailException {
 
         //로그인 성공
-        Member loginMember=loginService.login(loginForm.getEmail(), loginForm.getPassword());
+        Long loginId=loginService.login(loginForm.getEmail(), loginForm.getPassword());
 
-        return loginMember; //메인화면 URL 넣기
+        return loginId; //메인화면 URL 넣기
     }
 }

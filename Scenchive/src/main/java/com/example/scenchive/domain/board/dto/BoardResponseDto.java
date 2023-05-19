@@ -1,13 +1,11 @@
 package com.example.scenchive.domain.board.dto;
 
 import com.example.scenchive.domain.board.repository.Board;
-<<<<<<< HEAD
-=======
 import lombok.Getter;
->>>>>>> ec40467c7df794ea71c04c6f89b508b5d8ec4fa2
 
 import java.time.LocalDateTime;
 
+@Getter
 public class BoardResponseDto {
     private String boardtype_name; //카테고리
     private String title; //제목
