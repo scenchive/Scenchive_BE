@@ -4,7 +4,7 @@ import com.example.scenchive.domain.board.repository.boardType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+//
 @Getter
 @NoArgsConstructor
 public class BoardUpdateRequestDto {

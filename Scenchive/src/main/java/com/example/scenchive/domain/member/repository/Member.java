@@ -1,4 +1,4 @@
-package com.example.scenchive.domain.member.repository;
+package com.example.scenchive.member.repository;
 
 import com.example.scenchive.domain.board.repository.Board;
 import jakarta.persistence.*;
@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.ALL;
-
 @Getter
 @NoArgsConstructor
 @Entity
@@ -19,9 +17,13 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String email;
+
     private String name;
+
     private String password;
+
 
     @OneToMany(mappedBy = "member")
     private List<Board> boards=new ArrayList<>();

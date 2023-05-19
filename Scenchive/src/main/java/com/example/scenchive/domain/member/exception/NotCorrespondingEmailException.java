@@ -1,5 +1,5 @@
-package com.example.scenchive.domain.member.exception;
-
+package com.example.scenchive.member.exception;
+//
 public class NotCorrespondingEmailException extends Exception {
     public NotCorrespondingEmailException() {
     }

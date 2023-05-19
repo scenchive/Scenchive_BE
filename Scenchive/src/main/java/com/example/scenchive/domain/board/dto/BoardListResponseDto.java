@@ -3,7 +3,6 @@ package com.example.scenchive.domain.board.dto;
 import com.example.scenchive.domain.board.repository.Board;
 import lombok.Getter;
 
-
 @Getter
 public class BoardListResponseDto {
     private Long id;

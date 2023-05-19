@@ -1,7 +1,7 @@
-package com.example.scenchive.domain.board.repository;
+package com.example.scenchive.board.repository;
 
 import com.example.scenchive.domain.BaseTimeEntity;
-import com.example.scenchive.domain.member.repository.Member;
+import com.example.scenchive.member.repository.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

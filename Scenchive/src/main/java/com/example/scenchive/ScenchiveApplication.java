@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-@EnableJpaAuditing // JPA Auditing 활성화
+//
+@EnableJpaAuditing
 @SpringBootApplication
 public class ScenchiveApplication {
 
