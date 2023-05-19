@@ -15,10 +15,10 @@ public class MemberForm {
     @NotBlank
     private String name;
 
-    private int password;
+    private String password;
 
     @Builder
-    public MemberForm(String email, String name, int password) {
+    public MemberForm(String email, String name, String password) {
         this.email = email;
         this.name = name;
         this.password = password;

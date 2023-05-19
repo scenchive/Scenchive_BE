@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-//
+
 @Getter
 @NoArgsConstructor
 @Entity
@@ -42,6 +42,10 @@ public class Board extends BaseTimeEntity {
         this.boardtype=boardtype;
         boardtype.getBoards().add(this);
     }
+
+//    public void addComment(Comment comment) {
+//        commentList.add(comment);
+//    }
 
     @Builder
     public Board(Member member, String title, String body, boardType boardtype) {

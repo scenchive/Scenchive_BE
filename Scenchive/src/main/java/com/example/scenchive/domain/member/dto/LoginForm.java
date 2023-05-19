@@ -12,5 +12,5 @@ public class LoginForm {
     @Email
     private String email;
 
-    private int password;
+    private String password;
 }

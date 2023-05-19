@@ -1,11 +1,11 @@
 package com.example.scenchive.domain.board.service;
 
+import com.example.scenchive.domain.board.dto.BoardResponseDto;
 import com.example.scenchive.domain.board.repository.Board;
 import com.example.scenchive.domain.board.repository.BoardRepository;
 import com.example.scenchive.domain.board.dto.BoardListResponseDto;
 import com.example.scenchive.domain.board.dto.BoardSaveRequestDto;
 import com.example.scenchive.domain.board.dto.BoardUpdateRequestDto;
-import com.example.scenchive.domain.board.dto.BoardResponseDto;
 import com.example.scenchive.domain.board.repository.boardType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
