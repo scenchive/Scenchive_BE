@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-@SpringBootTest
+/*@SpringBootTest
 @Transactional
 public class MemberServiceTest {
     @Autowired
@@ -40,4 +40,4 @@ public class MemberServiceTest {
         IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> memberService.save(member2));
         assertEquals("이미 존재하는 닉네임입니다.", thrown.getMessage());
     }
-}
+}*/

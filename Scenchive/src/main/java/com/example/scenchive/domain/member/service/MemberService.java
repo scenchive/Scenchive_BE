@@ -18,7 +18,7 @@ public class MemberService {
 
     //회원가입
     @Transactional
-    public Long save(MemberForm memberForm){ //Id를 반환할지 member 객체 자체를 반환할지 고민
+    public Long save(MemberForm memberForm){
         validDuplicateMember(memberForm);
         return memberRepository.save(memberForm.toEntity()).getId();
     }

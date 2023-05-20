@@ -22,20 +22,24 @@ public class Member {
 
     private String name;
 
-    private int password;
+    private String password;
 
     @OneToMany(mappedBy = "member")
     private List<Board> boards=new ArrayList<>();
     //다 쪽에서 FK를 가지고 일 쪽에서 mappedby, list객체 가짐
 
+    @OneToMany(mappedBy = "member")
+    private List<UserTag> usertags=new ArrayList<>();
+    //다 쪽에서 FK를 가지고 일 쪽에서 mappedby, list객체 가짐
+
     @Builder
-    public Member(String email, String name, int password) {
+    public Member(String email, String name, String password) {
         this.email = email;
         this.name = name;
         this.password = password;
     }
 
-    public boolean checkPassword(int password){
-        return this.password==password;
+    public boolean checkPassword(String password){
+        return this.password.equals(password);
     }
 }
