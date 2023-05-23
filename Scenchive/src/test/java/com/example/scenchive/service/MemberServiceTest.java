@@ -22,7 +22,7 @@ public class MemberServiceTest {
     @Test
     public void 회원가입() throws Exception {
         //Given
-        MemberForm memberform = new MemberForm("jeong9032@naver.com", "kim", 1228);
+        MemberForm memberform = new MemberForm("jeong9032@naver.com", "kim", "1228");
         //When
         Long saveId =memberService.save(memberform);
         //Then
@@ -32,8 +32,8 @@ public class MemberServiceTest {
     @Test
     public void 중복_회원_예외() throws Exception {
         //Given
-        MemberForm member1 = new MemberForm("jeong9032@naver.com", "shin", 1228);
-        MemberForm member2 = new MemberForm("jeong90232@naver.com", "shin", 12228);
+        MemberForm member1 = new MemberForm("jeong9032@naver.com", "shin", "1228");
+        MemberForm member2 = new MemberForm("jeong90232@naver.com", "shin", "12228");
         //When
         memberService.save(member1);
         //Then
