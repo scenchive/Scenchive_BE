@@ -1,8 +1,8 @@
 package com.example.scenchive.domain.review.service;
 
-import com.example.scenchive.domain.filter.repository.PerfumeTag;
-import com.example.scenchive.domain.filter.repository.PerfumeTagRepository;
+import com.example.scenchive.domain.review.repository.RPerfumeTag;
 import com.example.scenchive.domain.review.dto.ReviewDto;
+import com.example.scenchive.domain.review.repository.RPerfumeTagRepository;
 import com.example.scenchive.domain.review.repository.Review;
 import com.example.scenchive.domain.review.repository.ReviewRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,11 +14,11 @@ import java.util.List;
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
-    private final PerfumeTagRepository perfumeTagRepository;
+    private final RPerfumeTagRepository RPerfumeTagRepository;
 
-    public ReviewService(ReviewRepository reviewRepository, PerfumeTagRepository perfumeTagRepository) {
+    public ReviewService(ReviewRepository reviewRepository, RPerfumeTagRepository RPerfumeTagRepository) {
         this.reviewRepository = reviewRepository;
-        this.perfumeTagRepository = perfumeTagRepository;
+        this.RPerfumeTagRepository = RPerfumeTagRepository;
     }
 
     public void saveReview(ReviewDto reviewDto) {
@@ -38,10 +38,10 @@ public class ReviewService {
             List<Long> ptagIds = reviewDto.getPtagIds();
             if (ptagIds != null && !ptagIds.isEmpty()) {
                 for (Long ptagId: ptagIds) {
-                    PerfumeTag perfumeTag = new PerfumeTag();
-                    perfumeTag.setPerfumeId(reviewDto.getPerfumeId());
-                    perfumeTag.setPtagId(ptagId);
-                    perfumeTagRepository.save(perfumeTag);
+                    RPerfumeTag RPerfumeTag = new RPerfumeTag();
+                    RPerfumeTag.setPerfumeId(reviewDto.getPerfumeId());
+                    RPerfumeTag.setPtagId(ptagId);
+                    RPerfumeTagRepository.save(RPerfumeTag);
                 }
             }
         } catch (DataIntegrityViolationException e) {

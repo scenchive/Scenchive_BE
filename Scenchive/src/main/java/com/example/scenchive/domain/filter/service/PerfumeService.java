@@ -23,9 +23,9 @@ public class PerfumeService {
         this.brandRepository = brandRepository;
     }
 
-    public List<PerfumeDto> getPerfumesByKeyword(List<PTag> keywordIds) {
+    public List<PerfumeDto> getPerfumesByKeyword(List<Long> keywordIds) {
         // 주어진 키워드 id들로 PerfumeTag 리스트 조회
-        List<PerfumeTag> perfumeTags = perfumeTagRepository.findByPtagIn(keywordIds);
+        List<PerfumeTag> perfumeTags = perfumeTagRepository.findByPtagIdIn(keywordIds);
         // perfume_id 오름차순으로 조회
         Set<Perfume> uniquePerfumes = new TreeSet<>((p1, p2) -> p1.getId().compareTo(p2.getId())); // Set: 다중 키워드로 인해 중복된 향수가 있는 경우 제거
 
