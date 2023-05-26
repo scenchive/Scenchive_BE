@@ -1,4 +1,4 @@
-package com.example.scenchive.domain.member.exception;
+package com.example.scenchive.domain.board.repository.exception;
 
 import com.example.scenchive.global.exception.BaseExceptionType;
 import org.springframework.http.HttpStatus;
