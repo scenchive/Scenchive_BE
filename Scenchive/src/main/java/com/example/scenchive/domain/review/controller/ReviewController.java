@@ -17,8 +17,13 @@ public class ReviewController {
 
     @PostMapping("/")
     public ResponseEntity<String> saveReview(@RequestBody ReviewDto reviewDto) {
-        reviewService.saveReview(reviewDto);
-        return ResponseEntity.ok("리뷰가 성공적으로 등록되었습니다.");
+        try {
+            reviewService.saveReview(reviewDto);
+            return ResponseEntity.ok("리뷰가 성공적으로 등록되었습니다.");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
     @DeleteMapping("/{reviewId}")
