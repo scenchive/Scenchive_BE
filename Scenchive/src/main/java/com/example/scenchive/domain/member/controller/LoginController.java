@@ -1,7 +1,7 @@
 package com.example.scenchive.domain.member.controller;
 
 import com.example.scenchive.domain.member.dto.LoginForm;
-import com.example.scenchive.domain.board.repository.exception.NotCorrespondingEmailException;
+import com.example.scenchive.domain.member.exception.NotCorrespondingEmailException;
 import com.example.scenchive.domain.member.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

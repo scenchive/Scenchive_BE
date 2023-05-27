@@ -1,6 +1,7 @@
 package com.example.scenchive.domain.filter.controller;
 
 import com.example.scenchive.domain.filter.dto.PerfumeDto;
+import com.example.scenchive.domain.filter.dto.PersonalDto;
 import com.example.scenchive.domain.filter.repository.PTag;
 import com.example.scenchive.domain.filter.service.PerfumeService;
 import com.example.scenchive.domain.filter.service.PersonalService;
@@ -29,12 +30,12 @@ public class PerfumeController {
         // 조회된 향수 목록 반환
         return recommendedPerfumes;
     }
-}
+
 
 //    //넘겨받은 사용자 Id로 추천 향수 리스트 가져오기
-//    @GetMapping("/profile/recommend")
-//    public List<PerfumeDto> personalRecommend(@RequestParam("userId") Long userId){
-//        List<PerfumeDto> personalRecommends =personalService.getPerfumesByUserKeyword(userId);
-//        return personalRecommends;
-//    }
-//}
+    @GetMapping("/profile/recommend")
+    public List<PersonalDto> personalRecommend(@RequestParam("userId") Long userId){
+        List<PersonalDto> personalRecommends =personalService.getPerfumesByUserKeyword(userId);
+        return personalRecommends;
+    }
+}

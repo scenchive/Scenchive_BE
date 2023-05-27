@@ -11,7 +11,7 @@ public interface PerfumeTagRepository extends JpaRepository<PerfumeTag, Long> {
 
     //List<PerfumeTag> findByPtagIdIn(List<Long> ptagIds);
 
-    //List<PerfumeTag> findByPtagId(Long ptagId);
+    List<PerfumeTag> findByPtag(PTag ptag);
 
 //    List<PerfumeTag> findByPtagIdIn(List<Long> ptagIds);
     List<PerfumeTag> findByPtagIn(List<PTag> ptags);
