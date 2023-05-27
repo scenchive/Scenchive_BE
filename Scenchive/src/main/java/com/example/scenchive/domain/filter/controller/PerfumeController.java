@@ -15,29 +15,26 @@ public class PerfumeController {
     private PersonalService personalService;
 
     @Autowired
-    public PerfumeController(PerfumeService perfumeService, PersonalService personalService){
-        this.perfumeService=perfumeService;
-        this.personalService=personalService;
+    public PerfumeController(PerfumeService perfumeService, PersonalService personalService) {
+        this.perfumeService = perfumeService;
+        this.personalService = personalService;
     }
 
-//    @Autowired
-//    public PerfumeController(PerfumeService perfumeService) {
-//        this.perfumeService = perfumeService;
-//    }
 
     @GetMapping("/perfumes/recommend")
-    public List<PerfumeDto> recommendPerfumes(@RequestParam("keywordId") Long keywordId) {
+    public List<PerfumeDto> recommendPerfumes(@RequestParam("keywordId") List<Long> keywordIds) {
         // 유저가 선택한 키워드를 받아와 해당 키워드에 대한 향수 목록 조회
-        List<PerfumeDto> recommendedPerfumes = perfumeService.getPerfumesByKeyword(keywordId);
+        List<PerfumeDto> recommendedPerfumes = perfumeService.getPerfumesByKeyword(keywordIds);
 
         // 조회된 향수 목록 반환
         return recommendedPerfumes;
     }
-
-    //넘겨받은 사용자 Id로 추천 향수 리스트 가져오기
-    @GetMapping("/profile/recommend")
-    public List<PerfumeDto> personalRecommend(@RequestParam("userId") Long userId){
-        List<PerfumeDto> personalRecommends =personalService.getPerfumesByUserKeyword(userId);
-        return personalRecommends;
-    }
 }
+
+//    //넘겨받은 사용자 Id로 추천 향수 리스트 가져오기
+//    @GetMapping("/profile/recommend")
+//    public List<PerfumeDto> personalRecommend(@RequestParam("userId") Long userId){
+//        List<PerfumeDto> personalRecommends =personalService.getPerfumesByUserKeyword(userId);
+//        return personalRecommends;
+//    }
+//}

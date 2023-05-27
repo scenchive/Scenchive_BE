@@ -23,6 +23,6 @@ public class LoginController {
         //로그인 성공
         Long loginId=loginService.login(loginForm.getEmail(), loginForm.getPassword());
 
-        return loginId; //메인화면 URL 넣기
+        return loginId;
     }
 }
