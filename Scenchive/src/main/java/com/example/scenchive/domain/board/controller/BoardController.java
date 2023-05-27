@@ -1,7 +1,7 @@
 package com.example.scenchive.domain.board.controller;
 
-import com.example.scenchive.domain.board.dto.BoardListResponseDto;
 import com.example.scenchive.domain.board.dto.BoardResponseDto;
+import com.example.scenchive.domain.board.dto.BoardListResponseDto;
 import com.example.scenchive.domain.board.service.BoardService;
 import com.example.scenchive.domain.board.dto.BoardSaveRequestDto;
 import com.example.scenchive.domain.board.dto.BoardUpdateRequestDto;
