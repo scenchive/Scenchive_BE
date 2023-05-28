@@ -1,7 +1,7 @@
 package com.example.scenchive.domain.member.controller;
 
 import com.example.scenchive.domain.member.dto.LoginForm;
-import com.example.scenchive.domain.board.repository.exception.NotCorrespondingEmailException;
+import com.example.scenchive.domain.member.exception.NotCorrespondingEmailException;
 import com.example.scenchive.domain.member.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +19,6 @@ public class LoginController {
         //로그인 성공
         Long loginId=loginService.login(loginForm.getEmail(), loginForm.getPassword());
 
-        return loginId; //메인화면 URL 넣기
+        return loginId;
     }
 }

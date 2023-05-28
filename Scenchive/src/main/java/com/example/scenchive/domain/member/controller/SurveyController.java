@@ -5,6 +5,7 @@ import com.example.scenchive.domain.member.repository.UserTag;
 import com.example.scenchive.domain.member.service.SurveyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,4 +22,7 @@ public class SurveyController {
         model.addAttribute("survey", surveyService.surveySave(surveyUserTagDto));
         return surveyService.surveySave(surveyUserTagDto);
     }
+
+   // @GetMapping("/survey")
+
 }
