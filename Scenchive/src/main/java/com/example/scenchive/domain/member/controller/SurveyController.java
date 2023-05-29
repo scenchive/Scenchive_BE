@@ -1,7 +1,9 @@
 package com.example.scenchive.domain.member.controller;
 
 import com.example.scenchive.domain.member.dto.SurveyUserTagDto;
+import com.example.scenchive.domain.member.dto.UtagDto;
 import com.example.scenchive.domain.member.repository.UserTag;
+import com.example.scenchive.domain.member.repository.Utag;
 import com.example.scenchive.domain.member.service.SurveyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
@@ -23,6 +25,9 @@ public class SurveyController {
         return surveyService.surveySave(surveyUserTagDto);
     }
 
-   // @GetMapping("/survey")
+   @GetMapping("/survey")
+    public List<UtagDto> survey(){
+        return surveyService.surveyGetUtags();
+    }
 
 }
