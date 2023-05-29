@@ -2,9 +2,11 @@ package com.example.scenchive.domain.filter.controller;
 
 import com.example.scenchive.domain.filter.dto.PerfumeDto;
 import com.example.scenchive.domain.filter.dto.PersonalDto;
+import com.example.scenchive.domain.filter.dto.SearchPerfumeDto;
 import com.example.scenchive.domain.filter.repository.PTag;
 import com.example.scenchive.domain.filter.service.PerfumeService;
 import com.example.scenchive.domain.filter.service.PersonalService;
+import com.example.scenchive.domain.filter.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +16,13 @@ import java.util.List;
 public class PerfumeController {
     private PerfumeService perfumeService;
     private PersonalService personalService;
+    private SearchService searchService;
 
     @Autowired
-    public PerfumeController(PerfumeService perfumeService, PersonalService personalService) {
+    public PerfumeController(PerfumeService perfumeService, PersonalService personalService, SearchService searchService) {
         this.perfumeService = perfumeService;
         this.personalService = personalService;
+        this.searchService=searchService;
     }
 
 
@@ -37,5 +41,12 @@ public class PerfumeController {
     public List<PersonalDto> personalRecommend(@RequestParam("userId") Long userId){
         List<PersonalDto> personalRecommends =personalService.getPerfumesByUserKeyword(userId);
         return personalRecommends;
+    }
+
+    //향수 및 브랜드 조회
+    @GetMapping("/search")
+    public List<SearchPerfumeDto> searchName(@RequestParam("name") String name){
+        List<SearchPerfumeDto> searchDtos=searchService.searchName(name);
+        return searchDtos;
     }
 }
