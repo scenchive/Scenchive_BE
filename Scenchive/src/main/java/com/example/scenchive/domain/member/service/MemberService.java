@@ -26,8 +26,8 @@ public class MemberService {
     //name 중복 확인
     //검증 기능 동작함
     private void validDuplicateMember(MemberForm memberForm){
-        List<Member> findMembers=memberRepository.findByName(memberForm.getName());
-        if(!findMembers.isEmpty()){
+        Member member=memberRepository.findByName(memberForm.getName()).get();
+        if(member!=null){
             throw new IllegalStateException("이미 존재하는 닉네임입니다.");
         }
     }
