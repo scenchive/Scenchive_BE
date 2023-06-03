@@ -18,7 +18,7 @@ public class LoginService {
     public Long login(String email, String password) throws NotCorrespondingEmailException {
         Optional<Member> findMember=memberRepository.findByEmail(email);
         if(!findMember
-                .orElseThrow(()->new NotCorrespondingEmailException("해당 이메일이 존재하지 않습니다."))
+                .orElseThrow(()-> new NotCorrespondingEmailException("해당 이메일이 존재하지 않습니다."))
                 .checkPassword(password)){
             throw new IllegalStateException("비밀번호가 틀렸습니다.");
         }
