@@ -36,14 +36,22 @@ public class PerfumeController {
     }
 
 
-//    //넘겨받은 사용자 Id로 추천 향수 리스트 가져오기
+    //향수 프로필 화면 : 넘겨받은 사용자 Id로 추천 향수 리스트 가져오기
     @GetMapping("/profile/recommend")
     public List<PersonalDto> personalRecommend(@RequestParam("userId") Long userId){
         List<PersonalDto> personalRecommends =personalService.getPerfumesByUserKeyword(userId);
         return personalRecommends;
     }
 
-    //향수 및 브랜드 조회
+    //메인 화면 : 사용자 Id와 계절 Id를 넘겨주면 추천 향수 리스트를 반환
+    @GetMapping("recommend")
+    public List<PersonalDto> getPerfumesByUserAndSeason(@RequestParam("userId") Long userId, @RequestParam("season") Long seasonId){
+        List<PersonalDto> mainRecommends=personalService.getPerfumesByUserAndSeason(userId, seasonId);
+        return mainRecommends;
+    }
+
+
+    //검색화면 : 향수 및 브랜드 조회
     @GetMapping("/search")
     public List<SearchPerfumeDto> searchName(@RequestParam("name") String name){
         List<SearchPerfumeDto> searchDtos=searchService.searchName(name);
