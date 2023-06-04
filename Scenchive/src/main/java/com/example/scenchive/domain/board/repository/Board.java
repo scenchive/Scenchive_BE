@@ -2,6 +2,7 @@ package com.example.scenchive.domain.board.repository;
 
 import com.example.scenchive.domain.BaseTimeEntity;
 import com.example.scenchive.domain.member.repository.Member;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

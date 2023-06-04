@@ -15,6 +15,8 @@ import lombok.Setter;
 @Table(name = "ptag")
 public class PTag {
     @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "id")
     private Long id;
 
     @JoinColumn(name = "ptag_name")
@@ -22,4 +24,5 @@ public class PTag {
 
     @JoinColumn(name = "ptag_kr")
     private String ptagKr;
+
 }

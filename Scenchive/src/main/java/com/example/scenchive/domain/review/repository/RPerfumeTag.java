@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @Entity
-@IdClass(com.example.scenchive.domain.filter.repository.PerfumeTag.PerfumeTagId.class)
+@IdClass(RPerfumeTag.PerfumeTagId.class)
 @Table(name = "perfumetag")
 public class RPerfumeTag {
     @Id
