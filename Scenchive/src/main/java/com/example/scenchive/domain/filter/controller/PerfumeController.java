@@ -16,11 +16,6 @@ public class PerfumeController {
         this.perfumeService = perfumeService;
     }
 
-//<<<<<<< HEAD
-//    @GetMapping("/recommend")
-//    public List<PerfumeDto> recommendPerfumes(@RequestParam("keywordId") List<Long> keywordIds) {
-//=======
-
     @GetMapping("/perfumes/recommend")
     public List<PerfumeDto> recommendPerfumes(@RequestParam("keywordId") List<Long> keywordIds) {
         // 유저가 선택한 키워드를 받아와 해당 키워드에 대한 향수 목록 조회
