@@ -1,5 +1,6 @@
 package com.example.scenchive.domain.filter.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import com.example.scenchive.domain.filter.dto.PerfumeDto;
 import com.example.scenchive.domain.filter.dto.PersonalDto;
 import com.example.scenchive.domain.filter.dto.SearchPerfumeDto;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins="http://10.0.2.15:8081")
 public class PerfumeController {
     private PerfumeService perfumeService;
     private PersonalService personalService;
@@ -56,5 +58,12 @@ public class PerfumeController {
     public List<SearchPerfumeDto> searchName(@RequestParam("name") String name){
         List<SearchPerfumeDto> searchDtos=searchService.searchName(name);
         return searchDtos;
+    }
+
+    //검색화면 : 브랜드별 향수 리스트 조회
+    @GetMapping("/brandperfume")
+    public List<SearchPerfumeDto> brandPerfume(@RequestParam("name") String name){
+        List<SearchPerfumeDto> brandDtos=searchService.brandPerfume(name);
+        return brandDtos;
     }
 }

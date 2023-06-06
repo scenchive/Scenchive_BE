@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,21 @@ public class SearchService {
         this.brandRepository = brandRepository;
     }
 
+    //검색화면 : 브랜드별 향수 리스트 조회
+    public List<SearchPerfumeDto> brandPerfume(String name){
+        List<Brand> brands = brandRepository.findByBrandName(name);
+        List<SearchPerfumeDto> searchPerfumeDtos = new ArrayList<>();
+        for (Brand brand : brands) {
+            List<Perfume> perfumes = perfumeRepository.findByBrandId(brand.getId());
+            for (Perfume perfume : perfumes) {
+                SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getPerfumeName(), brand.getBrandName());
+                searchPerfumeDtos.add(searchPerfumeDto);
+            }
+        }
+        return searchPerfumeDtos;
+    }
 
+    //검색화면 : 향수 및 브랜드 조회
     public List<SearchPerfumeDto> searchName(String name) {
         List<Perfume> perfumes = perfumeRepository.findByPerfumeNameContainingIgnoreCase(name);
         List<SearchPerfumeDto> searchPerfumeDtos = new ArrayList<>();
