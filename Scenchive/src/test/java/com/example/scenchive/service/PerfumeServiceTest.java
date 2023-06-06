@@ -1,20 +1,6 @@
 package com.example.scenchive.service;
 
-import com.example.scenchive.domain.filter.dto.PerfumeDto;
-import com.example.scenchive.domain.filter.repository.PerfumeTag;
-import com.example.scenchive.domain.filter.repository.PerfumeTagRepository;
-import com.example.scenchive.domain.filter.service.PerfumeService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 //public class PerfumeServiceTest {
 //    @Mock

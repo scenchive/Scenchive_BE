@@ -1,4 +1,4 @@
-package com.example.scenchive.domain.filter.repository;
+package com.example.scenchive.domain.review.repository;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,10 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "ptag")
-public class PTag {
+public class RPTag {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id")
     private Long id;
 
     @JoinColumn(name = "ptag_name")
@@ -24,5 +22,4 @@ public class PTag {
 
     @JoinColumn(name = "ptag_kr")
     private String ptagKr;
-
 }
