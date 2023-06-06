@@ -33,5 +33,22 @@ public class PerfumeTag {
 //        }
 
     }
+    public Long getPerfumeId() {
+        return perfume != null ? perfume.getId() : null;
+    }
+
+    public void setPerfumeId(Long perfumeId) {
+        this.perfume = new Perfume();
+        this.perfume.setId(perfumeId);
+    }
+
+    public Long getPtagId() {
+        return ptag != null ? ptag.getId() : null;
+    }
+
+    public void setPtagId(Long ptagId) {
+        this.ptag = new PTag();
+        this.ptag.setId(ptagId);
+    }
 
 }
