@@ -16,5 +16,3 @@ public class SearchPerfumeDto {
         this.brandName = brandName;
     }
 }
-
-

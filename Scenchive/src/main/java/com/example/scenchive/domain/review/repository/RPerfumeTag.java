@@ -1,5 +1,7 @@
-package com.example.scenchive.domain.filter.repository;
+package com.example.scenchive.domain.review.repository;
 
+import com.example.scenchive.domain.filter.repository.PTag;
+import com.example.scenchive.domain.filter.repository.Perfume;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +13,9 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @Entity
-@IdClass(PerfumeTag.PerfumeTagId.class)
+@IdClass(RPerfumeTag.PerfumeTagId.class)
 @Table(name = "perfumetag")
-public class PerfumeTag {
+public class RPerfumeTag {
     @Id
     @ManyToOne
     @JoinColumn(name = "perfume_id")
@@ -28,11 +30,12 @@ public class PerfumeTag {
         private Perfume perfume;
         private PTag ptag;
 
-//        public PerfumeTagId() {
-//
-//        }
+        public PerfumeTagId() {
+
+        }
 
     }
+
     public Long getPerfumeId() {
         return perfume != null ? perfume.getId() : null;
     }
@@ -50,5 +53,4 @@ public class PerfumeTag {
         this.ptag = new PTag();
         this.ptag.setId(ptagId);
     }
-
 }

@@ -18,7 +18,6 @@ public class Perfume {
     @JoinColumn(name = "perfume_name")
     private String perfumeName;
 
-    
     @JoinColumn(name = "brand_id")
     private Long brandId;
 }
