@@ -28,9 +28,9 @@ public class PerfumeTag {
         private Perfume perfume;
         private PTag ptag;
 
-        public PerfumeTagId() {
-
-        }
+//        public PerfumeTagId() {
+//
+//        }
 
     }
 
