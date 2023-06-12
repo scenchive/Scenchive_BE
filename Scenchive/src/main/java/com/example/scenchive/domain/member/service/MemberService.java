@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 //
 
 @Transactional(readOnly = true)
@@ -26,8 +27,8 @@ public class MemberService {
     //name 중복 확인
     //검증 기능 동작함
     private void validDuplicateMember(MemberForm memberForm){
-        Member member=memberRepository.findByName(memberForm.getName()).get();
-        if(member!=null){
+        Optional<Member> member=memberRepository.findByName(memberForm.getName());
+        if(member.isPresent()){
             throw new IllegalStateException("이미 존재하는 닉네임입니다.");
         }
     }

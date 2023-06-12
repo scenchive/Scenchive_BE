@@ -33,6 +33,9 @@ public class Review extends BaseTimeEntity {
     @Column(name = "sillage")
     private int sillage;
 
+    @Column(name = "season")
+    private Long season;
+
     @Column(name = "content", length = 1000)
     private String content;
 
