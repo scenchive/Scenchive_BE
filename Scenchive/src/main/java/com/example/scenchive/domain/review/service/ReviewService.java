@@ -1,15 +1,19 @@
 package com.example.scenchive.domain.review.service;
 
+import com.example.scenchive.domain.filter.repository.Perfume;
+import com.example.scenchive.domain.review.dto.ReviewListResponseDto;
 import com.example.scenchive.domain.review.repository.RPerfumeTag;
 import com.example.scenchive.domain.review.dto.ReviewDto;
 import com.example.scenchive.domain.review.repository.RPerfumeTagRepository;
 import com.example.scenchive.domain.review.repository.Review;
 import com.example.scenchive.domain.review.repository.ReviewRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -64,5 +68,13 @@ public class ReviewService {
 
     public void deleteReview(Long reviewId) {
         reviewRepository.deleteById(reviewId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewListResponseDto> findByPerfumeId(Long perfumeId){
+//        Perfume reviewperfume = new Perfume(perfume_id);
+        return reviewRepository.findByPerfumeId(perfumeId).stream()
+                .map(perfume->new ReviewListResponseDto(perfume))
+                .collect(Collectors.toList());
     }
 }

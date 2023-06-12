@@ -1,5 +1,6 @@
 package com.example.scenchive.domain.review.dto;
 
+import com.example.scenchive.domain.member.repository.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +9,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class ReviewDto {
-    private Long memberId;
+    private Member memberId;
     private Long perfumeId;
     private int rating; // 별점
     private int longevity; // 지속력

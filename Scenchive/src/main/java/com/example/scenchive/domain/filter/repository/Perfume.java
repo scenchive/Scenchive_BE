@@ -20,4 +20,8 @@ public class Perfume {
 
     @JoinColumn(name = "brand_id")
     private Long brandId;
+
+    public Perfume(Long id) {
+        this.id = id;
+    }
 }

@@ -44,6 +44,10 @@ public class Member {
         this.password = password;
     }
 
+    public Member(String name) {
+        this.name = name;
+    }
+
     public boolean checkPassword(String password){
         return this.password.equals(password);
     }
