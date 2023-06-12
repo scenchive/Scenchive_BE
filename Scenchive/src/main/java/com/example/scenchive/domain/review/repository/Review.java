@@ -1,6 +1,7 @@
 package com.example.scenchive.domain.review.repository;
 
 import com.example.scenchive.domain.BaseTimeEntity;
+import com.example.scenchive.domain.member.repository.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,8 +19,9 @@ public class Review extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private Member memberId;
 
     @Column(name = "perfume_id")
     private Long perfumeId;
@@ -32,6 +34,9 @@ public class Review extends BaseTimeEntity {
 
     @Column(name = "sillage")
     private int sillage;
+
+    @Column(name = "season")
+    private Long season;
 
     @Column(name = "content", length = 1000)
     private String content;

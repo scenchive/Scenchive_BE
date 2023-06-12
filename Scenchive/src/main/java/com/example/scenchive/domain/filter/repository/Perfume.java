@@ -25,6 +25,11 @@ public class Perfume {
     @JoinColumn(name = "brand_id")
     private Long brandId;
 
+    public Perfume(Long id) {
+        this.id = id;
+    }
+
     @OneToMany(mappedBy = "perfume")
     private List<perfumeMarked> perfumeMarkedList=new ArrayList<>();
+
 }
