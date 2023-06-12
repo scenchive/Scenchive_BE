@@ -5,11 +5,13 @@ import com.example.scenchive.domain.member.repository.UserTag;
 import com.example.scenchive.domain.member.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins="http://10.0.2.15:8081")
 public class ProfileController {
     private final ProfileService profileService;
 

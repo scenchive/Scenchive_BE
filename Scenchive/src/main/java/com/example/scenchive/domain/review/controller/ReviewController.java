@@ -7,12 +7,14 @@ import com.example.scenchive.domain.review.service.ReviewService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/review")
+@CrossOrigin(origins="http://10.0.2.15:8081")
 public class ReviewController {
     private final ReviewService reviewService;
 
