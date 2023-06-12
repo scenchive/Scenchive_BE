@@ -2,6 +2,7 @@ package com.example.scenchive.domain.review.controller;
 
 import com.example.scenchive.domain.review.dto.ReviewDto;
 import com.example.scenchive.domain.review.dto.ReviewListResponseDto;
+import com.example.scenchive.domain.review.repository.RPerfumeTagRepository;
 import com.example.scenchive.domain.review.service.ReviewService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
