@@ -1,9 +1,13 @@
 package com.example.scenchive.domain.filter.repository;
 
+import com.example.scenchive.domain.member.repository.perfumeMarked;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,4 +24,7 @@ public class Perfume {
 
     @JoinColumn(name = "brand_id")
     private Long brandId;
+
+    @OneToMany(mappedBy = "perfume")
+    private List<perfumeMarked> perfumeMarkedList=new ArrayList<>();
 }

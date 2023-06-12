@@ -30,6 +30,12 @@ public class Member {
     private List<Board> boards=new ArrayList<>();
     //다 쪽에서 FK를 가지고 일 쪽에서 mappedby, list객체 가짐
 
+    @OneToMany(mappedBy="member")
+    private List<UserTag> userTags=new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<perfumeMarked> perfumeMarkedList=new ArrayList<>();
+
 //    @OneToMany(mappedBy = "member", cascade = ALL, orphanRemoval = true)
 //    private List<Comment> commentList = new ArrayList<>();
 
