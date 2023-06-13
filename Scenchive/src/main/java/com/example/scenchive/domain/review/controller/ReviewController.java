@@ -1,5 +1,6 @@
 package com.example.scenchive.domain.review.controller;
 
+import com.example.scenchive.domain.review.dto.PerfumeRatingDto;
 import com.example.scenchive.domain.review.dto.ReviewDto;
 import com.example.scenchive.domain.review.dto.ReviewListResponseDto;
 import com.example.scenchive.domain.review.repository.RPerfumeTagRepository;
@@ -13,7 +14,6 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/review")
 @CrossOrigin(origins="http://10.0.2.15:8081")
 public class ReviewController {
     private final ReviewService reviewService;
@@ -23,7 +23,7 @@ public class ReviewController {
     }
 
     // 리뷰 등록
-    @PostMapping("/")
+    @PostMapping("/review/")
     public ResponseEntity<String> saveReview(@RequestBody ReviewDto reviewDto) {
         try {
             reviewService.saveReview(reviewDto);
@@ -35,16 +35,23 @@ public class ReviewController {
     }
 
     // 리뷰 삭제
-    @DeleteMapping("/{reviewId}")
+    @DeleteMapping("/review/{reviewId}")
     public ResponseEntity<String> deleteReview(@PathVariable("reviewId") Long reviewId) {
         reviewService.deleteReview(reviewId);
         return ResponseEntity.ok("리뷰가 성공적으로 삭제되었습니다.");
     }
 
     // 향수별 리뷰 조회
-    @GetMapping("/{perfumeId}")
+    @GetMapping("/review/{perfumeId}")
     public List<ReviewListResponseDto> getReview(@PathVariable("perfumeId") Long perfumeId, Model model) {
         model.addAttribute("perfumereview", reviewService.findByPerfumeId(perfumeId));
         return reviewService.findByPerfumeId(perfumeId);
+    }
+
+    // 향수별 평점평균 조회
+    @GetMapping("/perfumerating/{perfumeId}")
+    public ResponseEntity<PerfumeRatingDto> getPerfumeRating(@PathVariable("perfumeId") Long perfumeId) {
+        PerfumeRatingDto ratingDto = reviewService.calculatePerfumeRating(perfumeId);
+        return ResponseEntity.ok(ratingDto);
     }
 }

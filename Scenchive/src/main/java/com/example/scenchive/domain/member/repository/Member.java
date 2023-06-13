@@ -54,6 +54,10 @@ public class Member {
         this.name = name;
     }
 
+    public Member(Long id) {
+        this.id = id;
+    }
+
     public boolean checkPassword(String password){
         return this.password.equals(password);
     }
