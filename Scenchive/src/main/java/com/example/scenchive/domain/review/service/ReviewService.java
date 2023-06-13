@@ -1,6 +1,7 @@
 package com.example.scenchive.domain.review.service;
 
 import com.example.scenchive.domain.filter.repository.Perfume;
+import com.example.scenchive.domain.review.dto.PerfumeRatingDto;
 import com.example.scenchive.domain.review.dto.ReviewListResponseDto;
 import com.example.scenchive.domain.review.repository.RPerfumeTag;
 import com.example.scenchive.domain.review.dto.ReviewDto;
@@ -12,7 +13,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +28,7 @@ public class ReviewService {
         this.RPerfumeTagRepository = RPerfumeTagRepository;
     }
 
+    // 리뷰 등록 메서드
     public void saveReview(ReviewDto reviewDto) {
 
         try {
@@ -52,11 +56,12 @@ public class ReviewService {
             }
 
             // 계절감 평가 -> 키워드로 저장
-            Long season = reviewDto.getSeason();
-            if (season != null) {
+            String season = reviewDto.getSeason();
+            Long seasonId = Long.parseLong(season);
+            if (seasonId != null) {
                 RPerfumeTag rPerfumeTag = new RPerfumeTag();
                 rPerfumeTag.setPerfumeId(reviewDto.getPerfumeId());
-                rPerfumeTag.setPtagId(season);
+                rPerfumeTag.setPtagId(seasonId);
                 RPerfumeTagRepository.save(rPerfumeTag);
             }
 
@@ -66,15 +71,66 @@ public class ReviewService {
 
     }
 
+    // 리뷰 삭제 메서드
     public void deleteReview(Long reviewId) {
         reviewRepository.deleteById(reviewId);
     }
 
+
+    // 개별 향수 리뷰 리스트 조회 메서드
     @Transactional(readOnly = true)
     public List<ReviewListResponseDto> findByPerfumeId(Long perfumeId){
 //        Perfume reviewperfume = new Perfume(perfume_id);
         return reviewRepository.findByPerfumeId(perfumeId).stream()
                 .map(perfume->new ReviewListResponseDto(perfume))
                 .collect(Collectors.toList());
+    }
+
+    // 향수 평점 평균 산출 메서드
+    public PerfumeRatingDto calculatePerfumeRating(Long perfumeId) {
+        double ratingSum = reviewRepository.getRatingSumByPerfumeId(perfumeId);
+        long reviewCount = reviewRepository.countByPerfumeId(perfumeId);
+        double ratingAvg = reviewCount > 0 ? ratingSum / reviewCount : 0;
+
+        double longevitySum = reviewRepository.getLongevitySumByPerfumeId(perfumeId);
+        double longevityAvg = reviewCount > 0 ? longevitySum / reviewCount : 0;
+
+        double sillageSum = reviewRepository.getSillageSumByPerfumeId(perfumeId);
+        double sillageAvg = reviewCount > 0 ? sillageSum / reviewCount : 0;
+
+        List<Object[]> seasonCounts = reviewRepository.getSeasonCountsByPerfumeId(perfumeId);
+        Map<String, Double> seasonAvg = calculateSeasonAverages(seasonCounts, reviewCount);
+
+        PerfumeRatingDto ratingDto = new PerfumeRatingDto();
+        ratingDto.setPerfumeId(perfumeId);
+        ratingDto.setRatingAvg(ratingAvg);
+        ratingDto.setLongevityAvg(longevityAvg);
+        ratingDto.setSillageAvg(sillageAvg);
+        ratingDto.setSeasonAvg(seasonAvg);
+
+        return ratingDto;
+    }
+
+    public Map<String, Double> calculateSeasonAverages(List<Object[]> seasonCounts, long reviewCount) {
+//        List<Object[]> seasonCounts = reviewRepository.getSeasonCountsByPerfumeId(perfumeId);
+        Map<String, Double> seasonAverages = new HashMap<>();
+
+        // 총 투표수 계산
+        int totalVotes = 0;
+        for (Object[] seasonCount : seasonCounts) {
+            Long count = (Long) seasonCount[1];
+            totalVotes += count;
+        }
+
+        // 계절별 투표 비율 계산
+        for (Object[] seasonCount : seasonCounts) {
+            String season = (String) seasonCount[0];
+            Long count = (Long) seasonCount[1];
+
+            double percentage = Math.round((count.doubleValue() / totalVotes) * 100);
+            seasonAverages.put(season, percentage);
+        }
+
+        return seasonAverages;
     }
 }
