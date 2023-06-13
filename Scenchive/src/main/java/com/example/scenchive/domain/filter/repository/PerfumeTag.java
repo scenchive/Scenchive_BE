@@ -20,7 +20,7 @@ public class PerfumeTag {
     private Perfume perfume;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ptag_id")
     private PTag ptag;
 

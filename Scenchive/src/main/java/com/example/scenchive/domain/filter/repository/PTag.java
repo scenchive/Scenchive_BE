@@ -1,12 +1,12 @@
 package com.example.scenchive.domain.filter.repository;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,5 +24,12 @@ public class PTag {
 
     @JoinColumn(name = "ptag_kr")
     private String ptagKr;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="ptagtype_id")
+    private PTagType ptagType;
+
+    @OneToMany(mappedBy = "ptag")
+    private List<PerfumeTag> perfumeTagList=new ArrayList<>();
 
 }
