@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -124,13 +125,44 @@ public class ReviewService {
 
         // 계절별 투표 비율 계산
         for (Object[] seasonCount : seasonCounts) {
-            String season = (String) seasonCount[0];
+            String season = convertSeasonToString((String) seasonCount[0]);
             Long count = (Long) seasonCount[1];
 
             double percentage = Math.round((count.doubleValue() / totalVotes) * 100);
             seasonAverages.put(season, percentage);
         }
 
-        return seasonAverages;
+        // 모든 계절에 대한 투표수의 default를 0.0으로 설정
+        String[] allSeasons = {"spring", "summer", "fall", "winter"};
+        for (String season : allSeasons) {
+            if (!seasonAverages.containsKey(season)) {
+                seasonAverages.put(season, 0.0);
+            }
+        }
+
+        // response에서 봄-여름-가을-겨울 순으로 표시
+        Map<String, Double> sortedSeasonAverages = new LinkedHashMap<>();
+        sortedSeasonAverages.put("spring", seasonAverages.get("spring"));
+        sortedSeasonAverages.put("summer", seasonAverages.get("summer"));
+        sortedSeasonAverages.put("fall", seasonAverages.get("fall"));
+        sortedSeasonAverages.put("winter", seasonAverages.get("winter"));
+
+        return sortedSeasonAverages;
+    }
+
+    // 숫자로 표현된 계절을 문자열로 변환
+    private String convertSeasonToString(String season) {
+        switch (season) {
+            case "36":
+                return "spring";
+            case "37":
+                return "summer";
+            case "38":
+                return "fall";
+            case "39":
+                return "winter";
+            default:
+                return "unknown";
+        }
     }
 }
