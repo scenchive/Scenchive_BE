@@ -1,5 +1,6 @@
 package com.example.scenchive.domain.filter.service;
 
+import com.example.scenchive.domain.filter.dto.PTagDto;
 import com.example.scenchive.domain.filter.dto.PerfumeDto;
 import com.example.scenchive.domain.filter.repository.*;
 import jakarta.transaction.Transactional;
@@ -14,13 +15,15 @@ public class PerfumeService {
     private final PerfumeTagRepository perfumeTagRepository;
     private final PerfumeRepository perfumeRepository;
     private final BrandRepository brandRepository;
+    private final PTagRepository pTagRepository;
 
     @Autowired
-    public PerfumeService(PerfumeTagRepository perfumeTagRepository, PerfumeRepository perfumeRepository, BrandRepository brandRepository) {
+    public PerfumeService(PerfumeTagRepository perfumeTagRepository, PerfumeRepository perfumeRepository, BrandRepository brandRepository, PTagRepository pTagRepository) {
 
         this.perfumeTagRepository = perfumeTagRepository;
         this.perfumeRepository = perfumeRepository;
         this.brandRepository = brandRepository;
+        this.pTagRepository=pTagRepository;
     }
 
     public List<PerfumeDto> getPerfumesByKeyword(List<PTag> keywordIds) {
@@ -52,5 +55,38 @@ public class PerfumeService {
 
         // 향수 DTO 리스트 반환
         return perfumes;
+    }
+
+    //필터 추천 키워드 조회
+    public List<PTagDto> getTypeKeyword(){ //계열, 분위기, 계절 키워드
+        List<PTagDto> pTagDtos=new ArrayList<>();
+        for (long i=1;i<=25;i++){
+            PTagDto pTagDto=new PTagDto(i,
+                    pTagRepository.findById(i).get().getPtagName(),
+                    pTagRepository.findById(i).get().getPtagKr(),
+                    pTagRepository.findById(i).get().getPtagType().getId());
+            pTagDtos.add(pTagDto);
+        }
+
+        for (long i=36;i<=39;i++){
+            PTagDto pTagDto=new PTagDto(i,
+                    pTagRepository.findById(i).get().getPtagName(),
+                    pTagRepository.findById(i).get().getPtagKr(),
+                    pTagRepository.findById(i).get().getPtagType().getId());
+            pTagDtos.add(pTagDto);
+        }
+        return pTagDtos;
+    }
+
+    public List<PTagDto> getTPOKeyword(){ //장소, 분위기, 계열 키워드
+        List<PTagDto> pTagDtos=new ArrayList<>();
+        for (long i=1;i<=35;i++){
+            PTagDto pTagDto=new PTagDto(i,
+                    pTagRepository.findById(i).get().getPtagName(),
+                    pTagRepository.findById(i).get().getPtagKr(),
+                    pTagRepository.findById(i).get().getPtagType().getId());
+            pTagDtos.add(pTagDto);
+        }
+        return pTagDtos;
     }
 }
