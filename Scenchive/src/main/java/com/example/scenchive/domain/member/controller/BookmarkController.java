@@ -1,9 +1,12 @@
 package com.example.scenchive.domain.member.controller;
 
+import com.example.scenchive.domain.member.dto.BookmarkPerfumeDto;
 import com.example.scenchive.domain.member.dto.perfumeMarkedDto;
 import com.example.scenchive.domain.member.service.BookmarkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,6 +25,20 @@ public class BookmarkController {
     @DeleteMapping("/bookmark")
     public void bookmarkDelete(@RequestParam("userId") Long userId, @RequestParam("perfumeId") Long perfumeId){
         bookmarkService.bookmarkDelete(userId, perfumeId);
+    }
+
+    //북마크한 향수 조회
+    @GetMapping("/bookmark/{userId}")
+    public List<BookmarkPerfumeDto> getBookmarkPerfume(@PathVariable Long userId){
+        List<BookmarkPerfumeDto> bookmarkPerfumes=bookmarkService.getBookmarkPerfume(userId);
+        return bookmarkPerfumes;
+    }
+
+    //북마크한 향수와 유사한 향수 조회
+    @GetMapping("/bookmark/recommend/{userId}")
+    public List<BookmarkPerfumeDto> getSimilarPerfume(@PathVariable Long userId){
+        List<BookmarkPerfumeDto> similarPerfumeDtos=bookmarkService.getSimilarPerfume(userId);
+        return similarPerfumeDtos;
     }
 
 }
