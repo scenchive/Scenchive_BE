@@ -1,5 +1,6 @@
 package com.example.scenchive.domain.filter.repository;
 
+import com.example.scenchive.domain.info.repository.Perfumescent;
 import com.example.scenchive.domain.member.repository.perfumeMarked;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -31,5 +32,8 @@ public class Perfume {
 
     @OneToMany(mappedBy = "perfume")
     private List<perfumeMarked> perfumeMarkedList=new ArrayList<>();
+
+    @OneToMany(mappedBy = "perfume")
+    private List<Perfumescent> perfumescentList=new ArrayList<>();
 
 }

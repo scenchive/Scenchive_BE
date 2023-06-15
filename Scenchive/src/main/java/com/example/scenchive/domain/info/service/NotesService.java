@@ -1,6 +1,10 @@
 package com.example.scenchive.domain.info.service;
 
+import com.example.scenchive.domain.filter.repository.Perfume;
+import com.example.scenchive.domain.filter.repository.PerfumeRepository;
 import com.example.scenchive.domain.info.dto.NotesInfoResponse;
+import com.example.scenchive.domain.info.repository.Perfumenote;
+import com.example.scenchive.domain.info.repository.PerfumenoteRepository;
 import com.example.scenchive.domain.info.repository.Perfumescent;
 import com.example.scenchive.domain.info.repository.PerfumescentRepository;
 import jakarta.transaction.Transactional;
@@ -15,25 +19,33 @@ import java.util.stream.Collectors;
 @Transactional
 public class NotesService {
     private final PerfumescentRepository perfumescentRepository;
+    private final PerfumenoteRepository perfumenoteRepository;
+    private final PerfumeRepository perfumeRepository;
 
     @Autowired
-    public NotesService(PerfumescentRepository perfumescentRepository) {
+    public NotesService(PerfumescentRepository perfumescentRepository, PerfumenoteRepository perfumenoteRepository, PerfumeRepository perfumeRepository) {
         this.perfumescentRepository = perfumescentRepository;
+        this.perfumenoteRepository=perfumenoteRepository;
+        this.perfumeRepository=perfumeRepository;
     }
 
     // 탑노트 반환
     public List<String> getTopNotesByPerfumeId(Long perfumeId) {
-        List<Perfumescent> perfumeScents = perfumescentRepository.findByPerfumeIdAndNoteId(perfumeId, 1L);
+        Perfume perfume=perfumeRepository.findById(perfumeId).get();
+        Perfumenote perfumenote=perfumenoteRepository.findById(1L).get();
+        List<Perfumescent> perfumeScents = perfumescentRepository.findByPerfumeAndPerfumenote(perfume, perfumenote);
 //        System.out.println("top notes:" + perfumeScents);
         List<String> topNotes = perfumeScents.stream()
-                .map(Perfumescent::getScentKr)
-                .collect(Collectors.toList());
+                 .map(Perfumescent::getScentKr)
+                 .collect(Collectors.toList());
         return topNotes;
     }
 
     // 미들노트 반환
     public List<String> getMiddleNotesByPerfumeId(Long perfumeId) {
-        List<Perfumescent> perfumeScents = perfumescentRepository.findByPerfumeIdAndNoteId(perfumeId, 2L);
+        Perfume perfume=perfumeRepository.findById(perfumeId).get();
+        Perfumenote perfumenote=perfumenoteRepository.findById(2L).get();
+        List<Perfumescent> perfumeScents = perfumescentRepository.findByPerfumeAndPerfumenote(perfume, perfumenote);
 //        System.out.println("middle notes:" + perfumeScents);
         List<String> middleNotes = perfumeScents.stream()
                 .map(Perfumescent::getScentKr)
@@ -43,7 +55,9 @@ public class NotesService {
 
     // 베이스노트 반환
     public List<String> getBaseNotesByPerfumeId(Long perfumeId) {
-            List<Perfumescent> perfumeScents = perfumescentRepository.findByPerfumeIdAndNoteId(perfumeId, 3L);
+        Perfume perfume=perfumeRepository.findById(perfumeId).get();
+        Perfumenote perfumenote=perfumenoteRepository.findById(3L).get();
+            List<Perfumescent> perfumeScents = perfumescentRepository.findByPerfumeAndPerfumenote(perfume, perfumenote);
 //            System.out.println("base notes:" + perfumeScents);
             List<String> baseNotes = perfumeScents.stream()
                     .map(Perfumescent::getScentKr)
