@@ -30,7 +30,7 @@ public class SearchService {
 
     //검색화면 : 브랜드별 향수 리스트 조회
     public List<SearchPerfumeDto> brandPerfume(String name){
-        List<Brand> brands = brandRepository.findByBrandName(name);
+        List<Brand> brands = brandRepository.findByBrandNameContainingIgnoreCase(name);
         List<SearchPerfumeDto> searchPerfumeDtos = new ArrayList<>();
         for (Brand brand : brands) {
             List<Perfume> perfumes = perfumeRepository.findByBrandId(brand.getId());
@@ -46,7 +46,7 @@ public class SearchService {
     public List<SearchPerfumeDto> searchName(String name) {
         List<Perfume> perfumes = perfumeRepository.findByPerfumeNameContainingIgnoreCase(name);
         List<SearchPerfumeDto> searchPerfumeDtos = new ArrayList<>();
-        List<Brand> brands = brandRepository.findByBrandName(name);
+        List<Brand> brands = brandRepository.findByBrandNameContainingIgnoreCase(name);
 
         //브랜드 이름에서만 찾기
         if (perfumes.isEmpty()) {
