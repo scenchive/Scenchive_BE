@@ -1,12 +1,14 @@
 package com.example.scenchive.domain.filter.controller;
 
-import com.example.scenchive.domain.filter.dto.PTagDto;
-import com.example.scenchive.domain.filter.dto.PersonalDto;
-import com.example.scenchive.domain.filter.dto.SearchPerfumeDto;
+import com.example.scenchive.domain.filter.dto.*;
 import com.example.scenchive.domain.filter.service.PersonalService;
 import com.example.scenchive.domain.filter.service.SearchService;
+import com.example.scenchive.domain.info.dto.NotesInfoDto;
+import com.example.scenchive.domain.info.dto.NotesInfoResponse;
+import com.example.scenchive.domain.info.repository.Perfumenote;
+import com.example.scenchive.domain.info.service.NotesService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import com.example.scenchive.domain.filter.dto.PerfumeDto;
 import com.example.scenchive.domain.filter.service.PerfumeService;
 import com.example.scenchive.domain.filter.repository.PTag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +22,15 @@ public class PerfumeController {
     private PerfumeService perfumeService;
     private PersonalService personalService;
     private SearchService searchService;
+    private NotesService notesService;
 
     @Autowired
-    public PerfumeController(PerfumeService perfumeService, PersonalService personalService, SearchService searchService) {
+    public PerfumeController(PerfumeService perfumeService, PersonalService personalService,
+                             SearchService searchService, NotesService notesService) {
         this.perfumeService = perfumeService;
         this.personalService = personalService;
-        this.searchService=searchService;
+        this.searchService = searchService;
+        this.notesService = notesService;
     }
 
 
@@ -78,5 +83,36 @@ public class PerfumeController {
     public List<SearchPerfumeDto> brandPerfume(@RequestParam("name") String name){
         List<SearchPerfumeDto> brandDtos=searchService.brandPerfume(name);
         return brandDtos;
+    }
+
+//    @GetMapping("/notesinfo/{perfumeId}")
+//    public ResponseEntity<NotesInfoResponse> getNotesInfo(@PathVariable Long perfumeId) {
+//        NotesInfoDto notesInfo = perfumeService.getNotesInfo(perfumeId);
+//
+//        if (notesInfo != null) {
+//            NotesInfoResponse response = new NotesInfoResponse(perfumeId, notesInfo.getTop(), notesInfo.getMiddle(), notesInfo.getBase());
+//            return ResponseEntity.ok(response);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
+
+
+    @GetMapping("/notesinfo/{perfumeId}")
+    public ResponseEntity<NotesInfoResponse> getPerfumeNotesInfo(@PathVariable("perfumeId") Long perfumeId) {
+
+        NotesInfoResponse notesInfoResponse = new NotesInfoResponse();
+        notesInfoResponse.setPerfumeId(perfumeId);
+
+        List<String> topNotes = notesService.getTopNotesByPerfumeId(perfumeId);
+        notesInfoResponse.setTop(topNotes);
+
+        List<String> middleNotes = notesService.getMiddleNotesByPerfumeId(perfumeId);
+        notesInfoResponse.setMiddle(middleNotes);
+
+        List<String> baseNotes = notesService.getBaseNotesByPerfumeId(perfumeId);
+        notesInfoResponse.setBase(baseNotes);
+
+        return ResponseEntity.ok(notesInfoResponse);
     }
 }
