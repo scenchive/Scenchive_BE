@@ -1,8 +1,13 @@
 package com.example.scenchive.domain.filter.service;
 
+import com.example.scenchive.domain.info.dto.NotesInfoDto;
 import com.example.scenchive.domain.filter.dto.PTagDto;
 import com.example.scenchive.domain.filter.dto.PerfumeDto;
 import com.example.scenchive.domain.filter.repository.*;
+import com.example.scenchive.domain.info.repository.Perfumenote;
+import com.example.scenchive.domain.info.repository.PerfumenoteRepository;
+import com.example.scenchive.domain.info.repository.Perfumescent;
+import com.example.scenchive.domain.info.repository.PerfumescentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,14 +21,20 @@ public class PerfumeService {
     private final PerfumeRepository perfumeRepository;
     private final BrandRepository brandRepository;
     private final PTagRepository pTagRepository;
+    private PerfumescentRepository perfumescentRespository;
+    private PerfumenoteRepository perfumenoteRepository;
 
     @Autowired
-    public PerfumeService(PerfumeTagRepository perfumeTagRepository, PerfumeRepository perfumeRepository, BrandRepository brandRepository, PTagRepository pTagRepository) {
+    public PerfumeService(PerfumeTagRepository perfumeTagRepository, PerfumeRepository perfumeRepository,
+                          BrandRepository brandRepository, PTagRepository pTagRepository,
+                          PerfumescentRepository perfumescentRepository, PerfumenoteRepository perfumenoteRepository) {
 
         this.perfumeTagRepository = perfumeTagRepository;
         this.perfumeRepository = perfumeRepository;
         this.brandRepository = brandRepository;
-        this.pTagRepository=pTagRepository;
+        this.pTagRepository = pTagRepository;
+        this.perfumescentRespository = perfumescentRepository;
+        this.perfumenoteRepository = perfumenoteRepository;
     }
 
     public List<PerfumeDto> getPerfumesByKeyword(List<PTag> keywordIds) {
