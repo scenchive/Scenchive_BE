@@ -22,6 +22,13 @@ public class ProfileController {
         return utagDtos;
     }
 
+    //향수 프로필 수정하기 클릭 시 키워드 조회
+//    @GetMapping("/allkeyword/{userId}")
+//    public List<List> profileGetAllTags(@PathVariable Long userId){
+//        List<List> utagDtos=profileService.profileGetAllTags(userId);
+//        return utagDtos;
+//    }
+
     //향수 프로필 유저 키워드 저장
     @PostMapping("/keyword/{userId}")
     public String profileSave(@PathVariable Long userId, @RequestBody UtagDto utagDto){

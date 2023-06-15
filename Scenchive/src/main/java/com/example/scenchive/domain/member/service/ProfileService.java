@@ -45,6 +45,39 @@ public class ProfileService {
         return utagDtos;
     }
 
+    //향수 프로필 수정하기 클릭 시 키워드 조회
+//    public List<List> profileGetAllTags(Long userId){
+//        List<UtagDto> userUtagDtos = new ArrayList<>();
+//        List<UtagDto> allUtagDtos = new ArrayList<>();
+//        List<List> utagDtos=new ArrayList<>();
+//
+//        Member member=memberRepository.findById(userId).get();
+//        List<UserTag> userTags = userTagRepository.findByMember(member);
+//        for(UserTag userTag : userTags){
+//            Long id=userTag.getUtag().getId();
+//            String utag=userTag.getUtag().getUtag();
+//            String utag_kr=userTag.getUtag().getUtag_kr();
+//            int utagtype_id=userTag.getUtag().getUtagtype().getId();
+//
+//            UtagDto utagDto=new UtagDto(id, utag, utag_kr, utagtype_id);
+//            userUtagDtos.add(utagDto);
+//        }
+//
+//        utagDtos.add(userUtagDtos);
+//
+//        for (long i = 1; i <= 25; i++) {
+//            UtagDto utagDto = new UtagDto(i,
+//                    utagRepository.findById(i).get().getUtag(),
+//                    utagRepository.findById(i).get().getUtag_kr(),
+//                    utagRepository.findById(i).get().getUtagtype().getId());
+//            allUtagDtos.add(utagDto);
+//        }
+//
+//        utagDtos.add(allUtagDtos);
+//
+//        return utagDtos;
+//    }
+
     //향수 프로필 유저 키워드 저장
     @Transactional
     public String profileSave(Long userId, UtagDto utagDto){
