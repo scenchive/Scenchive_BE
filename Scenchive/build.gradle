@@ -34,6 +34,8 @@ dependencies {
     implementation group: 'org.json', name: 'json', version: '20230227'
     // Spring Security 추가
 //    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // Jsoup
+    implementation 'org.jsoup:jsoup:1.15.4'
 
     implementation group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
 }

@@ -2,11 +2,14 @@ package com.example.scenchive.domain.shopping.dto;
 
 import lombok.Getter;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
+
 import java.lang.Comparable;
 
 @Getter
 public class ItemDto implements Comparable<ItemDto> {
-    private String title;
+    private String cleanedTitle;
     private String link;
     private String image;
     private int lprice;
@@ -14,7 +17,8 @@ public class ItemDto implements Comparable<ItemDto> {
     private String mallName;
 
     public ItemDto(JSONObject itemJson) {
-        this.title = itemJson.getString("title");
+        String originalTitle = itemJson.getString("title");
+        this.cleanedTitle = Jsoup.clean(originalTitle, Safelist.none());
         this.link = itemJson.getString("link");
         this.image = itemJson.getString("image");
         this.lprice = itemJson.getInt("lprice");
