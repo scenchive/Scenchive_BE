@@ -1,5 +1,7 @@
 package com.example.scenchive.domain.info.service;
 
+import com.example.scenchive.domain.filter.repository.Brand;
+import com.example.scenchive.domain.filter.repository.BrandRepository;
 import com.example.scenchive.domain.filter.repository.Perfume;
 import com.example.scenchive.domain.filter.repository.PerfumeRepository;
 import com.example.scenchive.domain.info.dto.NotesInfoResponse;
@@ -21,12 +23,29 @@ public class NotesService {
     private final PerfumescentRepository perfumescentRepository;
     private final PerfumenoteRepository perfumenoteRepository;
     private final PerfumeRepository perfumeRepository;
+    private final BrandRepository brandRepository;
 
     @Autowired
-    public NotesService(PerfumescentRepository perfumescentRepository, PerfumenoteRepository perfumenoteRepository, PerfumeRepository perfumeRepository) {
+    public NotesService(PerfumescentRepository perfumescentRepository, PerfumenoteRepository perfumenoteRepository, PerfumeRepository perfumeRepository, BrandRepository brandRepository) {
         this.perfumescentRepository = perfumescentRepository;
         this.perfumenoteRepository=perfumenoteRepository;
         this.perfumeRepository=perfumeRepository;
+        this.brandRepository = brandRepository;
+    }
+
+    // 향수 이름
+    public String getPerfumeNameByPerfumeId(Long perfumeId) {
+        Perfume perfume = perfumeRepository.findById(perfumeId).get();
+        String perfumeName = perfume.getPerfumeName();
+        return perfumeName;
+    }
+
+    public String getBrandNameByPerfumeId(Long perfumeId) {
+        Perfume perfume = perfumeRepository.findById(perfumeId).get();
+        Long brandId = perfume.getBrandId();
+        Brand brand = brandRepository.findById(brandId).get();
+        String brandName = brand.getBrandName();
+        return brandName;
     }
 
     // 탑노트 반환
