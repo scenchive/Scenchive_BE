@@ -12,12 +12,17 @@ import java.util.List;
 @NoArgsConstructor
 public class NotesInfoResponse {
     private Long perfumeId;
+    private String perfumeName;
+    private String brandName;
     private List<String> top;
     private List<String> middle;
     private List<String> base;
 
-    public NotesInfoResponse(Long perfumeId, List<String> top, List<String> middle, List<String> base) {
+    public NotesInfoResponse(Long perfumeId, String perfumeName, String brandName,
+                             List<String> top, List<String> middle, List<String> base) {
         this.perfumeId = perfumeId;
+        this.perfumeName = perfumeName;
+        this.brandName = brandName;
         this.top = new ArrayList<>(top);
         this.middle = new ArrayList<>(middle);
         this.base = new ArrayList<>(base);
