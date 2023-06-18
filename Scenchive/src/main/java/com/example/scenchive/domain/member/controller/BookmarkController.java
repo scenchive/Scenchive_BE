@@ -21,10 +21,16 @@ public class BookmarkController {
         return bookmarkService.bookmarkSave(userId, perfumeId);
     }
 
+    //향수 북마크 유무 확인
+    @GetMapping("/checkmarked")
+    public String checkMarked(@RequestParam("userId") Long userId, @RequestParam("perfumeId") Long perfumeId){
+        return bookmarkService.checkMarked(userId, perfumeId);
+    }
+
     //향수 북마크 삭제
     @DeleteMapping("/bookmark")
-    public void bookmarkDelete(@RequestParam("userId") Long userId, @RequestParam("perfumeId") Long perfumeId){
-        bookmarkService.bookmarkDelete(userId, perfumeId);
+    public String bookmarkDelete(@RequestParam("userId") Long userId, @RequestParam("perfumeId") Long perfumeId){
+        return bookmarkService.bookmarkDelete(userId, perfumeId);
     }
 
     //북마크한 향수 조회
