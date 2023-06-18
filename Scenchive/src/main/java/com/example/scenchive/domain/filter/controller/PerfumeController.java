@@ -104,6 +104,12 @@ public class PerfumeController {
         NotesInfoResponse notesInfoResponse = new NotesInfoResponse();
         notesInfoResponse.setPerfumeId(perfumeId);
 
+        String perfumeName = notesService.getPerfumeNameByPerfumeId(perfumeId);
+        notesInfoResponse.setPerfumeName(perfumeName);
+
+        String brandName = notesService.getBrandNameByPerfumeId(perfumeId);
+        notesInfoResponse.setBrandName(brandName);
+
         List<String> topNotes = notesService.getTopNotesByPerfumeId(perfumeId);
         notesInfoResponse.setTop(topNotes);
 
