@@ -3,14 +3,14 @@ package com.example.scenchive.domain.filter.service;
 import com.example.scenchive.domain.filter.dto.PerfumeDto;
 import com.example.scenchive.domain.filter.dto.PersonalDto;
 import com.example.scenchive.domain.filter.repository.*;
+import com.example.scenchive.domain.filter.utils.DeduplicationUtils;
 import com.example.scenchive.domain.member.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Transactional
 @Service
@@ -76,7 +76,6 @@ public class PersonalService {
             PTag pTag = pTagRepository.findById(utagId).get(); //유저태그에 있는 세부코드 아이디와 같은 향수세부태그 가져오기
             List<PerfumeTag> perfumeTags = perfumeTagRepository.findByPtag(pTag); //향수세부태그를 가진 향수리스트 가져오기
 
-
             for (PerfumeTag perfumeTag : perfumeTags) { //향수세부태그를 가진 향수리스트에 있는 향수 하나씩 꺼내기
                 for (PerfumeTag seasonPerfumeTag : seasonPerfumeTags) { //계절코드를 가진 향수리스트에 있는 향수 하나씩 꺼내기
                     if (perfumeTag.getPerfumeId() == seasonPerfumeTag.getPerfumeId()) { //두 향수의 아이디가 같은 경우 향수 추가
@@ -84,12 +83,18 @@ public class PersonalService {
                         Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
                         String brandName = (brand != null) ? brand.getBrandName() : null;
                         PersonalDto personalDto = new PersonalDto(perfume.getId(), perfume.getPerfumeName(), brandName, keywordIds);
-                        perfumes.add(personalDto);
+                        if(!perfumes.contains(personalDto)){
+                            perfumes.add(personalDto);
+                        }
                     }
                 }
             }
         }
+
+        Collections.sort(keywordIds);
+
         // 향수 DTO 리스트 반환
+        perfumes = DeduplicationUtils.deduplication(perfumes, PersonalDto::getPerfumeName);
         return perfumes;
     }
 }
