@@ -87,9 +87,10 @@ public class BookmarkService {
 
         for (perfumeMarked perfumemarked : perfumeMarkedList){
             Perfume perfume=perfumemarked.getPerfume();
+            Long perfume_id= perfume.getId();
             String perfume_name=perfume.getPerfumeName();
             String brand_name=brandRepository.findById(perfume.getBrandId()).get().getBrandName();
-            BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume_name, brand_name);
+            BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume_id, perfume_name, brand_name);
             bookmarkPerfumeDtos.add(bookmarkPerfumeDto);
         }
         return bookmarkPerfumeDtos;
@@ -128,9 +129,10 @@ public class BookmarkService {
                 if(bookmarkPerfumeIds.contains(perfumeId)==false){ //사용자가 북마크한 향수 목록에 없는 향수인 경우(북마크한 향수 추천 방지)
                     Perfume perfume=perfumeRepository.findById(perfumeId).get();
 
+                    Long perfume_id=perfume.getId();
                     String perfume_name=perfume.getPerfumeName();
                     String brand_name=brandRepository.findById(perfume.getBrandId()).get().getBrandName();
-                    BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume_name, brand_name);
+                    BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume_id, perfume_name, brand_name);
 
                     if(similarPerfumeDtos.contains(bookmarkPerfumeDto)==false){ // 향수 추천 목록에 안 들어간 향수인 경우(중복 저장 방지)
                         similarPerfumeDtos.add(bookmarkPerfumeDto);
