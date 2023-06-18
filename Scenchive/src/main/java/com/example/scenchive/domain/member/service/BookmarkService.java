@@ -28,13 +28,28 @@ public class BookmarkService {
 
 
     @Autowired
-    public BookmarkService(perfumeMarkedRepository perfumemarkedRepository, MemberRepository memberRepository, PerfumeRepository perfumeRepository, BrandRepository brandRepository, PerfumeTagRepository perfumeTagRepository, PTagRepository ptagRepository){
+    public BookmarkService(perfumeMarkedRepository perfumemarkedRepository, MemberRepository memberRepository, PerfumeRepository perfumeRepository,
+                           BrandRepository brandRepository, PerfumeTagRepository perfumeTagRepository, PTagRepository ptagRepository){
         this.perfumemarkedRepository=perfumemarkedRepository;
         this.memberRepository=memberRepository;
         this.perfumeRepository=perfumeRepository;
         this.brandRepository=brandRepository;
         this.perfumeTagRepository=perfumeTagRepository;
         this.ptagRepository=ptagRepository;
+    }
+
+    //북마크한 향수인지 확인
+    @Transactional
+    public String checkMarked(Long userId, Long perfumeId){
+        Member member=memberRepository.findById(userId).get();
+        List<perfumeMarked> perfumeMarkedList = perfumemarkedRepository.findByMember(member);
+        for (perfumeMarked perfumemarked : perfumeMarkedList){
+            Perfume userPerfume=perfumemarked.getPerfume();
+            if (userPerfume.getId().equals(perfumeId)){
+                return "이미 북마크한 향수입니다.";
+            }
+        }
+        return "북마크한 향수가 아닙니다.";
     }
 
     @Transactional
@@ -54,11 +69,12 @@ public class BookmarkService {
     }
 
     @Transactional
-    public void bookmarkDelete(Long userId, Long perfumeId){
+    public String bookmarkDelete(Long userId, Long perfumeId){
         Member member=memberRepository.findById(userId).get();
         Perfume perfume=perfumeRepository.findById(perfumeId).get();
         perfumeMarked perfumemarked=perfumemarkedRepository.findByMemberAndPerfume(member, perfume).get();
         perfumemarkedRepository.delete(perfumemarked);
+        return "북마크 해제되었습니다.";
     }
 
 
