@@ -29,6 +29,12 @@ public class ProfileController {
 //        return utagDtos;
 //    }
 
+    //향수 프로필 유저 키워드 수정 (저장 및 삭제)
+    @PutMapping("/keyword/{userId}")
+    public String profileKeywordEdit(@PathVariable Long userId, @RequestBody List<UtagDto> utagDtoList){
+        return profileService.profileKeywordEdit(userId, utagDtoList);
+    }
+
     //향수 프로필 유저 키워드 저장
     @PostMapping("/keyword/{userId}")
     public String profileSave(@PathVariable Long userId, @RequestBody UtagDto utagDto){

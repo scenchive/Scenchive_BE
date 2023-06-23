@@ -13,6 +13,7 @@ public interface UserTagRepository extends JpaRepository<UserTag, Long> {
     //user_id로 utag_id 반환받기
     List<UserTag> findByMember(Member member);
 
+
     Optional<UserTag> findByMemberAndUtag(Member member, Utag utag);
 
     void deleteByMemberAndUtag(Member member, Utag utag);
