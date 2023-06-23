@@ -22,6 +22,12 @@ public class ProfileController {
         return utagDtos;
     }
 
+    //향수 프로필 유저 키워드 수정 (저장 및 삭제)
+    @PutMapping("/keyword/{userId}")
+    public String profileKeywordEdit(@PathVariable Long userId, @RequestBody List<UtagDto> utagDtoList){
+        return profileService.profileKeywordEdit(userId, utagDtoList);
+    }
+
     //향수 프로필 수정하기 클릭 시 키워드 조회
 //    @GetMapping("/allkeyword/{userId}")
 //    public List<List> profileGetAllTags(@PathVariable Long userId){
@@ -29,21 +35,15 @@ public class ProfileController {
 //        return utagDtos;
 //    }
 
-    //향수 프로필 유저 키워드 수정 (저장 및 삭제)
-    @PutMapping("/keyword/{userId}")
-    public String profileKeywordEdit(@PathVariable Long userId, @RequestBody List<UtagDto> utagDtoList){
-        return profileService.profileKeywordEdit(userId, utagDtoList);
-    }
-
-    //향수 프로필 유저 키워드 저장
-    @PostMapping("/keyword/{userId}")
-    public String profileSave(@PathVariable Long userId, @RequestBody UtagDto utagDto){
-        return profileService.profileSave(userId, utagDto);
-    }
-
-    //향수 프로필 유저 키워드 삭제
-    @DeleteMapping("/keyword/{userId}")
-    public String profileDelete(@PathVariable Long userId, @RequestBody UtagDto utagDto){
-        return profileService.profileDelete(userId, utagDto);
-    }
+//    //향수 프로필 유저 키워드 저장
+//    @PostMapping("/keyword/{userId}")
+//    public String profileSave(@PathVariable Long userId, @RequestBody UtagDto utagDto){
+//        return profileService.profileSave(userId, utagDto);
+//    }
+//
+//    //향수 프로필 유저 키워드 삭제
+//    @DeleteMapping("/keyword/{userId}")
+//    public String profileDelete(@PathVariable Long userId, @RequestBody UtagDto utagDto){
+//        return profileService.profileDelete(userId, utagDto);
+//    }
 }
