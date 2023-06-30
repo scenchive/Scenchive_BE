@@ -5,6 +5,7 @@ import com.example.scenchive.domain.filter.repository.Brand;
 import com.example.scenchive.domain.filter.repository.BrandRepository;
 import com.example.scenchive.domain.filter.repository.Perfume;
 import com.example.scenchive.domain.filter.repository.PerfumeRepository;
+import com.example.scenchive.domain.filter.utils.DeduplicationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class SearchService {
         for (Brand brand : brands) {
             List<Perfume> perfumes = perfumeRepository.findByBrandId(brand.getId());
             for (Perfume perfume : perfumes) {
-                SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getPerfumeName(), brand.getBrandName());
+                SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brand.getBrandName());
                 searchPerfumeDtos.add(searchPerfumeDto);
             }
         }
@@ -54,7 +55,7 @@ public class SearchService {
                 for (Brand brand : brands) {
                     perfumes = perfumeRepository.findByBrandId(brand.getId());
                     for (Perfume perfume : perfumes) {
-                        SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getPerfumeName(), brand.getBrandName());
+                        SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brand.getBrandName());
                         searchPerfumeDtos.add(searchPerfumeDto);
                     }
                 }
@@ -68,7 +69,7 @@ public class SearchService {
             for (Perfume perfume : perfumes) {
                 Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
                 if (brand != null) {
-                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getPerfumeName(), brand.getBrandName());
+                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brand.getBrandName());
                     searchPerfumeDtos.add(searchPerfumeDto);
                 } else {
                     throw new NullPointerException("검색하신 향수나 브랜드가 없습니다.");
@@ -81,7 +82,7 @@ public class SearchService {
             for (Perfume perfume : perfumes) {
                 Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
                 if (brand != null) {
-                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getPerfumeName(), brand.getBrandName());
+                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brand.getBrandName());
                     searchPerfumeDtos.add(searchPerfumeDto);
                 } else {
                     throw new NullPointerException("검색하신 향수나 브랜드가 없습니다.");
@@ -91,11 +92,12 @@ public class SearchService {
             for (Brand brand : brands) {
                 perfumes = perfumeRepository.findByBrandId(brand.getId());
                 for (Perfume perfume : perfumes) {
-                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getPerfumeName(), brand.getBrandName());
+                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brand.getBrandName());
                     searchPerfumeDtos.add(searchPerfumeDto);
                 }
             }
         }
+        searchPerfumeDtos= DeduplicationUtils.deduplication(searchPerfumeDtos, SearchPerfumeDto::getPerfumeName);
         return searchPerfumeDtos;
     }
 }
