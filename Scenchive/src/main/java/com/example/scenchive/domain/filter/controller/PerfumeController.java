@@ -7,6 +7,8 @@ import com.example.scenchive.domain.info.dto.NotesInfoDto;
 import com.example.scenchive.domain.info.dto.NotesInfoResponse;
 import com.example.scenchive.domain.info.repository.Perfumenote;
 import com.example.scenchive.domain.info.service.NotesService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import com.example.scenchive.domain.filter.service.PerfumeService;
@@ -15,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @CrossOrigin(origins="http://10.0.2.15:8081")
@@ -37,9 +38,10 @@ public class PerfumeController {
 
 
     @GetMapping("/perfumes/recommend")
-    public List<PerfumeDto> recommendPerfumes(@RequestParam("keywordId") List<PTag> keywordIds) {
+    public List<PerfumeDto> recommendPerfumes(@RequestParam("keywordId") List<PTag> keywordIds,
+                                              @PageableDefault(size = 10) Pageable pageable) { // 향수 10개씩 반환
         // 유저가 선택한 키워드를 받아와 해당 키워드에 대한 향수 목록 조회
-        List<PerfumeDto> recommendedPerfumes = perfumeService.getPerfumesByKeyword(keywordIds);
+        List<PerfumeDto> recommendedPerfumes = perfumeService.getPerfumesByKeyword(keywordIds, pageable);
 
         // 조회된 향수 목록 반환
         return recommendedPerfumes;
