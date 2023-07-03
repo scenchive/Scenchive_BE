@@ -10,6 +10,7 @@ import com.example.scenchive.domain.info.repository.Perfumescent;
 import com.example.scenchive.domain.info.repository.PerfumescentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,7 +22,7 @@ public class PerfumeService {
     private final PerfumeRepository perfumeRepository;
     private final BrandRepository brandRepository;
     private final PTagRepository pTagRepository;
-    private PerfumescentRepository perfumescentRespository;
+    private PerfumescentRepository perfumescentRepository;
     private PerfumenoteRepository perfumenoteRepository;
 
     @Autowired
@@ -33,11 +34,12 @@ public class PerfumeService {
         this.perfumeRepository = perfumeRepository;
         this.brandRepository = brandRepository;
         this.pTagRepository = pTagRepository;
-        this.perfumescentRespository = perfumescentRepository;
+        this.perfumescentRepository = perfumescentRepository;
         this.perfumenoteRepository = perfumenoteRepository;
     }
 
-    public List<PerfumeDto> getPerfumesByKeyword(List<PTag> keywordIds) {
+    // 키워드 필터링 결과로 나온 향수 리스트 조회
+    public List<PerfumeDto> getPerfumesByKeyword(List<PTag> keywordIds, Pageable pageable) {
         // 주어진 키워드 id들로 PerfumeTag 리스트 조회
         List<PerfumeTag> perfumeTags = perfumeTagRepository.findByPtagIn(keywordIds);
         // perfume_id 오름차순으로 조회
@@ -50,7 +52,12 @@ public class PerfumeService {
 
         List<PerfumeDto> perfumes = new ArrayList<>();
 
-        for (Perfume perfume : uniquePerfumes) {
+        int startIndex = (int) pageable.getOffset();
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), uniquePerfumes.size());
+
+        List<Perfume> paginatedPerfumes = new ArrayList<>(uniquePerfumes).subList(startIndex, endIndex);
+
+        for (Perfume perfume : paginatedPerfumes) {
             List<Long> perfumeKeywordIds = new ArrayList<>();
             for (PerfumeTag perfumeTag : perfumeTags) {
                 if (perfumeTag.getPerfume().equals(perfume)) {
@@ -66,6 +73,21 @@ public class PerfumeService {
 
         // 향수 DTO 리스트 반환
         return perfumes;
+    }
+
+    // 키워드 필터링 결과로 나온 전체 향수 개수 구하기
+    public long getTotalPerfumeCount(List<PTag> keywordIds) {
+        List<PerfumeTag> perfumeTags = perfumeTagRepository.findByPtagIn(keywordIds);
+        System.out.println("perfumeTags : " + perfumeTags);
+        Set<Perfume> uniquePerfumes = new HashSet<>();
+        System.out.println("uniquePerfumes : " + uniquePerfumes);
+
+        for (PerfumeTag perfumeTag : perfumeTags) {
+            Perfume perfume = perfumeTag.getPerfume();
+            uniquePerfumes.add(perfume);
+        }
+        System.out.println("size of uniquePerfumes : " + uniquePerfumes.size());
+        return uniquePerfumes.size();
     }
 
     //필터 추천 키워드 조회
