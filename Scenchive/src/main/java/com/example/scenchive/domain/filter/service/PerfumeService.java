@@ -38,6 +38,7 @@ public class PerfumeService {
         this.perfumenoteRepository = perfumenoteRepository;
     }
 
+    // 키워드 필터링 결과로 나온 향수 리스트 조회
     public List<PerfumeDto> getPerfumesByKeyword(List<PTag> keywordIds, Pageable pageable) {
         // 주어진 키워드 id들로 PerfumeTag 리스트 조회
         List<PerfumeTag> perfumeTags = perfumeTagRepository.findByPtagIn(keywordIds);
@@ -72,6 +73,21 @@ public class PerfumeService {
 
         // 향수 DTO 리스트 반환
         return perfumes;
+    }
+
+    // 키워드 필터링 결과로 나온 전체 향수 개수 구하기
+    public long getTotalPerfumeCount(List<PTag> keywordIds) {
+        List<PerfumeTag> perfumeTags = perfumeTagRepository.findByPtagIn(keywordIds);
+        System.out.println("perfumeTags : " + perfumeTags);
+        Set<Perfume> uniquePerfumes = new HashSet<>();
+        System.out.println("uniquePerfumes : " + uniquePerfumes);
+
+        for (PerfumeTag perfumeTag : perfumeTags) {
+            Perfume perfume = perfumeTag.getPerfume();
+            uniquePerfumes.add(perfume);
+        }
+        System.out.println("size of uniquePerfumes : " + uniquePerfumes.size());
+        return uniquePerfumes.size();
     }
 
     //필터 추천 키워드 조회
