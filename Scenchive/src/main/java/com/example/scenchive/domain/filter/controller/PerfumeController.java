@@ -42,7 +42,7 @@ public class PerfumeController {
         // 유저가 선택한 키워드를 받아와 해당 키워드에 대한 향수 목록 조회
         List<PerfumeDto> recommendedPerfumes = perfumeService.getPerfumesByKeyword(keywordIds, pageable);
         System.out.println("recommendedPerfumes : " + recommendedPerfumes);
-        long totalPerfumeCount = perfumeService.getTotalPerfumeCount(keywordIds);
+        int totalPerfumeCount = perfumeService.getTotalPerfumeCount(keywordIds);
         System.out.println("totalPerfumeCount : " + totalPerfumeCount);
 
         PerfumeResponseDto responseDto = new PerfumeResponseDto(recommendedPerfumes, totalPerfumeCount);
