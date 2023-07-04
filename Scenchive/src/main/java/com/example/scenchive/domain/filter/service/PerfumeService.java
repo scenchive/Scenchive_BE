@@ -1,14 +1,11 @@
 package com.example.scenchive.domain.filter.service;
 
-import com.example.scenchive.domain.info.dto.NotesInfoDto;
 import com.example.scenchive.domain.filter.dto.PTagDto;
 import com.example.scenchive.domain.filter.dto.PerfumeDto;
 import com.example.scenchive.domain.filter.repository.*;
-import com.example.scenchive.domain.info.repository.Perfumenote;
 import com.example.scenchive.domain.info.repository.PerfumenoteRepository;
-import com.example.scenchive.domain.info.repository.Perfumescent;
 import com.example.scenchive.domain.info.repository.PerfumescentRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,6 +35,8 @@ public class PerfumeService {
         this.perfumenoteRepository = perfumenoteRepository;
     }
 
+
+    @Transactional(readOnly = true)
     // 키워드 필터링 결과로 나온 향수 리스트 조회
     public List<PerfumeDto> getPerfumesByKeyword(List<PTag> keywordIds, Pageable pageable) {
         // 주어진 키워드 id들로 PerfumeTag 리스트 조회
@@ -75,8 +74,9 @@ public class PerfumeService {
         return perfumes;
     }
 
+    @Transactional(readOnly = true)
     // 키워드 필터링 결과로 나온 전체 향수 개수 구하기
-    public long getTotalPerfumeCount(List<PTag> keywordIds) {
+    public int getTotalPerfumeCount(List<PTag> keywordIds) {
         List<PerfumeTag> perfumeTags = perfumeTagRepository.findByPtagIn(keywordIds);
         System.out.println("perfumeTags : " + perfumeTags);
         Set<Perfume> uniquePerfumes = new HashSet<>();
