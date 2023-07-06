@@ -45,7 +45,7 @@ public class PerfumeController {
         long totalPerfumeCount = perfumeService.getTotalPerfumeCount(keywordIds);
         System.out.println("totalPerfumeCount : " + totalPerfumeCount);
 
-        PerfumeResponseDto responseDto = new PerfumeResponseDto(recommendedPerfumes, totalPerfumeCount);
+        PerfumeResponseDto responseDto = new PerfumeResponseDto(totalPerfumeCount, recommendedPerfumes);
         return responseDto;
 
         // 조회된 향수 목록 반환
@@ -93,19 +93,8 @@ public class PerfumeController {
         return brandDtos;
     }
 
-//    @GetMapping("/notesinfo/{perfumeId}")
-//    public ResponseEntity<NotesInfoResponse> getNotesInfo(@PathVariable Long perfumeId) {
-//        NotesInfoDto notesInfo = perfumeService.getNotesInfo(perfumeId);
-//
-//        if (notesInfo != null) {
-//            NotesInfoResponse response = new NotesInfoResponse(perfumeId, notesInfo.getTop(), notesInfo.getMiddle(), notesInfo.getBase());
-//            return ResponseEntity.ok(response);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
 
-
+    // 개별 향수 노트 정보 조회
     @GetMapping("/notesinfo/{perfumeId}")
     public ResponseEntity<NotesInfoResponse> getPerfumeNotesInfo(@PathVariable("perfumeId") Long perfumeId) {
 
