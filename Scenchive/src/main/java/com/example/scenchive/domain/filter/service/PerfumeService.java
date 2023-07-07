@@ -35,7 +35,6 @@ public class PerfumeService {
         this.perfumenoteRepository = perfumenoteRepository;
     }
 
-
     @Transactional(readOnly = true)
     // 키워드 필터링 결과로 나온 향수 리스트 조회
     public List<PerfumeDto> getPerfumesByKeyword(List<PTag> keywordIds, Pageable pageable) {
@@ -78,15 +77,12 @@ public class PerfumeService {
     // 키워드 필터링 결과로 나온 전체 향수 개수 구하기
     public int getTotalPerfumeCount(List<PTag> keywordIds) {
         List<PerfumeTag> perfumeTags = perfumeTagRepository.findByPtagIn(keywordIds);
-        System.out.println("perfumeTags : " + perfumeTags);
         Set<Perfume> uniquePerfumes = new HashSet<>();
-        System.out.println("uniquePerfumes : " + uniquePerfumes);
 
         for (PerfumeTag perfumeTag : perfumeTags) {
             Perfume perfume = perfumeTag.getPerfume();
             uniquePerfumes.add(perfume);
         }
-        System.out.println("size of uniquePerfumes : " + uniquePerfumes.size());
         return uniquePerfumes.size();
     }
 
