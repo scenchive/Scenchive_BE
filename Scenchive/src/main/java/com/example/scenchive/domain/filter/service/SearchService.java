@@ -41,13 +41,13 @@ public class SearchService {
             // 해당 브랜드 id를 갖는 향수 리스트 구하기
             List<Perfume> perfumes = perfumeRepository.findByBrandId(brand.getId());
             for (Perfume perfume : perfumes) {
-                SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brand.getBrandName());
+                SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brand.getId(), brand.getBrandName());
                 searchPerfumeDtos.add(searchPerfumeDto);
             }
         }
 //        return searchPerfumeDtos;
 
-        List<PerfumeDto> perfumes = new ArrayList<>();
+        List<SearchPerfumeDto> perfumes = new ArrayList<>();
 
         int startIndex = (int) pageable.getOffset();
         int endIndex = Math.min(startIndex + pageable.getPageSize(), searchPerfumeDtos.size());
@@ -55,19 +55,23 @@ public class SearchService {
         List<SearchPerfumeDto> paginatedPerfumes = new ArrayList<>(searchPerfumeDtos).subList(startIndex, endIndex);
 
         for (SearchPerfumeDto perfume : paginatedPerfumes) {
-
+            Optional<Brand> brand = brandRepository.findById(perfume.getBrandId());
+            String brandName = brand.get().getBrandName();
+            SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getPerfumeId(), perfume.getPerfumeName(), perfume.getBrandId(), brandName);
+            perfumes.add(searchPerfumeDto);
         }
+
+        return perfumes;
     }
 
     // 브랜드별 향수 전체 개수 조회
     public long getTotalBrandPerfumeCount(String name, Pageable pageable){
-
         List<Brand> brands = brandRepository.findByBrandNameContainingIgnoreCase(name);
         List<SearchPerfumeDto> searchPerfumeDtos = new ArrayList<>();
         for (Brand brand : brands) {
             List<Perfume> perfumes = perfumeRepository.findByBrandId(brand.getId());
             for (Perfume perfume : perfumes) {
-                SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brand.getBrandName());
+                SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brand.getId(), brand.getBrandName());
                 searchPerfumeDtos.add(searchPerfumeDto);
             }
         }
@@ -87,7 +91,7 @@ public class SearchService {
                 for (Brand brand : brands) {
                     perfumes = perfumeRepository.findByBrandId(brand.getId());
                     for (Perfume perfume : perfumes) {
-                        SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brand.getBrandName());
+                        SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brand.getId(), brand.getBrandName());
                         searchPerfumeDtos.add(searchPerfumeDto);
                     }
                 }
@@ -101,7 +105,7 @@ public class SearchService {
             for (Perfume perfume : perfumes) {
                 Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
                 if (brand != null) {
-                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brand.getBrandName());
+                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(),  brand.getId(), brand.getBrandName());
                     searchPerfumeDtos.add(searchPerfumeDto);
                 } else {
                     throw new NullPointerException("검색하신 향수나 브랜드가 없습니다.");
@@ -114,7 +118,7 @@ public class SearchService {
             for (Perfume perfume : perfumes) {
                 Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
                 if (brand != null) {
-                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brand.getBrandName());
+                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(),  brand.getId(), brand.getBrandName());
                     searchPerfumeDtos.add(searchPerfumeDto);
                 } else {
                     throw new NullPointerException("검색하신 향수나 브랜드가 없습니다.");
@@ -124,7 +128,7 @@ public class SearchService {
             for (Brand brand : brands) {
                 perfumes = perfumeRepository.findByBrandId(brand.getId());
                 for (Perfume perfume : perfumes) {
-                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brand.getBrandName());
+                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(),  brand.getId(), brand.getBrandName());
                     searchPerfumeDtos.add(searchPerfumeDto);
                 }
             }
