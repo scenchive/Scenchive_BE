@@ -7,23 +7,48 @@ import com.example.scenchive.domain.board.dto.BoardListResponseDto;
 import com.example.scenchive.domain.board.dto.BoardSaveRequestDto;
 import com.example.scenchive.domain.board.dto.BoardUpdateRequestDto;
 import com.example.scenchive.domain.board.repository.boardType;
+import com.example.scenchive.domain.comment.repository.CommentRepository;
+import com.example.scenchive.domain.member.repository.Member;
+import com.example.scenchive.domain.member.repository.MemberRepository;
+import com.example.scenchive.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 //
-@RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
-    //게시물 등록 메소드
+    @Autowired
+    public BoardService(BoardRepository boardRepository, MemberRepository memberRepository, MemberService memberService) {
+        this.boardRepository = boardRepository;
+        this.memberRepository=memberRepository;
+        this.memberService=memberService;
+    }
+
+    //게시물 등록 메소드 : 토큰과 BoardSaveRequestDto(게시물 제목, 내용, 게시판 카테고리) 넘겨주기
     @Transactional
     public Long save(BoardSaveRequestDto requestDto) {
-        return boardRepository.save(requestDto.toEntity()).getId();
+        Member member=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get();
+        String title= requestDto.getTitle();
+        String body= requestDto.getBody();
+        boardType boardtype=requestDto.getBoardtype();
+        Board board=Board.builder()
+                .member(member)
+                .title(title)
+                .body(body)
+                .boardtype(boardtype)
+                .build();
+
+        boardRepository.save(board);
+        return board.getId();
     }
 
     //게시물 수정 메소드
