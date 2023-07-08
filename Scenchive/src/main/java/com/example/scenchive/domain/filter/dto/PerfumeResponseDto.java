@@ -6,11 +6,12 @@ import java.util.List;
 
 @Getter
 public class PerfumeResponseDto {
+    private long totalPerfumeCount;
     private List<PerfumeDto> perfumes;
-    private int totalPerfumeCount;
 
-    public PerfumeResponseDto(List<PerfumeDto> perfumes, int totalPerfumeCount) {
-        this.perfumes = perfumes;
+
+    public PerfumeResponseDto(long totalPerfumeCount, List<PerfumeDto> perfumes) {
         this.totalPerfumeCount = totalPerfumeCount;
+        this.perfumes = perfumes;
     }
 }

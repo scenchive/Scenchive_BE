@@ -48,15 +48,11 @@ public class PerfumeController {
                                               @PageableDefault(size = 10) Pageable pageable) { // 향수 10개씩 반환
         // 유저가 선택한 키워드를 받아와 해당 키워드에 대한 향수 목록 조회
         List<PerfumeDto> recommendedPerfumes = perfumeService.getPerfumesByKeyword(keywordIds, pageable);
-        System.out.println("recommendedPerfumes : " + recommendedPerfumes);
-        int totalPerfumeCount = perfumeService.getTotalPerfumeCount(keywordIds);
-        System.out.println("totalPerfumeCount : " + totalPerfumeCount);
+        // 키워드에 해당하는 향수의 총 개수 조회
+        long totalPerfumeCount = perfumeService.getTotalPerfumeCount(keywordIds);
 
-        PerfumeResponseDto responseDto = new PerfumeResponseDto(recommendedPerfumes, totalPerfumeCount);
+        PerfumeResponseDto responseDto = new PerfumeResponseDto(totalPerfumeCount, recommendedPerfumes);
         return responseDto;
-
-        // 조회된 향수 목록 반환
-//        return recommendedPerfumes;
     }
 
     //필터 추천 : 키워드 조회
@@ -104,31 +100,25 @@ public class PerfumeController {
 
     //검색화면 : 향수 및 브랜드 조회
     @GetMapping("/search")
-    public List<SearchPerfumeDto> searchName(@RequestParam("name") String name){
-        List<SearchPerfumeDto> searchDtos=searchService.searchName(name);
+    public List<SearchPerfumeDto> searchName(@RequestParam("name") String name,
+                                             @PageableDefault(size = 10) Pageable pageable){
+        List<SearchPerfumeDto> searchDtos=searchService.searchName(name, pageable);
         return searchDtos;
     }
 
     //검색화면 : 브랜드별 향수 리스트 조회
     @GetMapping("/brandperfume")
-    public List<SearchPerfumeDto> brandPerfume(@RequestParam("name") String name){
-        List<SearchPerfumeDto> brandDtos=searchService.brandPerfume(name);
-        return brandDtos;
+    public BrandPerfumeResponseDto brandPerfume(@RequestParam("name") String name,
+                                               @PageableDefault(size = 10) Pageable pageable){
+        List<SearchPerfumeDto> brandDtos=searchService.brandPerfume(name, pageable);
+        long totalBrandPerfumeCount = searchService.getTotalBrandPerfumeCount(name, pageable);
+
+        BrandPerfumeResponseDto responseDto = new BrandPerfumeResponseDto(totalBrandPerfumeCount, brandDtos);
+        return responseDto;
     }
 
-//    @GetMapping("/notesinfo/{perfumeId}")
-//    public ResponseEntity<NotesInfoResponse> getNotesInfo(@PathVariable Long perfumeId) {
-//        NotesInfoDto notesInfo = perfumeService.getNotesInfo(perfumeId);
-//
-//        if (notesInfo != null) {
-//            NotesInfoResponse response = new NotesInfoResponse(perfumeId, notesInfo.getTop(), notesInfo.getMiddle(), notesInfo.getBase());
-//            return ResponseEntity.ok(response);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
 
-
+    // 개별 향수 노트 정보 조회
     @GetMapping("/notesinfo/{perfumeId}")
     public ResponseEntity<NotesInfoResponse> getPerfumeNotesInfo(@PathVariable("perfumeId") Long perfumeId) {
 
