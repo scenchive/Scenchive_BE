@@ -1,6 +1,7 @@
 package com.example.scenchive.domain.member.service;
 
 import com.example.scenchive.domain.filter.repository.*;
+import com.example.scenchive.domain.filter.utils.DeduplicationUtils;
 import com.example.scenchive.domain.member.dto.BookmarkPerfumeDto;
 import com.example.scenchive.domain.member.dto.perfumeMarkedDto;
 import com.example.scenchive.domain.member.repository.*;
@@ -140,6 +141,7 @@ public class BookmarkService {
                 }
             }
         }
+       similarPerfumeDtos= DeduplicationUtils.deduplication(similarPerfumeDtos, BookmarkPerfumeDto::getPerfume_name);
         return similarPerfumeDtos;
     }
 }
