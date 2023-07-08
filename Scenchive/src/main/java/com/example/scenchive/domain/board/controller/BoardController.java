@@ -38,9 +38,9 @@ public class BoardController {
 
     //개별 게시물 조회
     @GetMapping("/board/{id}")
-    public BoardResponseDto post(@PathVariable Long id, Model model){
+    public BoardResponseDto post(@PathVariable Long id){
         BoardResponseDto boardResponseDto=boardService.findById(id);
-        model.addAttribute("post", boardResponseDto);
+//        model.addAttribute("post", boardResponseDto);
         return boardResponseDto;
     }
 
