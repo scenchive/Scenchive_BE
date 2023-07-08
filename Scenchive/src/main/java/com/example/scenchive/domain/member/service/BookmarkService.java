@@ -1,12 +1,15 @@
 package com.example.scenchive.domain.member.service;
 
+import com.example.scenchive.domain.filter.dto.SearchPerfumeDto;
 import com.example.scenchive.domain.filter.repository.*;
 import com.example.scenchive.domain.filter.utils.DeduplicationUtils;
 import com.example.scenchive.domain.member.dto.BookmarkPerfumeDto;
+import com.example.scenchive.domain.member.dto.BookmarkPerfumeResponseDto;
 import com.example.scenchive.domain.member.dto.perfumeMarkedDto;
 import com.example.scenchive.domain.member.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +56,7 @@ public class BookmarkService {
         return "북마크한 향수가 아닙니다.";
     }
 
+    //북마크 저장
     @Transactional
     public perfumeMarkedDto bookmarkSave(Long userId, Long perfumeId){
         Member member=memberRepository.findById(userId).get();
@@ -69,6 +73,7 @@ public class BookmarkService {
         return perfumemarkedDto;
     }
 
+    //북마크 삭제
     @Transactional
     public String bookmarkDelete(Long userId, Long perfumeId){
         Member member=memberRepository.findById(userId).get();
@@ -78,9 +83,8 @@ public class BookmarkService {
         return "북마크 해제되었습니다.";
     }
 
-
-    //마이페이지 : 북마크한 향수 목록 조회
-    public List<BookmarkPerfumeDto> getBookmarkPerfume(Long userId){
+    //북마크한 향수 전체 개수 조회
+    public long getTotalBookmarkPerfumeCount(Long userId, Pageable pageable){
         List<BookmarkPerfumeDto> bookmarkPerfumeDtos=new ArrayList<>();
 
         Member member=memberRepository.findById(userId).get();
@@ -94,11 +98,43 @@ public class BookmarkService {
             BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume_id, perfume_name, brand_name);
             bookmarkPerfumeDtos.add(bookmarkPerfumeDto);
         }
-        return bookmarkPerfumeDtos;
+        return bookmarkPerfumeDtos.size();
+    }
+
+
+    //마이페이지 : 북마크한 향수 목록 조회
+    public List<BookmarkPerfumeDto> getBookmarkPerfume(Long userId, Pageable pageable){
+        List<BookmarkPerfumeDto> bookmarkPerfumeDtos=new ArrayList<>();
+
+        Member member=memberRepository.findById(userId).get();
+        List<perfumeMarked> perfumeMarkedList=perfumemarkedRepository.findByMember(member);
+
+        for (perfumeMarked perfumemarked : perfumeMarkedList){
+            Perfume perfume=perfumemarked.getPerfume();
+            Long perfume_id= perfume.getId();
+            String perfume_name=perfume.getPerfumeName();
+            String brand_name=brandRepository.findById(perfume.getBrandId()).get().getBrandName();
+            BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume_id, perfume_name, brand_name);
+            bookmarkPerfumeDtos.add(bookmarkPerfumeDto);
+        }
+//        return bookmarkPerfumeDtos;
+
+        List<BookmarkPerfumeDto> perfumes=new ArrayList<>();
+
+        int startIndex = (int) pageable.getOffset();
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), bookmarkPerfumeDtos.size());
+
+        List<BookmarkPerfumeDto> paginatedPerfumes = new ArrayList<>(bookmarkPerfumeDtos).subList(startIndex, endIndex);
+
+        for(BookmarkPerfumeDto perfume : paginatedPerfumes){
+            BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume.getPerfume_id(), perfume.getPerfume_name(), perfume.getBrand_name());
+            perfumes.add(bookmarkPerfumeDto);
+        }
+        return perfumes;
     }
 
     //마이페이지 : 북마크한 향수와 유사한 향수 목록 조회
-    public List<BookmarkPerfumeDto> getSimilarPerfume(Long userId){
+    public List<BookmarkPerfumeDto> getSimilarPerfume(Long userId, Pageable pageable){
         List<BookmarkPerfumeDto> similarPerfumeDtos=new ArrayList<>();
         List<Long> ptagIds=new ArrayList<>();
         List<Long> bookmarkPerfumeIds=new ArrayList<>();
@@ -141,7 +177,21 @@ public class BookmarkService {
                 }
             }
         }
+
        similarPerfumeDtos= DeduplicationUtils.deduplication(similarPerfumeDtos, BookmarkPerfumeDto::getPerfume_name);
-        return similarPerfumeDtos;
+//        return similarPerfumeDtos;
+
+        List<BookmarkPerfumeDto> perfumes=new ArrayList<>();
+
+        int startIndex = (int) pageable.getOffset();
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), similarPerfumeDtos.size());
+
+        List<BookmarkPerfumeDto> paginatedPerfumes = new ArrayList<>(similarPerfumeDtos).subList(startIndex, endIndex);
+
+        for(BookmarkPerfumeDto perfume : paginatedPerfumes){
+            BookmarkPerfumeDto bookmarkPerfumeDto = new BookmarkPerfumeDto(perfume.getPerfume_id(), perfume.getPerfume_name(), perfume.getBrand_name());
+            perfumes.add(bookmarkPerfumeDto);
+        }
+        return perfumes;
     }
 }

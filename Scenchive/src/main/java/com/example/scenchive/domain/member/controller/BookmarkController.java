@@ -1,6 +1,7 @@
 package com.example.scenchive.domain.member.controller;
 
 import com.example.scenchive.domain.member.dto.BookmarkPerfumeDto;
+import com.example.scenchive.domain.member.dto.BookmarkPerfumeResponseDto;
 import com.example.scenchive.domain.member.dto.perfumeMarkedDto;
 import com.example.scenchive.domain.member.repository.MemberRepository;
 import com.example.scenchive.domain.member.service.BookmarkService;
@@ -8,6 +9,8 @@ import com.example.scenchive.domain.member.service.MemberService;
 import com.example.scenchive.domain.member.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -76,10 +79,13 @@ public class BookmarkController {
 
     //토큰을 넘겨주면 북마크한 향수 조회
     @GetMapping("/bookmark")
-    public List<BookmarkPerfumeDto> getBookmarkPerfume(){
+    public BookmarkPerfumeResponseDto getBookmarkPerfume(@PageableDefault(size=10) Pageable pageable){
         Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
-        List<BookmarkPerfumeDto> bookmarkPerfumes=bookmarkService.getBookmarkPerfume(userId);
-        return bookmarkPerfumes;
+        List<BookmarkPerfumeDto> bookmarkPerfumes=bookmarkService.getBookmarkPerfume(userId, pageable);
+        long totalBookmarkPerfumeCount= bookmarkService.getTotalBookmarkPerfumeCount(userId, pageable);
+
+        BookmarkPerfumeResponseDto bookmarkPerfumeResponseDto=new BookmarkPerfumeResponseDto(totalBookmarkPerfumeCount, bookmarkPerfumes);
+        return bookmarkPerfumeResponseDto;
     }
 
     //북마크한 향수와 유사한 향수 조회
@@ -91,10 +97,13 @@ public class BookmarkController {
 
     //토큰을 넘겨주면 북마크한 향수와 유사한 향수 조회
     @GetMapping("/bookmark/recommend")
-    public List<BookmarkPerfumeDto> getSimilarPerfume(){
+    public List<BookmarkPerfumeDto> getSimilarPerfume(@PageableDefault(size=10) Pageable pageable){
         Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
-        List<BookmarkPerfumeDto> similarPerfumeDtos=bookmarkService.getSimilarPerfume(userId);
-        return similarPerfumeDtos;
+        List<BookmarkPerfumeDto> bookmarkPerfumes=bookmarkService.getSimilarPerfume(userId, pageable);
+//        long totalBookmarkRecommendPerfumeCount= bookmarkService.getTotalBookmarkRecommendPerfumeCount(userId);
+
+//        BookmarkPerfumeResponseDto bookmarkPerfumeResponseDto=new BookmarkPerfumeResponseDto(totalBookmarkRecommendPerfumeCount, bookmarkPerfumes);
+        return bookmarkPerfumes;
     }
 
 }
