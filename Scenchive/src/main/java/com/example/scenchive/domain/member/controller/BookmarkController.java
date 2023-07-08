@@ -2,47 +2,97 @@ package com.example.scenchive.domain.member.controller;
 
 import com.example.scenchive.domain.member.dto.BookmarkPerfumeDto;
 import com.example.scenchive.domain.member.dto.perfumeMarkedDto;
+import com.example.scenchive.domain.member.repository.MemberRepository;
 import com.example.scenchive.domain.member.service.BookmarkService;
+import com.example.scenchive.domain.member.service.MemberService;
+import com.example.scenchive.domain.member.service.ProfileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @RestController
 @CrossOrigin(origins="http://10.0.2.15:8081")
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
+    private final MemberService memberService;
+    private final MemberRepository memberRepository;
+
+    @Autowired
+    public BookmarkController(BookmarkService bookmarkService, MemberService memberService, ProfileService profileService, MemberRepository memberRepository) {
+        this.bookmarkService=bookmarkService;
+        this.memberService = memberService;
+        this.memberRepository=memberRepository;
+    }
+
 
     //향수 북마크 저장
+//    @PostMapping("/bookmark")
+//    public perfumeMarkedDto bookmarkSave(@RequestParam("userId") Long userId, @RequestParam("perfumeId") Long perfumeId){
+//        return bookmarkService.bookmarkSave(userId, perfumeId);
+//    }
+
+    //토큰과 향수 아이디를 넘겨주면 향수 북마크 저장
     @PostMapping("/bookmark")
-    public perfumeMarkedDto bookmarkSave(@RequestParam("userId") Long userId, @RequestParam("perfumeId") Long perfumeId){
+    public perfumeMarkedDto bookmarkSave(@RequestParam("perfumeId") Long perfumeId){
+        Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
         return bookmarkService.bookmarkSave(userId, perfumeId);
     }
 
     //향수 북마크 유무 확인
+//    @GetMapping("/checkmarked")
+//    public String checkMarked(@RequestParam("userId") Long userId, @RequestParam("perfumeId") Long perfumeId){
+//        return bookmarkService.checkMarked(userId, perfumeId);
+//    }
+
+    //토큰과 향수 아이디를 넘겨주면 향수 북마크 유무 확인
     @GetMapping("/checkmarked")
-    public String checkMarked(@RequestParam("userId") Long userId, @RequestParam("perfumeId") Long perfumeId){
+    public String checkMarked(@RequestParam("perfumeId") Long perfumeId){
+        Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
         return bookmarkService.checkMarked(userId, perfumeId);
     }
 
     //향수 북마크 삭제
+//    @DeleteMapping("/bookmark")
+//    public String bookmarkDelete(@RequestParam("userId") Long userId, @RequestParam("perfumeId") Long perfumeId){
+//        return bookmarkService.bookmarkDelete(userId, perfumeId);
+//    }
+
+    //토큰과 향수 아이디를 넘겨주면 향수 북마크 삭제
     @DeleteMapping("/bookmark")
-    public String bookmarkDelete(@RequestParam("userId") Long userId, @RequestParam("perfumeId") Long perfumeId){
+    public String bookmarkDelete(@RequestParam("perfumeId") Long perfumeId){
+        Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
         return bookmarkService.bookmarkDelete(userId, perfumeId);
     }
 
     //북마크한 향수 조회
-    @GetMapping("/bookmark/{userId}")
-    public List<BookmarkPerfumeDto> getBookmarkPerfume(@PathVariable Long userId){
+//    @GetMapping("/bookmark/{userId}")
+//    public List<BookmarkPerfumeDto> getBookmarkPerfume(@PathVariable Long userId){
+//        List<BookmarkPerfumeDto> bookmarkPerfumes=bookmarkService.getBookmarkPerfume(userId);
+//        return bookmarkPerfumes;
+//    }
+
+    //토큰을 넘겨주면 북마크한 향수 조회
+    @GetMapping("/bookmark")
+    public List<BookmarkPerfumeDto> getBookmarkPerfume(){
+        Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
         List<BookmarkPerfumeDto> bookmarkPerfumes=bookmarkService.getBookmarkPerfume(userId);
         return bookmarkPerfumes;
     }
 
     //북마크한 향수와 유사한 향수 조회
-    @GetMapping("/bookmark/recommend/{userId}")
-    public List<BookmarkPerfumeDto> getSimilarPerfume(@PathVariable Long userId){
+//    @GetMapping("/bookmark/recommend/{userId}")
+//    public List<BookmarkPerfumeDto> getSimilarPerfume(@PathVariable Long userId){
+//        List<BookmarkPerfumeDto> similarPerfumeDtos=bookmarkService.getSimilarPerfume(userId);
+//        return similarPerfumeDtos;
+//    }
+
+    //토큰을 넘겨주면 북마크한 향수와 유사한 향수 조회
+    @GetMapping("/bookmark/recommend")
+    public List<BookmarkPerfumeDto> getSimilarPerfume(){
+        Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
         List<BookmarkPerfumeDto> similarPerfumeDtos=bookmarkService.getSimilarPerfume(userId);
         return similarPerfumeDtos;
     }

@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public class LoginController {
     private final LoginService loginService;
 
-    @PostMapping("/login")
-    public Long login(@RequestBody LoginForm loginForm) throws NotCorrespondingEmailException {
-
-        //로그인 성공
-        Long loginId=loginService.login(loginForm.getEmail(), loginForm.getPassword());
-
-        return loginId;
-    }
+//    @PostMapping("/login")
+//    public Long login(@RequestBody LoginForm loginForm) throws NotCorrespondingEmailException {
+//
+//        //로그인 성공
+//        Long loginId=loginService.login(loginForm.getEmail(), loginForm.getPassword());
+//
+//        return loginId;
+//    }
 }

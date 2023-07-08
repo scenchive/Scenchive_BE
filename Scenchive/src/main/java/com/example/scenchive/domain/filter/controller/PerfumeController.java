@@ -7,6 +7,8 @@ import com.example.scenchive.domain.info.dto.NotesInfoDto;
 import com.example.scenchive.domain.info.dto.NotesInfoResponse;
 import com.example.scenchive.domain.info.repository.Perfumenote;
 import com.example.scenchive.domain.info.service.NotesService;
+import com.example.scenchive.domain.member.repository.MemberRepository;
+import com.example.scenchive.domain.member.service.MemberService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +27,19 @@ public class PerfumeController {
     private PersonalService personalService;
     private SearchService searchService;
     private NotesService notesService;
+    private MemberRepository memberRepository;
+    private MemberService memberService;
 
     @Autowired
     public PerfumeController(PerfumeService perfumeService, PersonalService personalService,
-                             SearchService searchService, NotesService notesService) {
+                             SearchService searchService, NotesService notesService,
+                             MemberRepository memberRepository, MemberService memberService) {
         this.perfumeService = perfumeService;
         this.personalService = personalService;
         this.searchService = searchService;
         this.notesService = notesService;
+        this.memberRepository=memberRepository;
+        this.memberService=memberService;
     }
 
 
@@ -65,15 +72,31 @@ public class PerfumeController {
 
 
     //향수 프로필 화면 : 넘겨받은 사용자 Id로 추천 향수 리스트 가져오기
+//    @GetMapping("/profile/recommend")
+//    public List<PersonalDto> personalRecommend(@RequestParam("userId") Long userId){
+//        List<PersonalDto> personalRecommends =personalService.getPerfumesByUserKeyword(userId);
+//        return personalRecommends;
+//    }
+
+    //향수 프로필 화면 : 토큰을 넘겨주면 추천 향수 리스트 가져오기
     @GetMapping("/profile/recommend")
-    public List<PersonalDto> personalRecommend(@RequestParam("userId") Long userId){
+    public List<PersonalDto> personalRecommend(){
+        Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
         List<PersonalDto> personalRecommends =personalService.getPerfumesByUserKeyword(userId);
         return personalRecommends;
     }
 
     //메인 화면 : 사용자 Id와 계절 Id를 넘겨주면 추천 향수 리스트를 반환
+//    @GetMapping("recommend")
+//    public List<PersonalDto> getPerfumesByUserAndSeason(@RequestParam("userId") Long userId, @RequestParam("season") Long seasonId){
+//        List<PersonalDto> mainRecommends=personalService.getPerfumesByUserAndSeason(userId, seasonId);
+//        return mainRecommends;
+//    }
+
+    //메인 화면 : 토큰과 계절 Id를 넘겨주면 추천 향수 리스트를 반환
     @GetMapping("recommend")
-    public List<PersonalDto> getPerfumesByUserAndSeason(@RequestParam("userId") Long userId, @RequestParam("season") Long seasonId){
+    public List<PersonalDto> getPerfumesByUserAndSeason(@RequestParam("season") Long seasonId){
+        Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
         List<PersonalDto> mainRecommends=personalService.getPerfumesByUserAndSeason(userId, seasonId);
         return mainRecommends;
     }
