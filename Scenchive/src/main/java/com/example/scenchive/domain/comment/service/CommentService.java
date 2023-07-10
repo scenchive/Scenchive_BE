@@ -7,6 +7,7 @@ import com.example.scenchive.domain.comment.repository.Comment;
 import com.example.scenchive.domain.comment.repository.CommentRepository;
 import com.example.scenchive.domain.member.repository.Member;
 import com.example.scenchive.domain.member.repository.MemberRepository;
+import com.example.scenchive.domain.member.service.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,18 +20,22 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
+    private final MemberService memberService;
 
-    public CommentService(CommentRepository commentRepository, MemberRepository memberRepository, BoardRepository boardRepository) {
+    public CommentService(CommentRepository commentRepository, MemberRepository memberRepository,
+                          BoardRepository boardRepository, MemberService memberService) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.boardRepository = boardRepository;
+        this.memberService=memberService;
     }
 
     // 댓글 생성
     @Transactional
-    public CommentDto createComment(Long boardId, Long memberId, String content) {
+    public CommentDto createComment(Long boardId, String content) {
         Board board = findBoard(boardId);
-        Member member = findMember(memberId);
+        Member member=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get();
+//        Member member = findMember(memberId);
 
         Comment comment = Comment.builder()
                 .member(member)
@@ -44,9 +49,10 @@ public class CommentService {
 
    // 대댓글 생성
     @Transactional
-    public CommentDto createReply(Long boardId, Long memberId, Long parentId, String content) {
+    public CommentDto createReply(Long boardId, Long parentId, String content) {
         Board board = findBoard(boardId);
-        Member member = findMember(memberId);
+//        Member member = findMember(memberId);
+        Member member=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get();
         Comment parentComment = findComment(parentId);
 
         Comment reply = Comment.builder()
