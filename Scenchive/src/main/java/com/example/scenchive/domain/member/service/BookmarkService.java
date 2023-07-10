@@ -133,8 +133,8 @@ public class BookmarkService {
         return perfumes;
     }
 
-    //마이페이지 : 북마크한 향수와 유사한 향수 목록 조회
-    public List<BookmarkPerfumeDto> getSimilarPerfume(Long userId, Pageable pageable){
+    //마이페이지 : 북마크한 향수와 유사한 향수 목록 조회 및 개수 반환
+    public BookmarkPerfumeResponseDto getSimilarPerfume(Long userId, Pageable pageable){
         List<BookmarkPerfumeDto> similarPerfumeDtos=new ArrayList<>();
         List<Long> ptagIds=new ArrayList<>();
         List<Long> bookmarkPerfumeIds=new ArrayList<>();
@@ -192,6 +192,7 @@ public class BookmarkService {
             BookmarkPerfumeDto bookmarkPerfumeDto = new BookmarkPerfumeDto(perfume.getPerfume_id(), perfume.getPerfume_name(), perfume.getBrand_name());
             perfumes.add(bookmarkPerfumeDto);
         }
-        return perfumes;
+        BookmarkPerfumeResponseDto bookmarkPerfumeResponseDto=new BookmarkPerfumeResponseDto(perfumes.size(), perfumes);
+        return bookmarkPerfumeResponseDto;
     }
 }
