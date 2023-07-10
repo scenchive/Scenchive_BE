@@ -180,6 +180,7 @@ public class BookmarkService {
 
        similarPerfumeDtos= DeduplicationUtils.deduplication(similarPerfumeDtos, BookmarkPerfumeDto::getPerfume_name);
 //        return similarPerfumeDtos;
+        long totalPerfumeCount=similarPerfumeDtos.size();
 
         List<BookmarkPerfumeDto> perfumes=new ArrayList<>();
 
@@ -192,7 +193,7 @@ public class BookmarkService {
             BookmarkPerfumeDto bookmarkPerfumeDto = new BookmarkPerfumeDto(perfume.getPerfume_id(), perfume.getPerfume_name(), perfume.getBrand_name());
             perfumes.add(bookmarkPerfumeDto);
         }
-        BookmarkPerfumeResponseDto bookmarkPerfumeResponseDto=new BookmarkPerfumeResponseDto(perfumes.size(), perfumes);
+        BookmarkPerfumeResponseDto bookmarkPerfumeResponseDto=new BookmarkPerfumeResponseDto(totalPerfumeCount, perfumes);
         return bookmarkPerfumeResponseDto;
     }
 }
