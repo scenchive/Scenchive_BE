@@ -20,25 +20,23 @@ public class CommentController {
     }
 
     // 댓글 생성
-    @PostMapping("/board/{boardId}/member/{memberId}")
+    @PostMapping("/board/{boardId}")
     public ResponseEntity<CommentDto> createComment(
             @PathVariable Long boardId,
-            @PathVariable Long memberId,
             @RequestBody @Valid CommentRequest request
     ) {
-        CommentDto commentDto = commentService.createComment(boardId, memberId, request.getContent());
+        CommentDto commentDto = commentService.createComment(boardId, request.getContent());
         return ResponseEntity.ok(commentDto);
     }
 
     // 대댓글 생성
-    @PostMapping("/board/{boardId}/member/{memberId}/reply/{parentId}")
+    @PostMapping("/board/{boardId}/reply/{parentId}")
     public ResponseEntity<CommentDto> createReply(
             @PathVariable Long boardId,
-            @PathVariable Long memberId,
             @PathVariable Long parentId,
             @RequestBody @Valid CommentRequest request
     ) {
-        CommentDto commentDto = commentService.createReply(boardId, memberId, parentId, request.getContent());
+        CommentDto commentDto = commentService.createReply(boardId, parentId, request.getContent());
         return ResponseEntity.ok(commentDto);
     }
 
