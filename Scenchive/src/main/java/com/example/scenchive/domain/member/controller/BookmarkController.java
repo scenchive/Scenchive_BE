@@ -97,13 +97,10 @@ public class BookmarkController {
 
     //토큰을 넘겨주면 북마크한 향수와 유사한 향수 조회
     @GetMapping("/bookmark/recommend")
-    public List<BookmarkPerfumeDto> getSimilarPerfume(@PageableDefault(size=10) Pageable pageable){
+    public BookmarkPerfumeResponseDto getSimilarPerfume(@PageableDefault(size=10) Pageable pageable){
         Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
-        List<BookmarkPerfumeDto> bookmarkPerfumes=bookmarkService.getSimilarPerfume(userId, pageable);
-//        long totalBookmarkRecommendPerfumeCount= bookmarkService.getTotalBookmarkRecommendPerfumeCount(userId);
-
-//        BookmarkPerfumeResponseDto bookmarkPerfumeResponseDto=new BookmarkPerfumeResponseDto(totalBookmarkRecommendPerfumeCount, bookmarkPerfumes);
-        return bookmarkPerfumes;
+        BookmarkPerfumeResponseDto bookmarkPerfumeResponseDto=bookmarkService.getSimilarPerfume(userId, pageable);
+        return bookmarkPerfumeResponseDto;
     }
 
 }
