@@ -100,10 +100,10 @@ public class PerfumeController {
 
     //검색화면 : 향수 및 브랜드 조회
     @GetMapping("/search")
-    public List<SearchPerfumeDto> searchName(@RequestParam("name") String name,
+    public SearchListDto searchName(@RequestParam("name") String name,
                                              @PageableDefault(size = 10) Pageable pageable){
-        List<SearchPerfumeDto> searchDtos=searchService.searchName(name, pageable);
-        return searchDtos;
+        SearchListDto searchListDto=searchService.searchName(name, pageable);
+        return searchListDto;
     }
 
     //검색화면 : 브랜드별 향수 리스트 조회
