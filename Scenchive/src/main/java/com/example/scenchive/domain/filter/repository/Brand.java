@@ -17,4 +17,7 @@ public class Brand {
 
     @Column(name = "brand_name")
     private String brandName;
+
+    @Column(name="brand_kr")
+    private String brandName_kr;
 }
