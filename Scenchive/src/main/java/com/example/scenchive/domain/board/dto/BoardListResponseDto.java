@@ -14,6 +14,12 @@ public class BoardListResponseDto {
         this.boardtype_name=entity.getBoardtype().getBoardtype_name();
         this.title=entity.getTitle();
     }
+
+    public BoardListResponseDto(Long id, String boardtype_name, String title) {
+        this.id = id;
+        this.boardtype_name = boardtype_name;
+        this.title = title;
+    }
 }
 
     

@@ -8,6 +8,7 @@ import com.example.scenchive.domain.board.dto.BoardSaveRequestDto;
 import com.example.scenchive.domain.board.dto.BoardUpdateRequestDto;
 import com.example.scenchive.domain.board.repository.boardType;
 import com.example.scenchive.domain.comment.repository.CommentRepository;
+import com.example.scenchive.domain.member.dto.BookmarkPerfumeDto;
 import com.example.scenchive.domain.member.repository.Member;
 import com.example.scenchive.domain.member.repository.MemberRepository;
 import com.example.scenchive.domain.member.service.MemberService;
@@ -15,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 //
@@ -79,18 +82,50 @@ public class BoardService {
     //게시판 전체 조회 메소드
     //findAllDesc()의 결과로 반환된 Board들을 BoardListResponseDto로 변환하고 List로 변환
     @Transactional(readOnly = true)
-    public List<BoardListResponseDto> findAllDesc() {
-        return boardRepository.findAllDesc().stream()
+    public List<BoardListResponseDto> findAllDesc(Pageable pageable) {
+        List<BoardListResponseDto> boards= new ArrayList<>();
+        boards=boardRepository.findAllDesc().stream()
                 .map(board -> new BoardListResponseDto(board))
                 .collect(Collectors.toList());
+
+        List<BoardListResponseDto> pagingBoards=new ArrayList<>();
+
+        int startIndex = (int) pageable.getOffset();
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), boards.size());
+
+        List<BoardListResponseDto> paginatedboards = new ArrayList<>(boards).subList(startIndex, endIndex);
+
+        for(BoardListResponseDto board : paginatedboards){
+            BoardListResponseDto boardListResponseDto=new BoardListResponseDto(board.getId(), board.getBoardtype_name(), board.getTitle());
+            pagingBoards.add(boardListResponseDto);
+        }
+
+        return pagingBoards;
     }
 
     //카테고리별 게시판 조회 메소드
     @Transactional(readOnly = true)
-    public List<BoardListResponseDto> findByBoardtype(int boardtype_id){
+    public List<BoardListResponseDto> findByBoardtype(int boardtype_id, Pageable pageable){
         boardType boardtype=new boardType(boardtype_id);
-        return boardRepository.findByBoardtype(boardtype).stream()
+
+        List<BoardListResponseDto> boards=new ArrayList<>();
+
+        boards = boardRepository.findByBoardtype(boardtype).stream()
                 .map(board->new BoardListResponseDto(board))
                 .collect(Collectors.toList());
+
+        List<BoardListResponseDto> pagingBoards=new ArrayList<>();
+
+        int startIndex = (int) pageable.getOffset();
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), boards.size());
+
+        List<BoardListResponseDto> paginatedboards = new ArrayList<>(boards).subList(startIndex, endIndex);
+
+        for(BoardListResponseDto board : paginatedboards){
+            BoardListResponseDto boardListResponseDto=new BoardListResponseDto(board.getId(), board.getBoardtype_name(), board.getTitle());
+            pagingBoards.add(boardListResponseDto);
+        }
+
+        return pagingBoards;
     }
 }
