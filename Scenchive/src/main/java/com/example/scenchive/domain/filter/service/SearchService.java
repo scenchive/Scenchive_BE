@@ -11,6 +11,8 @@ import com.example.scenchive.domain.filter.repository.PerfumeRepository;
 import com.example.scenchive.domain.filter.utils.DeduplicationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -132,11 +134,23 @@ public class SearchService {
                 }
             }
         }
-        searchPerfumeDtos= DeduplicationUtils.deduplication(searchPerfumeDtos, SearchPerfumeDto::getPerfumeName);
-        brandDtos=DeduplicationUtils.deduplication(brandDtos, BrandDto::getBrandName);
+        // 중복 제거 및 페이지 결과 생성
+        searchPerfumeDtos = new PageImpl<>(DeduplicationUtils.deduplication(searchPerfumeDtos, SearchPerfumeDto::getPerfumeName)).getContent();
+        brandDtos = new PageImpl<>(DeduplicationUtils.deduplication(brandDtos, BrandDto::getBrandName)).getContent();
+
         int searchPerfumeDtosLen = searchPerfumeDtos.size();
         int brandDtoslen = brandDtos.size();
-        SearchListDto searchListDto=new SearchListDto(brandDtoslen, brandDtos, searchPerfumeDtosLen, searchPerfumeDtos);
+
+        // 페이징 처리
+        int page = pageable.getPageNumber(); // 현재 페이지 번호
+        int pageSize = pageable.getPageSize(); // 페이지 크기
+
+        int start = page * pageSize;
+        int end = Math.min((start + pageSize), searchPerfumeDtos.size());
+        List<SearchPerfumeDto> paginatedSearchPerfumeDtos = searchPerfumeDtos.subList(start, end);
+        searchPerfumeDtos = DeduplicationUtils.deduplication(paginatedSearchPerfumeDtos, SearchPerfumeDto::getPerfumeName);
+
+        SearchListDto searchListDto = new SearchListDto(brandDtoslen, brandDtos, searchPerfumeDtosLen, searchPerfumeDtos);
         return searchListDto;
     }
 }
