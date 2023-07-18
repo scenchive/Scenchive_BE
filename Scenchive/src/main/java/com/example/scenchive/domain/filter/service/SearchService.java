@@ -134,7 +134,9 @@ public class SearchService {
         }
         searchPerfumeDtos= DeduplicationUtils.deduplication(searchPerfumeDtos, SearchPerfumeDto::getPerfumeName);
         brandDtos=DeduplicationUtils.deduplication(brandDtos, BrandDto::getBrandName);
-        SearchListDto searchListDto=new SearchListDto(brandDtos, searchPerfumeDtos);
+        int searchPerfumeDtosLen = searchPerfumeDtos.size();
+        int brandDtoslen = brandDtos.size();
+        SearchListDto searchListDto=new SearchListDto(brandDtoslen, brandDtos, searchPerfumeDtosLen, searchPerfumeDtos);
         return searchListDto;
     }
 }

@@ -103,6 +103,7 @@ public class PerfumeController {
     public SearchListDto searchName(@RequestParam("name") String name,
                                              @PageableDefault(size = 10) Pageable pageable){
         SearchListDto searchListDto=searchService.searchName(name, pageable);
+
         return searchListDto;
     }
 
