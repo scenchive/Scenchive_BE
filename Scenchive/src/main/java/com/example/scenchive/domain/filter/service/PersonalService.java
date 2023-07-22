@@ -30,6 +30,7 @@ public class PersonalService {
         this.pTagRepository = pTagRepository;
     }
 
+
     //향수 프로필 화면 : 사용자 Id를 넘겨주면 추천 향수 리스트를 반환
     public List<PersonalDto> getPerfumesByUserKeyword(Long userId) {
         Member member = memberRepository.findById(userId).get(); //사용자 아이디로 사용자 객체 찾기
