@@ -70,6 +70,12 @@ public class MemberService {
         return MemberForm.from(memberRepository.save(member));
     }
 
+    //메인 화면 : 사용자 닉네임 반환
+    public String getUsername(){
+        String userName=memberRepository.findByEmail(this.getMyUserWithAuthorities().getEmail()).get().getName();
+        return userName;
+    }
+
     @Transactional(readOnly = true)
     public MemberForm getUserWithAuthorities(String email) { // username을 기준으로 가져옴
         return MemberForm.from(memberRepository.findOneWithAuthoritiesByEmail(email).orElse(null));

@@ -1,6 +1,9 @@
 package com.example.scenchive.domain.review.service;
 
 import com.example.scenchive.domain.filter.repository.Perfume;
+import com.example.scenchive.domain.member.repository.Member;
+import com.example.scenchive.domain.member.repository.MemberRepository;
+import com.example.scenchive.domain.member.service.MemberService;
 import com.example.scenchive.domain.review.dto.PerfumeRatingDto;
 import com.example.scenchive.domain.review.dto.ReviewListResponseDto;
 import com.example.scenchive.domain.review.repository.RPerfumeTag;
@@ -23,10 +26,15 @@ import java.util.stream.Collectors;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final RPerfumeTagRepository RPerfumeTagRepository;
+    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
-    public ReviewService(ReviewRepository reviewRepository, RPerfumeTagRepository RPerfumeTagRepository) {
+    public ReviewService(ReviewRepository reviewRepository, RPerfumeTagRepository RPerfumeTagRepository,
+                         MemberRepository memberRepository, MemberService memberService) {
         this.reviewRepository = reviewRepository;
         this.RPerfumeTagRepository = RPerfumeTagRepository;
+        this.memberRepository=memberRepository;
+        this.memberService=memberService;
     }
 
     // 리뷰 등록 메서드
@@ -34,7 +42,8 @@ public class ReviewService {
 
         try {
             Review review = new Review();
-            review.setMemberId(reviewDto.getMemberId());
+            Member userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get();
+            review.setMemberId(userId);
             review.setPerfumeId(reviewDto.getPerfumeId());
             review.setRating(reviewDto.getRating());
             review.setLongevity(reviewDto.getLongevity());
