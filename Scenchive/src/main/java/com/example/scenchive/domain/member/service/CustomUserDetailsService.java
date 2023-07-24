@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    @Transactional // 두 개 이상의 쿼리가 실행될 때, atomic 실행을 보장하기 위한. // email로 고쳐야하나
+    @Transactional // 두 개 이상의 쿼리가 실행될 때, atomic 실행을 보장하기 위한.
     public UserDetails loadUserByUsername(final String username) {
         return memberRepository.findOneWithAuthoritiesByEmail(username)
                 .map(member -> createUser(username, member))
