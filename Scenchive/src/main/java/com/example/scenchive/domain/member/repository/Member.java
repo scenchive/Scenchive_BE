@@ -37,7 +37,15 @@ public class Member {
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities;
     @Column(name = "activated")
-    private boolean activated;
+    private Boolean activated;
+
+    public Boolean isActivated() {
+        return activated != null ? activated : false;
+    }
+
+    public void setActivated(Boolean activated) {
+        this.activated = activated;
+    }
 
     @OneToMany(mappedBy = "member")
     @Builder.Default

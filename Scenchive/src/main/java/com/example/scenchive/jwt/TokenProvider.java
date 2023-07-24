@@ -8,7 +8,11 @@ import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +24,7 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Component
@@ -30,12 +35,16 @@ public class TokenProvider implements InitializingBean {
     private final String secret;
     private final long tokenValidityInMilliseconds;
     private Key key;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     public TokenProvider(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
+            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds,
+            RedisTemplate<String, Object> redisTemplate) {
         this.secret = secret;
         this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -59,6 +68,31 @@ public class TokenProvider implements InitializingBean {
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
+    }
+
+    // Redis에 토큰을 저장하고 만료 시간 설정하는 메서드
+    public String createTokenAndStoreInRedis(Authentication authentication) {
+        String token = createToken(authentication);
+
+        // 토큰을 특정 key로 Redis에 저장하고 만료 시간 설정
+        String key = "access_token:" + token;
+        redisTemplate.opsForValue().set(key, "valid", tokenValidityInMilliseconds, TimeUnit.MILLISECONDS);
+
+        return token;
+    }
+
+    // 토큰이 Redis에 유효한지 확인하는 메서드
+    public boolean isTokenValidInRedis(String token) {
+        String key = "access_token:" + token;
+//        System.out.println("isTokenValidInRedis is successfully done.");
+        return redisTemplate.hasKey(key);
+    }
+
+    // 토큰을 Redis에서 삭제하는 메서드 (로그아웃 시 호출)
+    public void removeTokenFromRedis(String token) {
+        String key = "access_token:" + token;
+        redisTemplate.delete(key);
+//        System.out.println("removeTokenFromRedis is successfully done.");
     }
 
     // 토큰을 받아서 Authentication 객체 반환
