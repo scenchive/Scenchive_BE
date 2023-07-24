@@ -39,13 +39,12 @@ public class Member {
     @Column(name = "activated")
     private Boolean activated;
 
-    public Boolean isActivated(){
-        return activated!=null ? activated : false;
+    public Boolean isActivated() {
+        return activated != null ? activated : false;
     }
 
-    public void setActivated(Boolean activated){
-        this.activated=activated;
-    }
+    public void setActivated(Boolean activated) {
+        this.activated = activated;
 
     @OneToMany(mappedBy = "member")
     @Builder.Default
