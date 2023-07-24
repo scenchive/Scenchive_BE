@@ -43,7 +43,6 @@ public class TokenProvider implements InitializingBean {
             RedisTemplate<String, Object> redisTemplate) {
         this.secret = secret;
         this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
-
         this.redisTemplate = redisTemplate;
     }
 
@@ -84,7 +83,6 @@ public class TokenProvider implements InitializingBean {
     // 토큰이 Redis에 유효한지 확인하는 메서드
     public boolean isTokenValidInRedis(String token) {
         String key = "access_token:" + token;
-//        System.out.println("isTokenValidInRedis is successfully done.");
         return redisTemplate.hasKey(key);
     }
 
@@ -92,7 +90,6 @@ public class TokenProvider implements InitializingBean {
     public void removeTokenFromRedis(String token) {
         String key = "access_token:" + token;
         redisTemplate.delete(key);
-//        System.out.println("removeTokenFromRedis is successfully done.");
     }
 
     // 토큰을 받아서 Authentication 객체 반환
@@ -116,19 +113,19 @@ public class TokenProvider implements InitializingBean {
 
 
     // 토큰의 유효성 검사
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true; // 문제 없음
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            logger.info("잘못된 JWT 서명입니다.");
-        } catch (ExpiredJwtException e) {
-            logger.info("만료된 JWT 토큰입니다.");
-        } catch (UnsupportedJwtException e) {
-            logger.info("지원되지 않는 JWT 토큰입니다.");
-        } catch (IllegalArgumentException e) {
-            logger.info("JWT 토큰이 잘못되었습니다.");
-        }
-        return false; // 문제 있음
-    }
+//    public boolean validateToken(String token) {
+//        try {
+//            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+//            return true; // 문제 없음
+//        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+//            logger.info("잘못된 JWT 서명입니다.");
+//        } catch (ExpiredJwtException e) {
+//            logger.info("만료된 JWT 토큰입니다.");
+//        } catch (UnsupportedJwtException e) {
+//            logger.info("지원되지 않는 JWT 토큰입니다.");
+//        } catch (IllegalArgumentException e) {
+//            logger.info("JWT 토큰이 잘못되었습니다.");
+//        }
+//        return false; // 문제 있음
+//    }
 }

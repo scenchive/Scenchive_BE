@@ -56,16 +56,10 @@ public class AuthController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Bearer " + jwt);
 
-//        String jwt = tokenProvider.createToken(authentication); // 인증정보를 기반으로 JWT 토큰 생성
-//
-//        // 토큰을 Response Header, Body 모두에 넣어준다.
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
         return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
     }
 
-    @PostMapping("/custom-logout")
+    @PostMapping("/service-logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
         // Authorization 헤더에서 토큰 추출 (토큰 형식이 "Bearer <token>"인 경우)
         String authToken = token.substring(7);
