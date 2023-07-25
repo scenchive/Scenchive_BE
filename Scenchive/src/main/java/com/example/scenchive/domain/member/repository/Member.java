@@ -44,7 +44,7 @@ public class Member {
     }
 
     public void setActivated(Boolean activated) {
-        this.activated = activated;
+        this.activated = activated;}
 
     @OneToMany(mappedBy = "member")
     @Builder.Default
