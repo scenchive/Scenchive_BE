@@ -41,6 +41,10 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
+    // Lettuce 사용을 위한 의존성 추가 (redis)
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'io.lettuce:lettuce-core'
+
     // Jsoup
     implementation 'org.jsoup:jsoup:1.15.4'
 
