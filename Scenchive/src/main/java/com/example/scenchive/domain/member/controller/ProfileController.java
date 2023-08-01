@@ -1,5 +1,6 @@
 package com.example.scenchive.domain.member.controller;
 
+import com.example.scenchive.domain.member.dto.ProfileDto;
 import com.example.scenchive.domain.member.dto.UtagDto;
 import com.example.scenchive.domain.member.repository.MemberRepository;
 import com.example.scenchive.domain.member.repository.UserTag;
@@ -26,6 +27,14 @@ public class ProfileController {
         this.memberService = memberService;
         this.profileService = profileService;
         this.memberRepository=memberRepository;
+    }
+
+    //향수 프로필 화면 : 토큰을 넘겨주면 사용자 정보 조회
+    @GetMapping("/profile")
+    public ProfileDto getProfile(){
+        Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
+        ProfileDto profileDto=profileService.getProfile(userId);
+        return profileDto;
     }
 
     //향수 프로필 유저 키워드 조회
