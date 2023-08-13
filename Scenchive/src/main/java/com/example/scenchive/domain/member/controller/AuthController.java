@@ -80,4 +80,15 @@ public class AuthController {
             return new ResponseEntity<>("유효하지 않거나 만료된 토큰입니다.", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/token-validation")
+    public ResponseEntity<?> tokenValidation(@RequestHeader("Authorization") String token) {
+        String authToken = token.substring(7);
+
+        if (tokenProvider.isTokenValidInRedis(authToken)) {
+            return ResponseEntity.ok(authToken);
+        } else {
+            return new ResponseEntity<>("유효하지 않거나 만료된 토큰입니다.", HttpStatus.UNAUTHORIZED);
+        }
+    }
 }
