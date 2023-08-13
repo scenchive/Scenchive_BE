@@ -11,6 +11,8 @@ import com.example.scenchive.domain.member.service.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -105,10 +107,14 @@ public class CommentService {
 
     private CommentDto mapToDto(Comment comment) {
         CommentDto dto = new CommentDto();
+
+        LocalDateTime localDateTime=comment.getCreated_at();
+        String createdAt = localDateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+
         dto.setId(comment.getId());
         dto.setMemberName(comment.getMember().getName());
         dto.setContent(comment.getContent());
-        dto.setCreatedAt(comment.getCreated_at().toString());
+        dto.setCreatedAt(createdAt);
         dto.setDeleted(comment.isDeleted());
         if (comment.getParentComment() != null) {
             dto.setParentId(comment.getParentComment().getId());

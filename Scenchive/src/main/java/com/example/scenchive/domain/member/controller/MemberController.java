@@ -39,6 +39,11 @@ public class MemberController {
         return ResponseEntity.ok(memberService.signup(memberForm));
     }
 
+    @GetMapping("/username")
+    public String getUsername(){
+        return memberService.getUsername();
+    }
+
     // 내 정보
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('USER','ADMIN')") // 두가지 권한 모두 호출가능한 API

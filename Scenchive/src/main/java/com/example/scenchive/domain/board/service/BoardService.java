@@ -18,6 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -76,7 +81,14 @@ public class BoardService {
     public BoardResponseDto findById(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
-        return new BoardResponseDto(board);
+
+        LocalDateTime localDateTime=board.getModified_at();
+        String modifiedAt = localDateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
+
+        BoardResponseDto boardResponseDto=new BoardResponseDto(board.getBoardtype().getBoardtype_name(), board.getTitle(), board.getBody(),
+                board.getMember().getName(), modifiedAt);
+
+        return boardResponseDto;
     }
 
     //게시판 전체 조회 메소드

@@ -9,7 +9,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class ReviewDto {
-    private Member memberId;
     private Long perfumeId;
     private int rating; // 별점
     private int longevity; // 지속력

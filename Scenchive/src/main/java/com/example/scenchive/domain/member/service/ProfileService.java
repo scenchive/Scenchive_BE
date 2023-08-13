@@ -1,5 +1,6 @@
 package com.example.scenchive.domain.member.service;
 
+import com.example.scenchive.domain.member.dto.ProfileDto;
 import com.example.scenchive.domain.member.dto.UtagDto;
 import com.example.scenchive.domain.member.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,15 @@ public class ProfileService {
         this.memberRepository=memberRepository;
         this.utagRepository=utagRepository;
         this.utagTypeRepository=utagTypeRepository;
+    }
+
+    //향수 프로필 화면 : 사용자 정보 조회
+    public ProfileDto getProfile(Long userId){
+        Member member = memberRepository.findById(userId).get();
+        String userEmail=member.getEmail();
+        String userName= member.getName();
+        ProfileDto profileDto=new ProfileDto(userEmail, userName);
+        return profileDto;
     }
 
     //향수 프로필 유저 키워드 조회

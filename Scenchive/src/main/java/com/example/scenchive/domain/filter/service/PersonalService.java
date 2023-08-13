@@ -1,11 +1,9 @@
 package com.example.scenchive.domain.filter.service;
 
-import com.example.scenchive.domain.filter.dto.PerfumeDto;
 import com.example.scenchive.domain.filter.dto.PersonalDto;
 import com.example.scenchive.domain.filter.repository.*;
 import com.example.scenchive.domain.filter.utils.DeduplicationUtils;
 import com.example.scenchive.domain.member.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +28,8 @@ public class PersonalService {
         this.pTagRepository = pTagRepository;
     }
 
-    //향수 프로필 화면 : 사용자 Id를 넘겨주면 추천 향수 리스트를 반환
+
+   //향수 프로필 화면 : 사용자 Id를 넘겨주면 추천 향수 리스트를 반환
     public List<PersonalDto> getPerfumesByUserKeyword(Long userId) {
         Member member = memberRepository.findById(userId).get(); //사용자 아이디로 사용자 객체 찾기
         List<UserTag> userTags = userTagRepository.findByMember(member); //사용자 객체로 유저별태그 리스트 반환
