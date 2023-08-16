@@ -10,4 +10,6 @@ public interface PerfumeRepository extends JpaRepository<Perfume, Long> {
     List<Perfume> findByPerfumeNameContainingIgnoreCase(String perfumeName);
 
     List<Perfume> findByBrandId(Long brandId);
+
+
 }
