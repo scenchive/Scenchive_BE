@@ -1,14 +1,17 @@
 package com.example.scenchive.domain.filter.service;
 
+import com.example.scenchive.domain.filter.dto.MainPerfumeDto;
 import com.example.scenchive.domain.filter.dto.PersonalDto;
 import com.example.scenchive.domain.filter.repository.*;
 import com.example.scenchive.domain.filter.utils.DeduplicationUtils;
 import com.example.scenchive.domain.member.repository.*;
+import com.example.scenchive.domain.review.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -18,14 +21,18 @@ public class PersonalService {
     private final MemberRepository memberRepository;
     private final BrandRepository brandRepository;
     private final PTagRepository pTagRepository;
+    private final ReviewService reviewService;
 
     @Autowired
-    public PersonalService(UserTagRepository userTagRepository, PerfumeTagRepository perfumeTagRepository, MemberRepository memberRepository, BrandRepository brandRepository, PTagRepository pTagRepository) {
+    public PersonalService(UserTagRepository userTagRepository, PerfumeTagRepository perfumeTagRepository,
+                           MemberRepository memberRepository, BrandRepository brandRepository,
+                           PTagRepository pTagRepository, ReviewService reviewService) {
         this.userTagRepository = userTagRepository;
         this.perfumeTagRepository = perfumeTagRepository;
         this.memberRepository = memberRepository;
         this.brandRepository = brandRepository;
         this.pTagRepository = pTagRepository;
+        this.reviewService=reviewService;
     }
 
 
@@ -57,11 +64,11 @@ public class PersonalService {
     }
 
     //메인 화면 : 사용자 Id와 계절 Id를 넘겨주면 추천 향수 리스트를 반환
-    public List<PersonalDto> getPerfumesByUserAndSeason(Long userId, Long seasonId) {
+    public List<MainPerfumeDto> getPerfumesByUserAndSeason(Long userId, Long seasonId) {
         Member member = memberRepository.findById(userId).get(); //사용자 아이디로 사용자 객체 찾기
         List<UserTag> userTags = userTagRepository.findByMember(member); //사용자 객체로 유저별태그 리스트 반환
 
-        List<PersonalDto> perfumes = new ArrayList<>();
+        List<MainPerfumeDto> perfumes = new ArrayList<>();
         List<Long> keywordIds = new ArrayList<>();
 
         //계절코드를 가진 향수 리스트 가져오기
@@ -81,9 +88,12 @@ public class PersonalService {
                         Perfume perfume = perfumeTag.getPerfume();
                         Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
                         String brandName = (brand != null) ? brand.getBrandName() : null;
-                        PersonalDto personalDto = new PersonalDto(perfume.getId(), perfume.getPerfumeName(), brandName, keywordIds);
-                        if(!perfumes.contains(personalDto)){
-                            perfumes.add(personalDto);
+
+                        double ratingAvg=reviewService.calculatePerfumeRating(perfume.getId()).getRatingAvg();
+
+                        MainPerfumeDto mainPerfumeDto = new MainPerfumeDto(perfume.getId(), perfume.getPerfumeName(), brandName, keywordIds, ratingAvg);
+                        if(!perfumes.contains(mainPerfumeDto)){
+                            perfumes.add(mainPerfumeDto);
                         }
                     }
                 }
@@ -92,8 +102,12 @@ public class PersonalService {
 
         Collections.sort(keywordIds);
 
+
         // 향수 DTO 리스트 반환
-        perfumes = DeduplicationUtils.deduplication(perfumes, PersonalDto::getPerfumeName);
+        perfumes = DeduplicationUtils.deduplication(perfumes, MainPerfumeDto::getPerfumeName);
+
+        perfumes=perfumes.stream().sorted(Comparator.comparing(MainPerfumeDto::getRatingAvg).reversed()).collect(Collectors.toList());
+        perfumes=perfumes.stream().skip(0).limit(3).collect(Collectors.toList());
         return perfumes;
     }
 }
