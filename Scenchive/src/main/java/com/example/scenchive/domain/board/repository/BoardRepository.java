@@ -1,5 +1,6 @@
 package com.example.scenchive.domain.board.repository;
 
+import com.example.scenchive.domain.member.repository.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,4 +16,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findAllDesc();
 
     List<Board> findByBoardtype(boardType boardtype);
+
+    List<Board> findByMember(Member member);
 }
