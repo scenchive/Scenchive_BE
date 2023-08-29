@@ -91,9 +91,9 @@ public class PerfumeController {
 
     //메인 화면 : 토큰과 계절 Id를 넘겨주면 추천 향수 리스트를 반환
     @GetMapping("recommend")
-    public List<PersonalDto> getPerfumesByUserAndSeason(@RequestParam("season") Long seasonId){
+    public List<MainPerfumeDto> getPerfumesByUserAndSeason(@RequestParam("season") Long seasonId){
         Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
-        List<PersonalDto> mainRecommends=personalService.getPerfumesByUserAndSeason(userId, seasonId);
+        List<MainPerfumeDto> mainRecommends=personalService.getPerfumesByUserAndSeason(userId, seasonId);
         return mainRecommends;
     }
 
