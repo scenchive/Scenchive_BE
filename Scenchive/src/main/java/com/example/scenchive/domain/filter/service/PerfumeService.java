@@ -63,9 +63,11 @@ public class PerfumeService {
                 }
             }
 
+            String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
+            String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
             Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
             String brandName = (brand != null) ? brand.getBrandName() : null;
-            PerfumeDto perfumeDto = new PerfumeDto(perfume.getId(), perfume.getPerfumeName(), brandName, perfumeKeywordIds);
+            PerfumeDto perfumeDto = new PerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage, brandName, perfumeKeywordIds);
             perfumes.add(perfumeDto);
         }
 
