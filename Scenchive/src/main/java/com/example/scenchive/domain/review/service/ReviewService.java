@@ -101,12 +101,15 @@ public class ReviewService {
         double ratingSum = reviewRepository.getRatingSumByPerfumeId(perfumeId);
         long reviewCount = reviewRepository.countByPerfumeId(perfumeId);
         double ratingAvg = reviewCount > 0 ? ratingSum / reviewCount : 0;
+        ratingAvg = Math.round(ratingAvg * 10.0) / 10.0;
 
         double longevitySum = reviewRepository.getLongevitySumByPerfumeId(perfumeId);
         double longevityAvg = reviewCount > 0 ? longevitySum / reviewCount : 0;
+        longevityAvg = Math.round(longevityAvg * 10.0) / 10.0;
 
         double sillageSum = reviewRepository.getSillageSumByPerfumeId(perfumeId);
         double sillageAvg = reviewCount > 0 ? sillageSum / reviewCount : 0;
+        sillageAvg = Math.round(sillageAvg * 10.0) / 10.0;
 
         List<Object[]> seasonCounts = reviewRepository.getSeasonCountsByPerfumeId(perfumeId);
         Map<String, Double> seasonAvg = calculateSeasonAverages(seasonCounts, reviewCount);
