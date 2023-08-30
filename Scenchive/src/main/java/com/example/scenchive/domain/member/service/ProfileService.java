@@ -33,7 +33,7 @@ public class ProfileService {
         Member member = memberRepository.findById(userId).get();
         String userEmail=member.getEmail();
         String userName= member.getName();
-        ProfileDto profileDto=new ProfileDto(userEmail, userName);
+        ProfileDto profileDto=new ProfileDto(userId, userEmail, userName);
         return profileDto;
     }
 
