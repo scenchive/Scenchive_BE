@@ -91,7 +91,7 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public List<ReviewListResponseDto> findByPerfumeId(Long perfumeId){
 //        Perfume reviewperfume = new Perfume(perfume_id);
-        return reviewRepository.findByPerfumeId(perfumeId).stream()
+        return reviewRepository.findByPerfumeIdOrderByCreatedAtDesc(perfumeId).stream()
                 .map(perfume->new ReviewListResponseDto(perfume))
                 .collect(Collectors.toList());
     }

@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     // 향수 id에 등록된 리뷰 리스트 가져오기
-    List<Review> findByPerfumeId(Long perfumeId);
+    List<Review> findByPerfumeIdOrderByCreatedAtDesc(Long perfumeId);
 
     // 전체 별점 합산
     @Query("SELECT SUM(r.rating) FROM Review r WHERE r.perfumeId = :perfumeId")
