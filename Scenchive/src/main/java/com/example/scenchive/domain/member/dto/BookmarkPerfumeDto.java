@@ -11,11 +11,13 @@ public class BookmarkPerfumeDto { //향수 아이디, 이미지, 이름, 브랜�
     private String perfume_name;
     private String perfumeImage;
     private String brand_name;
+    private String brandName_kr;
 
-    public BookmarkPerfumeDto(Long perfume_id, String perfume_name, String perfumeImage, String brand_name) {
+    public BookmarkPerfumeDto(Long perfume_id, String perfume_name, String perfumeImage, String brand_name, String brandName_kr) {
         this.perfume_id=perfume_id;
         this.perfume_name = perfume_name;
         this.perfumeImage = perfumeImage;
         this.brand_name = brand_name;
+        this.brandName_kr = brandName_kr;
     }
 }
