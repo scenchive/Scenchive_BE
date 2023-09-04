@@ -10,7 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 //
 @RequiredArgsConstructor
@@ -21,8 +23,8 @@ public class BoardController {
 
     //게시물 등록
     @PostMapping("/board")
-    public Long save(@RequestBody BoardSaveRequestDto requestDto){
-        return boardService.save(requestDto);
+    public Long save(@RequestPart(required = false) MultipartFile image, @RequestPart("requestDto") BoardSaveRequestDto requestDto) throws IOException {
+        return boardService.save(image, requestDto);
     }
 
     //게시물 수정
