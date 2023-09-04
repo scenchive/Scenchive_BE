@@ -97,7 +97,8 @@ public class BookmarkService {
             String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
             String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
             String brand_name=brandRepository.findById(perfume.getBrandId()).get().getBrandName();
-            BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume_id, perfume_name, perfumeImage, brand_name);
+            String brandName_kr=brandRepository.findById(perfume.getBrandId()).get().getBrandName_kr();
+            BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume_id, perfume_name, perfumeImage, brand_name, brandName_kr);
             bookmarkPerfumeDtos.add(bookmarkPerfumeDto);
         }
         return bookmarkPerfumeDtos.size();
@@ -118,7 +119,8 @@ public class BookmarkService {
             String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
             String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
             String brand_name=brandRepository.findById(perfume.getBrandId()).get().getBrandName();
-            BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume_id, perfume_name, perfumeImage, brand_name);
+            String brandName_kr = brandRepository.findById(perfume.getBrandId()).get().getBrandName_kr();
+            BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume_id, perfume_name, perfumeImage, brand_name, brandName_kr);
             bookmarkPerfumeDtos.add(bookmarkPerfumeDto);
         }
 //        return bookmarkPerfumeDtos;
@@ -133,7 +135,7 @@ public class BookmarkService {
         for(BookmarkPerfumeDto perfume : paginatedPerfumes){
             String cleanedFileName = perfume.getPerfume_name().replaceAll("[^\\w]", "");
             String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
-            BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume.getPerfume_id(), perfume.getPerfume_name(), perfumeImage, perfume.getBrand_name());
+            BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume.getPerfume_id(), perfume.getPerfume_name(), perfumeImage, perfume.getBrand_name(), perfume.getBrandName_kr());
             perfumes.add(bookmarkPerfumeDto);
         }
         return perfumes;
@@ -177,7 +179,8 @@ public class BookmarkService {
                     String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
                     String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
                     String brand_name=brandRepository.findById(perfume.getBrandId()).get().getBrandName();
-                    BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume_id, perfume_name, perfumeImage, brand_name);
+                    String brandName_kr = brandRepository.findById(perfume.getBrandId()).get().getBrandName_kr();
+                    BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume_id, perfume_name, perfumeImage, brandName_kr, brand_name);
 
                     if(similarPerfumeDtos.contains(bookmarkPerfumeDto)==false){ // 향수 추천 목록에 안 들어간 향수인 경우(중복 저장 방지)
                         similarPerfumeDtos.add(bookmarkPerfumeDto);
@@ -200,7 +203,7 @@ public class BookmarkService {
         for(BookmarkPerfumeDto perfume : paginatedPerfumes){
             String cleanedFileName = perfume.getPerfume_name().replaceAll("[^\\w]", "");
             String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
-            BookmarkPerfumeDto bookmarkPerfumeDto = new BookmarkPerfumeDto(perfume.getPerfume_id(), perfume.getPerfume_name(), perfumeImage, perfume.getBrand_name());
+            BookmarkPerfumeDto bookmarkPerfumeDto = new BookmarkPerfumeDto(perfume.getPerfume_id(), perfume.getPerfume_name(), perfumeImage, perfume.getBrand_name(), perfume.getBrandName_kr());
             perfumes.add(bookmarkPerfumeDto);
         }
         BookmarkPerfumeResponseDto bookmarkPerfumeResponseDto=new BookmarkPerfumeResponseDto(totalPerfumeCount, perfumes);

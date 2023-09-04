@@ -56,7 +56,8 @@ public class PersonalService {
                 String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
                 Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
                 String brandName = (brand != null) ? brand.getBrandName() : null;
-                PersonalDto personalDto = new PersonalDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage, brandName, keywordIds);
+                String brandName_kr = (brand != null) ? brand.getBrandName_kr() : null;
+                PersonalDto personalDto = new PersonalDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage, brandName, brandName_kr, keywordIds);
                 perfumes.add(personalDto);
             }
         }
@@ -92,10 +93,11 @@ public class PersonalService {
                         String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
                         Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
                         String brandName = (brand != null) ? brand.getBrandName() : null;
+                        String brandName_kr = (brand != null) ? brand.getBrandName_kr() : null;
 
                         double ratingAvg=reviewService.calculatePerfumeRating(perfume.getId()).getRatingAvg();
 
-                        MainPerfumeDto mainPerfumeDto = new MainPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage, brandName, keywordIds, ratingAvg);
+                        MainPerfumeDto mainPerfumeDto = new MainPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage, brandName, brandName_kr, keywordIds, ratingAvg);
                         if(!perfumes.contains(mainPerfumeDto)) {
                             perfumes.add(mainPerfumeDto);
                         }
