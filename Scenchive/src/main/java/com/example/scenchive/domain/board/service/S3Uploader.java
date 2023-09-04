@@ -29,7 +29,7 @@ import java.util.UUID;
 @Service
 public class S3Uploader {
 
-    private final AmazonS3Client amazonS3Client;
+    private final AmazonS3Client amazonS3Client; //AmazonS3Client: S3 전송객체를 만들 때 필요한 클래스
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -50,6 +50,7 @@ public class S3Uploader {
         return uploadImageUrl;      // 업로드된 파일의 S3 URL 주소 반환
     }
 
+    //S3 버킷에 이미지 업로드
     private String putS3(File uploadFile, String fileName) {
         amazonS3Client.putObject(
                 new PutObjectRequest(bucket, fileName, uploadFile)
@@ -58,6 +59,7 @@ public class S3Uploader {
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
+    //로컬에 있는 이미지 삭제
     private void removeNewFile(File targetFile) {
         if(targetFile.delete()) {
             log.info("파일이 삭제되었습니다.");
@@ -66,8 +68,10 @@ public class S3Uploader {
         }
     }
 
+    //변환
     private Optional<File> convert(MultipartFile file) throws  IOException {
-        File convertFile = new File(file.getOriginalFilename());
+        String now=LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        File convertFile = new File(now + "." + file.getOriginalFilename()); //파일 변환
         if(convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
                 fos.write(file.getBytes());

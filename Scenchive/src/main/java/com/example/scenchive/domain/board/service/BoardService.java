@@ -57,7 +57,7 @@ public class BoardService {
 
         if (!image.isEmpty()) {
             try{
-                imageUrl = s3Uploader.upload(image, "board");
+                imageUrl = s3Uploader.upload(image, "board"); //board라는 이름의 디렉토리 생성 후 그 안에 파일 저장
             }
             catch (IOException e){
                 e.printStackTrace();

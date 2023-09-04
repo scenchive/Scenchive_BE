@@ -34,7 +34,7 @@ public class S3Config {
     public AmazonS3Client amazonS3Client() {
         AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey); //accessKey, secretKey를 가지는 객체 생성
 
-        return (AmazonS3Client) AmazonS3ClientBuilder
+        return (AmazonS3Client) AmazonS3ClientBuilder //AmazonS3Client: S3 전송객체를 만들 때 필요한 클래스
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(region)
