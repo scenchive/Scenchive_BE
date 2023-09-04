@@ -89,7 +89,7 @@ public class PersonalService {
                 for (PerfumeTag seasonPerfumeTag : seasonPerfumeTags) { //계절코드를 가진 향수리스트에 있는 향수 하나씩 꺼내기
                     if (perfumeTag.getPerfumeId() == seasonPerfumeTag.getPerfumeId()) { //두 향수의 아이디가 같은 경우 향수 추가
                         Perfume perfume = perfumeTag.getPerfume();
-                        String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w ]", "");
+                        String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
                         String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
                         Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
                         String brandName = (brand != null) ? brand.getBrandName() : null;
