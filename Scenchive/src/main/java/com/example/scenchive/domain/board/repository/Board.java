@@ -7,11 +7,13 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@ToString
 @NoArgsConstructor
 @Entity
 @Table(name="board")
@@ -35,6 +37,9 @@ public class Board extends BaseTimeEntity {
     private boardType boardtype;
     //다 쪽에서 FK를 가지고 일 쪽에서 mappedby, list객체 가짐
 
+    @Column
+    private String imageUrl;
+
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
@@ -55,11 +60,12 @@ public class Board extends BaseTimeEntity {
     }
 
     @Builder
-    public Board(Member member, String title, String body, boardType boardtype) {
+    public Board(Member member, String title, String body, boardType boardtype, String imageUrl) {
         this.member = member;
         this.title = title;
         this.body = body;
         this.boardtype = boardtype;
+        this.imageUrl=imageUrl;
     }
 
     public void update(String title, String body, boardType boardtype){

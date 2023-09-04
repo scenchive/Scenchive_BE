@@ -38,3 +38,6 @@ out/
 
 ### DB Protection ###
 .properties
+
+## .properties files ##
+src/main/resources/application.properties

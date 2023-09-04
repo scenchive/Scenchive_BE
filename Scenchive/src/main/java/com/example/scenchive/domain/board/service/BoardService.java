@@ -17,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -34,25 +36,40 @@ public class BoardService {
     private final MemberRepository memberRepository;
     private final MemberService memberService;
 
+    private final S3Uploader s3Uploader;
+
     @Autowired
-    public BoardService(BoardRepository boardRepository, MemberRepository memberRepository, MemberService memberService) {
+    public BoardService(BoardRepository boardRepository, MemberRepository memberRepository, MemberService memberService, S3Uploader s3Uploader) {
         this.boardRepository = boardRepository;
         this.memberRepository=memberRepository;
         this.memberService=memberService;
+        this.s3Uploader=s3Uploader;
     }
 
     //게시물 등록 메소드 : 토큰과 BoardSaveRequestDto(게시물 제목, 내용, 게시판 카테고리) 넘겨주기
     @Transactional
-    public Long save(BoardSaveRequestDto requestDto) {
-        Member member=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get();
-        String title= requestDto.getTitle();
-        String body= requestDto.getBody();
-        boardType boardtype=requestDto.getBoardtype();
-        Board board=Board.builder()
+    public Long save(MultipartFile image, BoardSaveRequestDto requestDto) throws IOException {
+        Member member = memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get();
+        String title = requestDto.getTitle();
+        String body = requestDto.getBody();
+        boardType boardtype = requestDto.getBoardtype();
+        String imageUrl = null;
+
+        if (!image.isEmpty()) {
+            try{
+                imageUrl = s3Uploader.upload(image, "board"); //board라는 이름의 디렉토리 생성 후 그 안에 파일 저장
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        Board board = Board.builder()
                 .member(member)
                 .title(title)
                 .body(body)
                 .boardtype(boardtype)
+                .imageUrl(imageUrl)
                 .build();
 
         boardRepository.save(board);
