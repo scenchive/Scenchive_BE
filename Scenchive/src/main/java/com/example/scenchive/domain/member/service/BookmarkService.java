@@ -180,7 +180,7 @@ public class BookmarkService {
                     String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
                     String brand_name=brandRepository.findById(perfume.getBrandId()).get().getBrandName();
                     String brandName_kr = brandRepository.findById(perfume.getBrandId()).get().getBrandName_kr();
-                    BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume_id, perfume_name, perfumeImage, brandName_kr, brand_name);
+                    BookmarkPerfumeDto bookmarkPerfumeDto=new BookmarkPerfumeDto(perfume_id, perfume_name, perfumeImage, brand_name, brandName_kr);
 
                     if(similarPerfumeDtos.contains(bookmarkPerfumeDto)==false){ // 향수 추천 목록에 안 들어간 향수인 경우(중복 저장 방지)
                         similarPerfumeDtos.add(bookmarkPerfumeDto);
