@@ -10,6 +10,7 @@ import com.example.scenchive.domain.info.service.NotesService;
 import com.example.scenchive.domain.member.repository.MemberRepository;
 import com.example.scenchive.domain.member.service.MemberService;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
