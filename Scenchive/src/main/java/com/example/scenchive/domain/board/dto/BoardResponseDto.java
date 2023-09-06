@@ -12,6 +12,7 @@ public class BoardResponseDto {
     private String title; //제목
     private String body; //내용
     private String name; //작성자 이름
+    private String imageUrl; //이미지
     private String modified_at; //수정시각
 
 //    public BoardResponseDto(Board entity){
@@ -22,11 +23,12 @@ public class BoardResponseDto {
 //        this.modified_at=entity.getModified_at();
 //    }
 
-    public BoardResponseDto(String boardtype_name, String title, String body, String name, String modified_at) {
+    public BoardResponseDto(String boardtype_name, String title, String body, String name, String imageUrl, String modified_at) {
         this.boardtype_name = boardtype_name;
         this.title = title;
         this.body = body;
         this.name = name;
+        this.imageUrl=imageUrl;
         this.modified_at = modified_at;
     }
 }

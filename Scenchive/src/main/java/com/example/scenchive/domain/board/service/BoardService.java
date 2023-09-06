@@ -103,7 +103,7 @@ public class BoardService {
         String modifiedAt = localDateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
 
         BoardResponseDto boardResponseDto=new BoardResponseDto(board.getBoardtype().getBoardtype_name(), board.getTitle(), board.getBody(),
-                board.getMember().getName(), modifiedAt);
+                board.getMember().getName(), board.getImageUrl(), modifiedAt);
 
         return boardResponseDto;
     }
