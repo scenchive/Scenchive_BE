@@ -94,7 +94,13 @@ public class SearchService {
     //검색화면 : 향수 및 브랜드 조회
     public SearchListDto searchName(String name, Pageable pageable) {
         List<Perfume> perfumes = perfumeRepository.findByPerfumeNameContainingIgnoreCase(name); //검색어 포함된 향수 리스트
-        List<Brand> brands = brandRepository.findByBrandNameContainingIgnoreCase(name); //검색어 포함된 브랜드 리스트
+        List<Brand> brands = new ArrayList<>();
+
+        if (name.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")){
+            brands = brandRepository.findByBrandNameKrContainingIgnoreCase(name);
+        } else {
+            brands = brandRepository.findByBrandNameContainingIgnoreCase(name); //검색어 포함된 브랜드 리스트
+        }
         List<SearchPerfumeDto> searchPerfumeDtos = new ArrayList<>();
         List<BrandDto> brandDtos=new ArrayList<>();
 
