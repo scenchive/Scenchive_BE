@@ -76,6 +76,22 @@ public class BoardService {
         return board.getId();
     }
 
+    //이미지 저장 테스트
+    @Transactional
+    public String test(MultipartFile image) throws IOException {
+        String imageUrl = null;
+
+        if (!image.isEmpty()) {
+            try{
+                imageUrl = s3Uploader.upload(image, "board"); //board라는 이름의 디렉토리 생성 후 그 안에 파일 저장
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        return imageUrl;
+    }
+
     //게시물 수정 메소드
     @Transactional
     public Long update(Long id, BoardUpdateRequestDto requestDto) {
