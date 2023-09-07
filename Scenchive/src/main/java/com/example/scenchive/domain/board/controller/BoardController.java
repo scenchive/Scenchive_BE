@@ -27,7 +27,13 @@ public class BoardController {
         return boardService.save(image, requestDto);
     }
 
-    //게시물 수정
+    //이미지 저장 테스트
+    @PostMapping("/test")
+    public String test(@RequestPart(required = false) MultipartFile image) throws IOException {
+        return boardService.test(image);
+    }
+
+   //게시물 수정
     @PutMapping("/board/{id}")
     public Long update(@PathVariable("id") Long id, @RequestBody BoardUpdateRequestDto requestDto) {
         return boardService.update(id, requestDto);
