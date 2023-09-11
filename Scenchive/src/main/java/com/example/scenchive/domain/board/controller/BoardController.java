@@ -59,7 +59,7 @@ public class BoardController {
 
     //카테고리별 게시판 조회
     @GetMapping("/boardtype/{id}")
-    public List<BoardListResponseDto> getTypeboard(@PathVariable("id") int id, @PageableDefault(size=10) Pageable pageable) {
+    public TotalBoardResponseDto getTypeboard(@PathVariable("id") int id, @PageableDefault(size=10) Pageable pageable) {
         return boardService.findByBoardtype(id, pageable);
     }
 }

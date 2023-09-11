@@ -143,14 +143,13 @@ public class BoardService {
             pagingBoards.add(boardListResponseDto);
         }
 
-//        return pagingBoards;
         TotalBoardResponseDto responseDto = new TotalBoardResponseDto(pagingBoards.size(), pagingBoards);
         return responseDto;
     }
 
     //카테고리별 게시판 조회 메소드
     @Transactional(readOnly = true)
-    public List<BoardListResponseDto> findByBoardtype(int boardtype_id, Pageable pageable){
+    public TotalBoardResponseDto findByBoardtype(int boardtype_id, Pageable pageable){
         boardType boardtype=new boardType(boardtype_id);
 
         List<BoardListResponseDto> boards=new ArrayList<>();
@@ -173,6 +172,7 @@ public class BoardService {
             pagingBoards.add(boardListResponseDto);
         }
 
-        return pagingBoards;
+        TotalBoardResponseDto responseDto = new TotalBoardResponseDto(pagingBoards.size(), pagingBoards);
+        return responseDto;
     }
 }
