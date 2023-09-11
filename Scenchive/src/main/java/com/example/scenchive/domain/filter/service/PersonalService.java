@@ -81,16 +81,24 @@ public class PersonalService {
         PTag seasonTag = pTagRepository.findById(seasonId).get();
         List<PerfumeTag> seasonPerfumeTags = perfumeTagRepository.findByPtag(seasonTag);
 
+        // Perfume 키워드 일치 횟수 저장 맵 생성
+        Map<Long, Integer> perfumeKeywordMatches = new HashMap<>();
+
         //사용자가 선택한 세부코드를 가진 향수 리스트 가져오기
         for (UserTag userTag : userTags) {
             Long utagId = userTag.getUtag().getId(); //유저태그에 저장돼있는 세부코드 아이디 가져오기
-            keywordIds.add(utagId);
+            //keywordIds.add(utagId);
             PTag pTag = pTagRepository.findById(utagId).get(); //유저태그에 있는 세부코드 아이디와 같은 향수세부태그 가져오기
             List<PerfumeTag> perfumeTags = perfumeTagRepository.findByPtag(pTag); //향수세부태그를 가진 향수리스트 가져오기
 
             for (PerfumeTag perfumeTag : perfumeTags) { //향수세부태그를 가진 향수리스트에 있는 향수 하나씩 꺼내기
                 for (PerfumeTag seasonPerfumeTag : seasonPerfumeTags) { //계절코드를 가진 향수리스트에 있는 향수 하나씩 꺼내기
                     if (perfumeTag.getPerfumeId() == seasonPerfumeTag.getPerfumeId()) { //두 향수의 아이디가 같은 경우 향수 추가
+
+                        // 향수와 계절 향수가 일치하는 경우, 키워드 일치 횟수 증가
+                        Long perfumeId = perfumeTag.getPerfume().getId();
+                        perfumeKeywordMatches.put(perfumeId, perfumeKeywordMatches.getOrDefault(perfumeId, 0) + 1);
+
                         Perfume perfume = perfumeTag.getPerfume();
                         String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
                         String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
@@ -100,7 +108,7 @@ public class PersonalService {
 
                         double ratingAvg=reviewService.calculatePerfumeRating(perfume.getId()).getRatingAvg();
 
-                        MainPerfumeDto mainPerfumeDto = new MainPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage, brandName, brandName_kr, keywordIds, ratingAvg);
+                        MainPerfumeDto mainPerfumeDto = new MainPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage, brandName, brandName_kr, ratingAvg);
                         if(!perfumes.contains(mainPerfumeDto)) {
                             perfumes.add(mainPerfumeDto);
                         }
@@ -115,7 +123,12 @@ public class PersonalService {
         // 향수 DTO 리스트 반환
         perfumes = DeduplicationUtils.deduplication(perfumes, MainPerfumeDto::getPerfumeName);
 
-        perfumes=perfumes.stream().sorted(Comparator.comparing(MainPerfumeDto::getRatingAvg).reversed()).collect(Collectors.toList());
+        perfumes.sort(Comparator
+                .<MainPerfumeDto, Integer>comparing(dto -> perfumeKeywordMatches.getOrDefault(dto.getId(), 0))
+                .reversed()
+                .thenComparing(Comparator.comparing(MainPerfumeDto::getRatingAvg).reversed()));
+
+        //perfumes=perfumes.stream().sorted(Comparator.comparing(MainPerfumeDto::getRatingAvg).reversed()).collect(Collectors.toList());
         perfumes=perfumes.stream().skip(0).limit(3).collect(Collectors.toList());
         return perfumes;
     }
