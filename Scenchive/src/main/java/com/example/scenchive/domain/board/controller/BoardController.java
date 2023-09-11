@@ -1,10 +1,7 @@
 package com.example.scenchive.domain.board.controller;
 
-import com.example.scenchive.domain.board.dto.BoardResponseDto;
-import com.example.scenchive.domain.board.dto.BoardListResponseDto;
+import com.example.scenchive.domain.board.dto.*;
 import com.example.scenchive.domain.board.service.BoardService;
-import com.example.scenchive.domain.board.dto.BoardSaveRequestDto;
-import com.example.scenchive.domain.board.dto.BoardUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -56,7 +53,7 @@ public class BoardController {
 
     //전체 게시판 조회
     @GetMapping("/boards")
-    public List<BoardListResponseDto> boards(@PageableDefault(size=10) Pageable pageable) {
+    public TotalBoardResponseDto boards(@PageableDefault(size=10) Pageable pageable) {
         return boardService.findAllDesc(pageable);
     }
 
