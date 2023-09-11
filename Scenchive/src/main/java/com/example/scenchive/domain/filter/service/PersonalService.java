@@ -62,6 +62,9 @@ public class PersonalService {
             }
         }
 
+        perfumes = DeduplicationUtils.deduplication(perfumes, PersonalDto::getPerfumeName);
+        perfumes=perfumes.stream().skip(0).limit(10).collect(Collectors.toList());
+
         // 향수 DTO 리스트 반환
         return perfumes;
     }
