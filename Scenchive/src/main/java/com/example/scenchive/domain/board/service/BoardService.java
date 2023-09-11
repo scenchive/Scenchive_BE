@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 //
@@ -158,6 +159,8 @@ public class BoardService {
         boards = boardRepository.findByBoardtype(boardtype).stream()
                 .map(board->new BoardListResponseDto(board))
                 .collect(Collectors.toList());
+
+        boards=boards.stream().sorted(Comparator.comparing(BoardListResponseDto::getId).reversed()).collect(Collectors.toList());
 
         List<BoardListResponseDto> pagingBoards=new ArrayList<>();
 
