@@ -1,11 +1,8 @@
 package com.example.scenchive.domain.board.service;
 
-import com.example.scenchive.domain.board.dto.BoardResponseDto;
+import com.example.scenchive.domain.board.dto.*;
 import com.example.scenchive.domain.board.repository.Board;
 import com.example.scenchive.domain.board.repository.BoardRepository;
-import com.example.scenchive.domain.board.dto.BoardListResponseDto;
-import com.example.scenchive.domain.board.dto.BoardSaveRequestDto;
-import com.example.scenchive.domain.board.dto.BoardUpdateRequestDto;
 import com.example.scenchive.domain.board.repository.boardType;
 import com.example.scenchive.domain.comment.repository.CommentRepository;
 import com.example.scenchive.domain.member.dto.BookmarkPerfumeDto;
@@ -128,7 +125,7 @@ public class BoardService {
     //게시판 전체 조회 메소드
     //findAllDesc()의 결과로 반환된 Board들을 BoardListResponseDto로 변환하고 List로 변환
     @Transactional(readOnly = true)
-    public List<BoardListResponseDto> findAllDesc(Pageable pageable) {
+    public TotalBoardResponseDto findAllDesc(Pageable pageable) {
         List<BoardListResponseDto> boards= new ArrayList<>();
         boards=boardRepository.findAllDesc().stream()
                 .map(board -> new BoardListResponseDto(board))
@@ -146,12 +143,13 @@ public class BoardService {
             pagingBoards.add(boardListResponseDto);
         }
 
-        return pagingBoards;
+        TotalBoardResponseDto responseDto = new TotalBoardResponseDto(pagingBoards.size(), pagingBoards);
+        return responseDto;
     }
 
     //카테고리별 게시판 조회 메소드
     @Transactional(readOnly = true)
-    public List<BoardListResponseDto> findByBoardtype(int boardtype_id, Pageable pageable){
+    public TotalBoardResponseDto findByBoardtype(int boardtype_id, Pageable pageable){
         boardType boardtype=new boardType(boardtype_id);
 
         List<BoardListResponseDto> boards=new ArrayList<>();
@@ -174,6 +172,7 @@ public class BoardService {
             pagingBoards.add(boardListResponseDto);
         }
 
-        return pagingBoards;
+        TotalBoardResponseDto responseDto = new TotalBoardResponseDto(pagingBoards.size(), pagingBoards);
+        return responseDto;
     }
 }
