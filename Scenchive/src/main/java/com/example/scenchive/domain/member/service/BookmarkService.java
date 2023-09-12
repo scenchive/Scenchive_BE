@@ -142,7 +142,7 @@ public class BookmarkService {
     }
 
     //마이페이지 : 북마크한 향수와 유사한 향수 목록 조회 및 개수 반환
-    public BookmarkPerfumeResponseDto getSimilarPerfume(Long userId, Pageable pageable){
+    public BookmarkPerfumeResponseDto getSimilarPerfume(Long userId){
         List<BookmarkPerfumeDto> similarPerfumeDtos=new ArrayList<>();
         List<Long> ptagIds=new ArrayList<>();
         List<Long> bookmarkPerfumeIds=new ArrayList<>();
@@ -190,23 +190,10 @@ public class BookmarkService {
         }
 
        similarPerfumeDtos= DeduplicationUtils.deduplication(similarPerfumeDtos, BookmarkPerfumeDto::getPerfume_name);
-//        return similarPerfumeDtos;
+       similarPerfumeDtos=similarPerfumeDtos.stream().skip(0).limit(10).collect(Collectors.toList());
         long totalPerfumeCount=similarPerfumeDtos.size();
 
-        List<BookmarkPerfumeDto> perfumes=new ArrayList<>();
-
-        int startIndex = (int) pageable.getOffset();
-        int endIndex = Math.min(startIndex + pageable.getPageSize(), similarPerfumeDtos.size());
-
-        List<BookmarkPerfumeDto> paginatedPerfumes = new ArrayList<>(similarPerfumeDtos).subList(startIndex, endIndex);
-
-        for(BookmarkPerfumeDto perfume : paginatedPerfumes){
-            String cleanedFileName = perfume.getPerfume_name().replaceAll("[^\\w]", "");
-            String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
-            BookmarkPerfumeDto bookmarkPerfumeDto = new BookmarkPerfumeDto(perfume.getPerfume_id(), perfume.getPerfume_name(), perfumeImage, perfume.getBrand_name(), perfume.getBrandName_kr());
-            perfumes.add(bookmarkPerfumeDto);
-        }
-        BookmarkPerfumeResponseDto bookmarkPerfumeResponseDto=new BookmarkPerfumeResponseDto(totalPerfumeCount, perfumes);
+        BookmarkPerfumeResponseDto bookmarkPerfumeResponseDto=new BookmarkPerfumeResponseDto(totalPerfumeCount, similarPerfumeDtos);
         return bookmarkPerfumeResponseDto;
     }
 }
