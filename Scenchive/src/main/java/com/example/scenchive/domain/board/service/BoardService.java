@@ -143,7 +143,7 @@ public class BoardService {
             pagingBoards.add(boardListResponseDto);
         }
 
-        TotalBoardResponseDto responseDto = new TotalBoardResponseDto(pagingBoards.size(), pagingBoards);
+        TotalBoardResponseDto responseDto = new TotalBoardResponseDto(boards.size(), pagingBoards);
         return responseDto;
     }
 
@@ -172,7 +172,7 @@ public class BoardService {
             pagingBoards.add(boardListResponseDto);
         }
 
-        TotalBoardResponseDto responseDto = new TotalBoardResponseDto(pagingBoards.size(), pagingBoards);
+        TotalBoardResponseDto responseDto = new TotalBoardResponseDto(boards.size(), pagingBoards);
         return responseDto;
     }
 }
