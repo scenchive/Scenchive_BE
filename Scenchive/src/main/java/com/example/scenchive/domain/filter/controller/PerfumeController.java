@@ -120,7 +120,7 @@ public class PerfumeController {
     }
 
 
-    // 개별 향수 노트 정보 조회
+    //개별 향수 노트 정보 조회
     @GetMapping("/notesinfo/{perfumeId}")
     public ResponseEntity<NotesInfoResponse> getPerfumeNotesInfo(@PathVariable("perfumeId") Long perfumeId) {
 
@@ -143,5 +143,11 @@ public class PerfumeController {
         notesInfoResponse.setBase(baseNotes);
 
         return ResponseEntity.ok(notesInfoResponse);
+    }
+
+    //향수 전체 정보 반환
+    @GetMapping("/fullinfo/{perfumeId}")
+    public PerfumeFullInfoDto perfumeFullInfo(@PathVariable("perfumeId") Long perfumeId) {
+        return perfumeService.getPerfumeFullInfo(perfumeId);
     }
 }
