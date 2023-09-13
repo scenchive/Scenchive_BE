@@ -6,6 +6,7 @@ import com.example.scenchive.domain.filter.dto.PerfumeFullInfoDto;
 import com.example.scenchive.domain.filter.repository.*;
 import com.example.scenchive.domain.info.repository.PerfumenoteRepository;
 import com.example.scenchive.domain.info.repository.PerfumescentRepository;
+import com.example.scenchive.domain.review.repository.ReviewRepository;
 import com.example.scenchive.domain.review.service.ReviewService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class PerfumeService {
     private final PTagRepository pTagRepository;
     private PerfumescentRepository perfumescentRepository;
     private PerfumenoteRepository perfumenoteRepository;
+    private ReviewRepository reviewRepository;
     private final ReviewService reviewService;
 
 
@@ -31,7 +33,7 @@ public class PerfumeService {
     public PerfumeService(PerfumeTagRepository perfumeTagRepository, PerfumeRepository perfumeRepository,
                           BrandRepository brandRepository, PTagRepository pTagRepository,
                           PerfumescentRepository perfumescentRepository, PerfumenoteRepository perfumenoteRepository,
-                          ReviewService reviewService) {
+                          ReviewRepository reviewRepository, ReviewService reviewService) {
 
         this.perfumeTagRepository = perfumeTagRepository;
         this.perfumeRepository = perfumeRepository;
@@ -39,6 +41,7 @@ public class PerfumeService {
         this.pTagRepository = pTagRepository;
         this.perfumescentRepository = perfumescentRepository;
         this.perfumenoteRepository = perfumenoteRepository;
+        this.reviewRepository=reviewRepository;
         this.reviewService=reviewService;
     }
 
@@ -75,7 +78,12 @@ public class PerfumeService {
             Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
             String brandName = (brand != null) ? brand.getBrandName() : null;
             String brandName_kr = (brand != null) ? brand.getBrandName_kr() : null;
-            double ratingAvg=reviewService.calculatePerfumeRating(perfume.getId()).getRatingAvg();
+
+            double ratingAvg=0L;
+
+            if (reviewRepository.findByPerfumeIdOrderByCreatedAtDesc(perfume.getId()).size()!=0){
+                ratingAvg=reviewService.calculatePerfumeRating(perfume.getId()).getRatingAvg();
+            }
 
             PerfumeDto perfumeDto = new PerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage, brandName, brandName_kr, perfumeKeywordIds, ratingAvg);
             perfumes.add(perfumeDto);
