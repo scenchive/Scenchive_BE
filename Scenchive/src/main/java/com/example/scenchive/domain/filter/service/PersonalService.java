@@ -5,6 +5,7 @@ import com.example.scenchive.domain.filter.dto.PersonalDto;
 import com.example.scenchive.domain.filter.repository.*;
 import com.example.scenchive.domain.filter.utils.DeduplicationUtils;
 import com.example.scenchive.domain.member.repository.*;
+import com.example.scenchive.domain.review.repository.ReviewRepository;
 import com.example.scenchive.domain.review.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,17 +23,20 @@ public class PersonalService {
     private final BrandRepository brandRepository;
     private final PTagRepository pTagRepository;
     private final ReviewService reviewService;
+    private final ReviewRepository reviewRepository;
 
     @Autowired
     public PersonalService(UserTagRepository userTagRepository, PerfumeTagRepository perfumeTagRepository,
                            MemberRepository memberRepository, BrandRepository brandRepository,
-                           PTagRepository pTagRepository, ReviewService reviewService) {
+                           PTagRepository pTagRepository, ReviewService reviewService,
+                           ReviewRepository reviewRepository) {
         this.userTagRepository = userTagRepository;
         this.perfumeTagRepository = perfumeTagRepository;
         this.memberRepository = memberRepository;
         this.brandRepository = brandRepository;
         this.pTagRepository = pTagRepository;
         this.reviewService=reviewService;
+        this.reviewRepository=reviewRepository;
     }
 
 
@@ -106,7 +110,11 @@ public class PersonalService {
                         String brandName = (brand != null) ? brand.getBrandName() : null;
                         String brandName_kr = (brand != null) ? brand.getBrandName_kr() : null;
 
-                        double ratingAvg=reviewService.calculatePerfumeRating(perfume.getId()).getRatingAvg();
+                        double ratingAvg=0L;
+
+                        if (reviewRepository.findByPerfumeIdOrderByCreatedAtDesc(perfume.getId()).size()!=0){
+                            ratingAvg=reviewService.calculatePerfumeRating(perfume.getId()).getRatingAvg();
+                        }
 
                         MainPerfumeDto mainPerfumeDto = new MainPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage, brandName, brandName_kr, ratingAvg);
                         if(!perfumes.contains(mainPerfumeDto)) {
