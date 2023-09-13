@@ -179,24 +179,3 @@ public class SearchService {
         return searchListDto;
     }
 }
-
-//        else if(perfumes!= null && brands!= null){
-//            for (Perfume perfume : perfumes) {
-//                Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
-//                if (brand != null) {
-//                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getPerfumeName(), brand.getBrandName());
-//                    searchPerfumeDtos.add(searchPerfumeDto);
-//                } else {
-//                    throw new NullPointerException("검색하신 향수나 브랜드가 없습니다.");
-//                }
-//            }
-//            for (Brand brand : brands) {
-//                perfumes = perfumeRepository.findByBrandId(brand.getId());
-//                for (Perfume perfume : perfumes) {
-//                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getPerfumeName(), brand.getBrandName());
-//                    searchPerfumeDtos.add(searchPerfumeDto);
-//                }
-//            }
-//        } else {
-//            throw new NullPointerException("검색하신 향수나 브랜드가 없습니다.");
-//        }

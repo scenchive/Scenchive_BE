@@ -5,12 +5,14 @@ import com.example.scenchive.domain.filter.dto.PerfumeDto;
 import com.example.scenchive.domain.filter.repository.*;
 import com.example.scenchive.domain.info.repository.PerfumenoteRepository;
 import com.example.scenchive.domain.info.repository.PerfumescentRepository;
+import com.example.scenchive.domain.review.service.ReviewService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -21,11 +23,14 @@ public class PerfumeService {
     private final PTagRepository pTagRepository;
     private PerfumescentRepository perfumescentRepository;
     private PerfumenoteRepository perfumenoteRepository;
+    private final ReviewService reviewService;
+
 
     @Autowired
     public PerfumeService(PerfumeTagRepository perfumeTagRepository, PerfumeRepository perfumeRepository,
                           BrandRepository brandRepository, PTagRepository pTagRepository,
-                          PerfumescentRepository perfumescentRepository, PerfumenoteRepository perfumenoteRepository) {
+                          PerfumescentRepository perfumescentRepository, PerfumenoteRepository perfumenoteRepository,
+                          ReviewService reviewService) {
 
         this.perfumeTagRepository = perfumeTagRepository;
         this.perfumeRepository = perfumeRepository;
@@ -33,6 +38,7 @@ public class PerfumeService {
         this.pTagRepository = pTagRepository;
         this.perfumescentRepository = perfumescentRepository;
         this.perfumenoteRepository = perfumenoteRepository;
+        this.reviewService=reviewService;
     }
 
     @Transactional(readOnly = true)
@@ -68,9 +74,13 @@ public class PerfumeService {
             Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
             String brandName = (brand != null) ? brand.getBrandName() : null;
             String brandName_kr = (brand != null) ? brand.getBrandName_kr() : null;
-            PerfumeDto perfumeDto = new PerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage, brandName, brandName_kr, perfumeKeywordIds);
+            double ratingAvg=reviewService.calculatePerfumeRating(perfume.getId()).getRatingAvg();
+
+            PerfumeDto perfumeDto = new PerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage, brandName, brandName_kr, perfumeKeywordIds, ratingAvg);
             perfumes.add(perfumeDto);
         }
+
+        perfumes=perfumes.stream().sorted(Comparator.comparing(PerfumeDto::getRatingAvg).reversed()).collect(Collectors.toList());
 
         // 향수 DTO 리스트 반환
         return perfumes;
