@@ -2,6 +2,7 @@ package com.example.scenchive.domain.filter.service;
 
 import com.example.scenchive.domain.filter.dto.PTagDto;
 import com.example.scenchive.domain.filter.dto.PerfumeDto;
+import com.example.scenchive.domain.filter.dto.PerfumeFullInfoDto;
 import com.example.scenchive.domain.filter.repository.*;
 import com.example.scenchive.domain.info.repository.PerfumenoteRepository;
 import com.example.scenchive.domain.info.repository.PerfumescentRepository;
@@ -130,5 +131,20 @@ public class PerfumeService {
             pTagDtos.add(pTagDto);
         }
         return pTagDtos;
+    }
+
+    @Transactional(readOnly = true)
+    public PerfumeFullInfoDto getPerfumeFullInfo(Long perfumeId) {
+        Optional<Perfume> optionalPerfume  = perfumeRepository.findById(perfumeId);
+        PerfumeFullInfoDto perfumeDto = optionalPerfume.map(perfume -> {
+            String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
+            String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
+            Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
+
+            return new PerfumeFullInfoDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage,
+                    brand != null ? brand.getBrandName() : null, brand != null ? brand.getBrandName_kr() : null);
+        }).orElse(null);
+
+        return perfumeDto;
     }
 }
