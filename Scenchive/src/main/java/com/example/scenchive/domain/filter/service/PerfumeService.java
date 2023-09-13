@@ -79,7 +79,7 @@ public class PerfumeService {
             String brandName = (brand != null) ? brand.getBrandName() : null;
             String brandName_kr = (brand != null) ? brand.getBrandName_kr() : null;
 
-            double ratingAvg=0L;
+            double ratingAvg=0.0;
 
             if (reviewRepository.findByPerfumeIdOrderByCreatedAtDesc(perfume.getId()).size()!=0){
                 ratingAvg=reviewService.calculatePerfumeRating(perfume.getId()).getRatingAvg();

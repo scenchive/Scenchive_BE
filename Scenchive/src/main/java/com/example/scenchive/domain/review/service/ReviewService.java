@@ -95,30 +95,53 @@ public class ReviewService {
 
     // 향수 평점 평균 산출 메서드
     public PerfumeRatingDto calculatePerfumeRating(Long perfumeId) {
-        double ratingSum = reviewRepository.getRatingSumByPerfumeId(perfumeId);
-        long reviewCount = reviewRepository.countByPerfumeId(perfumeId);
-        double ratingAvg = reviewCount > 0 ? ratingSum / reviewCount : 0;
-        ratingAvg = Math.round(ratingAvg * 10.0) / 10.0;
 
-        double longevitySum = reviewRepository.getLongevitySumByPerfumeId(perfumeId);
-        double longevityAvg = reviewCount > 0 ? longevitySum / reviewCount : 0;
-        longevityAvg = Math.round(longevityAvg * 10.0) / 10.0;
+        if (reviewRepository.findByPerfumeIdOrderByCreatedAtDesc(perfumeId).size()!=0){
+            double ratingSum = reviewRepository.getRatingSumByPerfumeId(perfumeId);
+            long reviewCount = reviewRepository.countByPerfumeId(perfumeId);
+            double ratingAvg = reviewCount > 0 ? ratingSum / reviewCount : 0;
+            ratingAvg = Math.round(ratingAvg * 10.0) / 10.0;
 
-        double sillageSum = reviewRepository.getSillageSumByPerfumeId(perfumeId);
-        double sillageAvg = reviewCount > 0 ? sillageSum / reviewCount : 0;
-        sillageAvg = Math.round(sillageAvg * 10.0) / 10.0;
+            double longevitySum = reviewRepository.getLongevitySumByPerfumeId(perfumeId);
+            double longevityAvg = reviewCount > 0 ? longevitySum / reviewCount : 0;
+            longevityAvg = Math.round(longevityAvg * 10.0) / 10.0;
 
-        List<Object[]> seasonCounts = reviewRepository.getSeasonCountsByPerfumeId(perfumeId);
-        Map<String, Double> seasonAvg = calculateSeasonAverages(seasonCounts, reviewCount);
+            double sillageSum = reviewRepository.getSillageSumByPerfumeId(perfumeId);
+            double sillageAvg = reviewCount > 0 ? sillageSum / reviewCount : 0;
+            sillageAvg = Math.round(sillageAvg * 10.0) / 10.0;
 
-        PerfumeRatingDto ratingDto = new PerfumeRatingDto();
-        ratingDto.setPerfumeId(perfumeId);
-        ratingDto.setRatingAvg(ratingAvg);
-        ratingDto.setLongevityAvg(longevityAvg);
-        ratingDto.setSillageAvg(sillageAvg);
-        ratingDto.setSeasonAvg(seasonAvg);
+            List<Object[]> seasonCounts = reviewRepository.getSeasonCountsByPerfumeId(perfumeId);
+            Map<String, Double> seasonAvg = calculateSeasonAverages(seasonCounts, reviewCount);
 
-        return ratingDto;
+            PerfumeRatingDto ratingDto = new PerfumeRatingDto();
+            ratingDto.setPerfumeId(perfumeId);
+            ratingDto.setRatingAvg(ratingAvg);
+            ratingDto.setLongevityAvg(longevityAvg);
+            ratingDto.setSillageAvg(sillageAvg);
+            ratingDto.setSeasonAvg(seasonAvg);
+
+            return ratingDto;
+        }
+
+        else{
+            double ratingAvg =0.0;
+            double longevityAvg =0.0;
+            double sillageAvg =0.0;
+            Map<String, Double> seasonAvg = new HashMap<>();
+            seasonAvg.put("spring", 0.0);
+            seasonAvg.put("summer", 0.0);
+            seasonAvg.put("fall", 0.0);
+            seasonAvg.put("winter", 0.0);
+
+            PerfumeRatingDto ratingDto = new PerfumeRatingDto();
+            ratingDto.setPerfumeId(perfumeId);
+            ratingDto.setRatingAvg(ratingAvg);
+            ratingDto.setLongevityAvg(longevityAvg);
+            ratingDto.setSillageAvg(sillageAvg);
+            ratingDto.setSeasonAvg(seasonAvg);
+
+            return ratingDto;
+        }
     }
 
     public Map<String, Double> calculateSeasonAverages(List<Object[]> seasonCounts, long reviewCount) {
