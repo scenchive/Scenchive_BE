@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -35,6 +36,22 @@ public class ProfileController {
         Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
         ProfileDto profileDto=profileService.getProfile(userId);
         return profileDto;
+    }
+
+    //향수 프로필 이미지 수정
+    @PutMapping("/profile")
+    public ProfileDto updateProfileImage(@RequestPart(required = false) MultipartFile image){
+        Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
+        ProfileDto profileDto=profileService.updateImage(userId, image);
+        return profileDto;
+    }
+
+    //향수 프로필 이미지 삭제
+    @DeleteMapping("/profile")
+    public String deleteProfileImage(){
+        Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
+        profileService.deleteImage(userId);
+        return "프로필 이미지 삭제 완료";
     }
 
     //향수 프로필 유저 키워드 조회

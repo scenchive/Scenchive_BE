@@ -37,7 +37,6 @@ public class CommentService {
     public CommentDto createComment(Long boardId, String content) {
         Board board = findBoard(boardId);
         Member member=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get();
-//        Member member = findMember(memberId);
 
         Comment comment = Comment.builder()
                 .member(member)
@@ -116,6 +115,7 @@ public class CommentService {
         dto.setContent(comment.getContent());
         dto.setCreatedAt(createdAt);
         dto.setDeleted(comment.isDeleted());
+        dto.setImageUrl(comment.getMember().getImageUrl());
         if (comment.getParentComment() != null) {
             dto.setParentId(comment.getParentComment().getId());
         }

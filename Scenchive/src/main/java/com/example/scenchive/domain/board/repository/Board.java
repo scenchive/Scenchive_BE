@@ -68,9 +68,14 @@ public class Board extends BaseTimeEntity {
         this.imageUrl=imageUrl;
     }
 
-    public void update(String title, String body, boardType boardtype){
+    public void update(String title, String body, boardType boardtype, String imageUrl){
         this.title=title;
         this.body = body;
         this.boardtype = boardtype;
+        this.imageUrl=imageUrl;
+    }
+
+    public void deleteImage(String imageUrl){
+        this.imageUrl=null;
     }
 }

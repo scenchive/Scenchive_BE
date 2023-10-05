@@ -32,14 +32,21 @@ public class BoardController {
 
    //게시물 수정
     @PutMapping("/board/{id}")
-    public Long update(@PathVariable("id") Long id, @RequestBody BoardUpdateRequestDto requestDto) {
-        return boardService.update(id, requestDto);
+    public Long update(@PathVariable("id") Long id, @RequestPart("requestDto") BoardUpdateRequestDto requestDto, @RequestPart(required = false) MultipartFile image) {
+        return boardService.update(id, requestDto, image);
     }
 
     //게시물 삭제
     @DeleteMapping("/board/{id}")
     public Long delete(@PathVariable("id") Long id) {
         boardService.delete(id);
+        return id;
+    }
+
+    //게시글 이미지 삭제
+    @DeleteMapping("/boardimage/{id}")
+    public Long deleteImage(@PathVariable("id") Long id) {
+        boardService.deleteImage(id);
         return id;
     }
 

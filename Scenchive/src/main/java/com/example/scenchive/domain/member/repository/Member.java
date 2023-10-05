@@ -1,6 +1,8 @@
 package com.example.scenchive.domain.member.repository;
 
 import com.example.scenchive.domain.board.repository.Board;
+import com.example.scenchive.domain.member.dto.AuthorityDto;
+import com.example.scenchive.domain.member.dto.MemberForm;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -29,6 +32,18 @@ public class Member {
     private String name;
 
     private String password;
+
+    @Column
+    private String imageUrl;
+
+//    @Builder
+//    public Member(String email, String name, String password, String imageUrl, Set<Authority> authorities) {
+//        this.email = email;
+//        this.name = name;
+//        this.password = password;
+//        this.imageUrl = imageUrl;
+//        this.authorities = authorities;
+//    }
 
     @ManyToMany
     @JoinTable(
@@ -83,5 +98,13 @@ public class Member {
 
     public boolean checkPassword(String password){
         return this.password.equals(password);
+    }
+
+    public void updateImage(String imageUrl){
+        this.imageUrl=imageUrl;
+    }
+
+    public void deleteImage(String imageUrl){
+        this.imageUrl="https://scenchive.s3.ap-northeast-2.amazonaws.com/member/585a1429-2a79-4940-9488-6cea5bb9cb95.png";
     }
 }

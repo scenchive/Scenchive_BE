@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.multipart.MultipartFile;
 
 //
 
@@ -34,9 +35,9 @@ public class MemberController {
 //    }
     @PostMapping("/signup") // userDto를 파라미터로 받아서, signup 수행
     public ResponseEntity<MemberForm> signup(
-            @Validated @RequestBody MemberForm memberForm
+            @RequestPart(required = false) MultipartFile image, @Validated @RequestPart("memberForm") MemberForm memberForm
     ) {
-        return ResponseEntity.ok(memberService.signup(memberForm));
+        return ResponseEntity.ok(memberService.signup(image, memberForm));
     }
 
     @GetMapping("/username")
