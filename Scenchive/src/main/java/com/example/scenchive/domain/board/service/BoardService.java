@@ -53,7 +53,7 @@ public class BoardService {
         boardType boardtype = requestDto.getBoardtype();
         String imageUrl = null;
 
-        if (!image.isEmpty()) {
+        if (image != null && !image.isEmpty()) {
             try{
                 imageUrl = s3Uploader.upload(image, "board"); //board라는 이름의 디렉토리 생성 후 그 안에 파일 저장
             }
@@ -92,11 +92,53 @@ public class BoardService {
 
     //게시물 수정 메소드
     @Transactional
-    public Long update(Long id, BoardUpdateRequestDto requestDto) {
+    public Long update(Long id, BoardUpdateRequestDto requestDto, MultipartFile image) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
-        board.update(requestDto.getTitle(), requestDto.getBody(), requestDto.getBoardtype());
+
+        String imageUrl=board.getImageUrl();
+        if(imageUrl!=null){ //원래 사진이 있는 경우
+            if(image==null || image.isEmpty()){ //1. 추가한 사진이 없는 경우
+                imageUrl=board.getImageUrl(); //원래 사진 반환
+            }
+            else if(!image.isEmpty()){ //2. 추가한 사진이 있는 경우
+                try{
+                    s3Uploader.fileDelete(imageUrl); //원래 사진 삭제
+                    imageUrl=s3Uploader.upload(image, "board"); //추가한 사진 저장
+                }
+                catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        else if(imageUrl==null || image.isEmpty()){ //원래 사진이 없는 경우
+            if(image==null || image.isEmpty()){ //1. 추가한 사진이 없는 경우
+                imageUrl=null;
+            }
+            else if(!image.isEmpty()){ //2. 추가한 사진이 있는 경우
+                try{
+                    imageUrl=s3Uploader.upload(image, "board"); //추가한 사진 저장
+                }
+                catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        board.update(requestDto.getTitle(), requestDto.getBody(), requestDto.getBoardtype(), imageUrl);
         return id;
+    }
+
+    //게시글 사진 삭제 기능 메소드
+    @Transactional
+    public void deleteImage(Long id){
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+        String imageUrl= board.getImageUrl();
+        if(imageUrl!=null){
+            s3Uploader.fileDelete(imageUrl);
+            board.deleteImage(imageUrl);
+        }
     }
 
     //게시물 삭제 메소드
@@ -104,6 +146,12 @@ public class BoardService {
     public void delete(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+        String imageUrl= board.getImageUrl();
+        if(imageUrl!=null){
+            s3Uploader.fileDelete(imageUrl);
+            board.deleteImage(imageUrl);
+        }
         boardRepository.delete(board);
     }
 

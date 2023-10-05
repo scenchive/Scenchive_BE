@@ -12,4 +12,5 @@ public class CommentDto {
     private String createdAt;
     private boolean deleted;
     private Long parentId;
+    private String imageUrl;
 }

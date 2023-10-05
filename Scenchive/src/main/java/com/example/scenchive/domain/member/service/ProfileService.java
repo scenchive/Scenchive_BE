@@ -1,12 +1,15 @@
 package com.example.scenchive.domain.member.service;
 
+import com.example.scenchive.domain.board.service.S3Uploader;
 import com.example.scenchive.domain.member.dto.ProfileDto;
 import com.example.scenchive.domain.member.dto.UtagDto;
 import com.example.scenchive.domain.member.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,13 +22,16 @@ public class ProfileService {
     private final MemberRepository memberRepository;
     private final UtagRepository utagRepository;
     private final UtagTypeRepository utagTypeRepository;
+    private final S3Uploader s3Uploader;
 
     @Autowired
-    public ProfileService(UserTagRepository userTagRepository, MemberRepository memberRepository, UtagRepository utagRepository, UtagTypeRepository utagTypeRepository) {
+    public ProfileService(UserTagRepository userTagRepository, MemberRepository memberRepository, UtagRepository utagRepository,
+                          UtagTypeRepository utagTypeRepository, S3Uploader s3Uploader) {
         this.userTagRepository = userTagRepository;
         this.memberRepository=memberRepository;
         this.utagRepository=utagRepository;
         this.utagTypeRepository=utagTypeRepository;
+        this.s3Uploader=s3Uploader;
     }
 
     //향수 프로필 화면 : 사용자 정보 조회
@@ -33,8 +39,44 @@ public class ProfileService {
         Member member = memberRepository.findById(userId).get();
         String userEmail=member.getEmail();
         String userName= member.getName();
-        ProfileDto profileDto=new ProfileDto(userId, userEmail, userName);
+        String userImage= member.getImageUrl();
+        ProfileDto profileDto=new ProfileDto(userId, userEmail, userName, userImage);
         return profileDto;
+    }
+
+    //향수 프로필 : 이미지 수정
+    @Transactional
+    public ProfileDto updateImage(Long userId, MultipartFile image){
+        Member member = memberRepository.findById(userId).get();
+        String userImage=member.getImageUrl();
+
+        if(!image.isEmpty()){ //입력한 사진이 있는 경우
+            try{
+                if("https://scenchive.s3.ap-northeast-2.amazonaws.com/member/585a1429-2a79-4940-9488-6cea5bb9cb95.png".equals(userImage)){ //원래 사진이 기본 사진인 경우
+                    userImage=s3Uploader.upload(image, "member");   //입력한 사진 저장
+                }
+                else{ //원래 사진이 기본 사진이 아닌 경우
+                    s3Uploader.fileDelete(userImage); //원래 사진 지우기
+                    userImage=s3Uploader.upload(image, "member"); //입력한 사진 저장
+                }
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+        member.updateImage(userImage);
+        return new ProfileDto(member);
+    }
+
+    //향수 프로필 : 이미지 삭제
+    @Transactional
+    public void deleteImage(Long userId){
+        Member member = memberRepository.findById(userId).get();
+        String userImage=member.getImageUrl();
+        if(userImage!="https://scenchive.s3.ap-northeast-2.amazonaws.com/member/585a1429-2a79-4940-9488-6cea5bb9cb95.png"){
+            s3Uploader.fileDelete(userImage);
+        }
+        member.deleteImage(userImage);
     }
 
     //향수 프로필 유저 키워드 조회

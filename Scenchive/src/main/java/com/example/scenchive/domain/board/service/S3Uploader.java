@@ -1,5 +1,6 @@
 package com.example.scenchive.domain.board.service;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -79,6 +80,15 @@ public class S3Uploader {
             return Optional.of(convertFile);
         }
         return Optional.empty();
+    }
+
+    public void fileDelete(String fileName){
+        try{
+            amazonS3Client.deleteObject(this.bucket, fileName.substring(50));
+        }
+        catch(AmazonServiceException e){
+            System.err.println(e.getErrorMessage());
+        }
     }
 
 }
