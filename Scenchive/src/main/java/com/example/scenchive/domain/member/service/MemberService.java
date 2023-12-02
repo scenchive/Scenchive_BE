@@ -1,6 +1,8 @@
 package com.example.scenchive.domain.member.service;
 
 import com.example.scenchive.domain.board.service.S3Uploader;
+import com.example.scenchive.domain.member.dto.CheckEmailDto;
+import com.example.scenchive.domain.member.dto.CheckNameDto;
 import com.example.scenchive.domain.member.dto.MemberForm;
 import com.example.scenchive.domain.member.exception.DuplicateMemberException;
 import com.example.scenchive.domain.member.exception.NotFoundMemberException;
@@ -8,8 +10,10 @@ import com.example.scenchive.domain.member.repository.Authority;
 import com.example.scenchive.domain.member.repository.Member;
 import com.example.scenchive.domain.member.repository.MemberRepository;
 import com.example.scenchive.domain.member.util.SecurityUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,12 +54,41 @@ public class MemberService {
 //            throw new IllegalStateException("이미 존재하는 닉네임입니다.");
 //        }
 //    }
+
+    //회원가입 시 닉네임 중복 확인
     @Transactional
-    public MemberForm signup(MultipartFile image, MemberForm memberForm) { // 회원가입 로직 수행
+    public String checkEmail(CheckEmailDto checkEmailDto){
+        if (memberRepository.findByEmail(checkEmailDto.getEmail()).orElse(null) != null) {
+            return "이미 가입되어 있는 이메일입니다.";
+        }
+        return "가입 가능한 이메일입니다.";
+    }
+
+    @Transactional
+    public String checkName(CheckNameDto checkNameDto){
+        if (memberRepository.findByName(checkNameDto.getName()).orElse(null) != null) {
+            return "이미 가입되어 있는 닉네임입니다.";
+        }
+        return "가입 가능한 닉네임입니다.";
+    }
+
+
+    @Transactional
+    public ResponseEntity<?> signup(MultipartFile image, MemberForm memberForm) { // 회원가입 로직 수행
+
+        //username과 email이 모두 데이터베이스에 있는 경우
+        if (memberRepository.existsByName(memberForm.getName()) && memberRepository.existsByEmail(memberForm.getEmail())) {
+            return ResponseEntity.badRequest().body("이미 가입되어 있는 닉네임과 이메일입니다.");
+        }
 
         // 이미 이 username으로 저장된 유저가 데이터베이스에 있는지
-        if (memberRepository.findOneWithAuthoritiesByEmail(memberForm.getName()).orElse(null) != null) {
-            throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
+        if (memberRepository.existsByName(memberForm.getName())) {
+            return ResponseEntity.badRequest().body("이미 가입되어 있는 닉네임입니다.");
+        }
+
+        // 이미 이 email로 저장된 유저가 데이터베이스에 있는지
+        if (memberRepository.existsByEmail(memberForm.getEmail())) {
+            return ResponseEntity.badRequest().body("이미 가입되어 있는 이메일입니다.");
         }
 
         // 권한정보 생성
@@ -65,7 +98,7 @@ public class MemberService {
 
         String imageUrl = null;
 
-        if (!image.isEmpty()) {
+        if (image!=null && !image.isEmpty()) {
             try{
                 imageUrl = s3Uploader.upload(image, "member"); //member라는 이름의 디렉토리 생성 후 그 안에 파일 저장
             }
@@ -89,7 +122,9 @@ public class MemberService {
                 .activated(true)
                 .build();
 
-        return MemberForm.from(memberRepository.save(member));
+        MemberForm.from(memberRepository.save(member));
+
+        return ResponseEntity.ok("회원가입이 성공적으로 완료되었습니다.");
     }
 
     //메인 화면 : 사용자 닉네임 반환

@@ -1,10 +1,12 @@
 package com.example.scenchive.domain.member.service;
 
 import com.example.scenchive.domain.board.service.S3Uploader;
+import com.example.scenchive.domain.member.dto.CheckNameDto;
 import com.example.scenchive.domain.member.dto.ProfileDto;
 import com.example.scenchive.domain.member.dto.UtagDto;
 import com.example.scenchive.domain.member.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -137,73 +139,15 @@ public class ProfileService {
         return "update";
     }
 
-//    //향수 프로필 유저 키워드 저장
-//    @Transactional
-//    public String profileSave(Long userId, UtagDto utagDto){
-//        Member member=memberRepository.findById(userId).get();
-//        UtagType utagType=utagTypeRepository.findById(utagDto.getUtagtype_id()).get();
-//
-//        Utag utag=Utag.builder().id(utagDto.getId())
-//                .utag(utagDto.getUtag())
-//                .utag_kr(utagDto.getUtag_kr())
-//                .utagtype(utagType)
-//                .build();
-//
-//        //중복저장 방지
-//        Optional<UserTag> checkUserTag=userTagRepository.findByMemberAndUtag(member, utag);
-//        if(checkUserTag.isPresent()){
-//            return "already exists";
-//        }
-//
-//        //db에 없는 경우에만 저장
-//        UserTag userTag=UserTag.builder()
-//                .member(member)
-//                .utag(utag)
-//                .build();
-//
-//        userTagRepository.save(userTag);
-//        return "save";
-//    }
-//
-//    //향수 프로필 유저 키워드 삭제
-//    @Transactional
-//    public String profileDelete(Long userId, UtagDto utagDto){
-//        Member member=memberRepository.findById(userId).get();
-//        Utag utag=utagRepository.findById(utagDto.getId()).get();
-//        userTagRepository.deleteByMemberAndUtag(member, utag);
-//        return "delete";
-//    }
+    //향수 프로필: 닉네임 변경
+    @Transactional
+    public String changeName(Long userId, CheckNameDto checkNameDto){
+        if (memberRepository.findByName(checkNameDto.getName()).orElse(null) != null) {
+            return "이미 존재하는 닉네임입니다.";
+        }
+        Member member = memberRepository.findById(userId).get();
+        member.updateName(checkNameDto.getName());
+        return "닉네임이 변경되었습니다.";
+    }
 
-    //향수 프로필 수정하기 클릭 시 키워드 조회
-//    public List<List> profileGetAllTags(Long userId){
-//        List<UtagDto> userUtagDtos = new ArrayList<>();
-//        List<UtagDto> allUtagDtos = new ArrayList<>();
-//        List<List> utagDtos=new ArrayList<>();
-//
-//        Member member=memberRepository.findById(userId).get();
-//        List<UserTag> userTags = userTagRepository.findByMember(member);
-//        for(UserTag userTag : userTags){
-//            Long id=userTag.getUtag().getId();
-//            String utag=userTag.getUtag().getUtag();
-//            String utag_kr=userTag.getUtag().getUtag_kr();
-//            int utagtype_id=userTag.getUtag().getUtagtype().getId();
-//
-//            UtagDto utagDto=new UtagDto(id, utag, utag_kr, utagtype_id);
-//            userUtagDtos.add(utagDto);
-//        }
-//
-//        utagDtos.add(userUtagDtos);
-//
-//        for (long i = 1; i <= 25; i++) {
-//            UtagDto utagDto = new UtagDto(i,
-//                    utagRepository.findById(i).get().getUtag(),
-//                    utagRepository.findById(i).get().getUtag_kr(),
-//                    utagRepository.findById(i).get().getUtagtype().getId());
-//            allUtagDtos.add(utagDto);
-//        }
-//
-//        utagDtos.add(allUtagDtos);
-//
-//        return utagDtos;
-//    }
 }

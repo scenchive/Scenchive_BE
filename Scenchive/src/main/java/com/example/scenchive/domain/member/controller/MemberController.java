@@ -1,5 +1,7 @@
 package com.example.scenchive.domain.member.controller;
 
+import com.example.scenchive.domain.member.dto.CheckEmailDto;
+import com.example.scenchive.domain.member.dto.CheckNameDto;
 import com.example.scenchive.domain.member.dto.MemberForm;
 import com.example.scenchive.domain.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,11 +35,22 @@ public class MemberController {
 //        }
 //        return memberService.save(memberForm);
 //    }
+
+    @PostMapping("/member/email")
+    public String checkEmail(@Valid @RequestBody CheckEmailDto checkEmailDto){
+        return memberService.checkEmail(checkEmailDto);
+    }
+
+    @PostMapping("/member/name")
+    public String checkName(@Valid @RequestBody CheckNameDto checkNameDto){
+        return memberService.checkName(checkNameDto);
+    }
+
     @PostMapping("/signup") // userDto를 파라미터로 받아서, signup 수행
-    public ResponseEntity<MemberForm> signup(
-            @RequestPart(required = false) MultipartFile image, @Validated @RequestPart("memberForm") MemberForm memberForm
+    public ResponseEntity<?> signup(
+            @RequestPart(required = false) MultipartFile image, @Valid @RequestPart("memberForm") MemberForm memberForm
     ) {
-        return ResponseEntity.ok(memberService.signup(image, memberForm));
+        return memberService.signup(image, memberForm);
     }
 
     @GetMapping("/username")

@@ -107,4 +107,8 @@ public class Member {
     public void deleteImage(String imageUrl){
         this.imageUrl="https://scenchive.s3.ap-northeast-2.amazonaws.com/member/585a1429-2a79-4940-9488-6cea5bb9cb95.png";
     }
+
+    public void updateName(String name){
+        this.name=name;
+    }
 }
