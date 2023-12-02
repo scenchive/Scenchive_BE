@@ -17,11 +17,15 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberForm {
-    @Email
+
+    @NotBlank
+    @Email(message = "유효하지 않은 이메일 형식입니다.",
+            regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$")
     private String email;
     @NotBlank
     private String name;
 
+    @NotBlank
     private String password;
 
     private Set<AuthorityDto> authorityDtoSet;

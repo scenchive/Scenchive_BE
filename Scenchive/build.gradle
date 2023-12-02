@@ -52,6 +52,8 @@ dependencies {
 
     //AWS S3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+   // implementation 'net.bytebuddy:byte-buddy:1.11.15'
 }
 
 tasks.named('test') {
