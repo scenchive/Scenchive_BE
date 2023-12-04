@@ -36,12 +36,12 @@ public class MemberController {
 //        return memberService.save(memberForm);
 //    }
 
-    @PostMapping("/member/email")
+    @GetMapping("/member/email")
     public String checkEmail(@Valid @RequestBody CheckEmailDto checkEmailDto){
         return memberService.checkEmail(checkEmailDto);
     }
 
-    @PostMapping("/member/name")
+    @GetMapping("/member/name")
     public String checkName(@Valid @RequestBody CheckNameDto checkNameDto){
         return memberService.checkName(checkNameDto);
     }
