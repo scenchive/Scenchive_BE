@@ -112,6 +112,7 @@ public class CommentService {
 
         dto.setId(comment.getId());
         dto.setMemberName(comment.getMember().getName());
+        dto.setMemberId(comment.getMember().getId());
         dto.setContent(comment.getContent());
         dto.setCreatedAt(createdAt);
         dto.setDeleted(comment.isDeleted());
