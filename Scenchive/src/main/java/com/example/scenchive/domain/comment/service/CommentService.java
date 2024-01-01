@@ -8,6 +8,7 @@ import com.example.scenchive.domain.comment.repository.CommentRepository;
 import com.example.scenchive.domain.member.repository.Member;
 import com.example.scenchive.domain.member.repository.MemberRepository;
 import com.example.scenchive.domain.member.service.MemberService;
+import com.example.scenchive.domain.notification.service.NotificationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +24,16 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final MemberService memberService;
+    private final NotificationService notificationService;
 
     public CommentService(CommentRepository commentRepository, MemberRepository memberRepository,
-                          BoardRepository boardRepository, MemberService memberService) {
+                          BoardRepository boardRepository, MemberService memberService,
+                          NotificationService notificationService) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.boardRepository = boardRepository;
         this.memberService=memberService;
+        this.notificationService=notificationService;
     }
 
     // 댓글 생성
@@ -45,6 +49,11 @@ public class CommentService {
                 .build();
 
         commentRepository.save(comment);
+
+        //댓글이 달린 게시물을 작성한 유저에게 알림 생성
+        Member boardMember=board.getMember();
+        notificationService.createNotification(boardMember, content, comment.getCreated_at());
+
         return mapToDto(comment);
     }
 
@@ -64,6 +73,11 @@ public class CommentService {
                 .build();
 
         commentRepository.save(reply);
+
+        //대댓글이 달린 댓글을 작성한 유저에게 알림 생성
+        Member parentMember=parentComment.getMember();
+        notificationService.createNotification(parentMember, content, reply.getCreated_at());
+
         return mapToDto(reply);
     }
 
