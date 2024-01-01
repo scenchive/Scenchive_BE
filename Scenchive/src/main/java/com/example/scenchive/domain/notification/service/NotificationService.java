@@ -44,7 +44,7 @@ public class NotificationService {
 
     //알림 클릭 시 메소드
     public void readNotification(Long notificationId){
-        Notification notification = notificationRepository.findById(notificationId).get();
+        Notification notification = notificationRepository.findById(notificationId).orElseThrow(() -> new IllegalArgumentException("해당 알림이 없습니다."));
         if (!notification.isMemberCheck()){
             notification.checkNotification();
         }
@@ -53,7 +53,7 @@ public class NotificationService {
 
     //확인한 알림인지 알려주는 메소드
     public String checkBoolean(Long notificationId){
-        Notification notification=notificationRepository.findById(notificationId).get();
+        Notification notification=notificationRepository.findById(notificationId).orElseThrow(() -> new IllegalArgumentException("해당 알림이 없습니다."));
         if(notification.isMemberCheck()){
             return "이미 확인한 알림입니다.";
         }
