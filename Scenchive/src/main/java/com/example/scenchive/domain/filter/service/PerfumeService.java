@@ -85,7 +85,7 @@ public class PerfumeService {
                 ratingAvg=reviewService.calculatePerfumeRating(perfume.getId()).getRatingAvg();
             }
 
-            PerfumeDto perfumeDto = new PerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage, brandName, brandName_kr, perfumeKeywordIds, ratingAvg);
+            PerfumeDto perfumeDto = new PerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(), perfumeImage, brandName, brandName_kr, perfumeKeywordIds, ratingAvg);
             perfumes.add(perfumeDto);
         }
 
@@ -149,7 +149,7 @@ public class PerfumeService {
             String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
             Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
 
-            return new PerfumeFullInfoDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage,
+            return new PerfumeFullInfoDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(), perfumeImage,
                     brand != null ? brand.getBrandName() : null, brand != null ? brand.getBrandName_kr() : null);
         }).orElse(null);
 

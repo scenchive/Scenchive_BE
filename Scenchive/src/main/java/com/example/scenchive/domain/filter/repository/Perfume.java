@@ -23,6 +23,9 @@ public class Perfume {
     @JoinColumn(name = "perfume_name")
     private String perfumeName;
 
+    @Column(columnDefinition = "TEXT")
+    private String perfume_kr;
+
     @JoinColumn(name = "brand_id")
     private Long brandId;
 
@@ -36,4 +39,8 @@ public class Perfume {
     @OneToMany(mappedBy = "perfume")
     private List<Perfumescent> perfumescentList=new ArrayList<>();
 
+
+    public void update(String perfumeKr){
+        this.perfume_kr=perfumeKr;
+    }
 }

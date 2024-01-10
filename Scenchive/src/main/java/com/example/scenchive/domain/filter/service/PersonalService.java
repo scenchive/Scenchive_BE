@@ -61,7 +61,7 @@ public class PersonalService {
                 Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
                 String brandName = (brand != null) ? brand.getBrandName() : null;
                 String brandName_kr = (brand != null) ? brand.getBrandName_kr() : null;
-                PersonalDto personalDto = new PersonalDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage, brandName, brandName_kr, keywordIds);
+                PersonalDto personalDto = new PersonalDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(), perfumeImage, brandName, brandName_kr, keywordIds);
                 perfumes.add(personalDto);
             }
         }
@@ -116,7 +116,7 @@ public class PersonalService {
                             ratingAvg=reviewService.calculatePerfumeRating(perfume.getId()).getRatingAvg();
                         }
 
-                        MainPerfumeDto mainPerfumeDto = new MainPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfumeImage, brandName, brandName_kr, ratingAvg);
+                        MainPerfumeDto mainPerfumeDto = new MainPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(), perfumeImage, brandName, brandName_kr, ratingAvg);
                         if(!perfumes.contains(mainPerfumeDto)) {
                             perfumes.add(mainPerfumeDto);
                         }
