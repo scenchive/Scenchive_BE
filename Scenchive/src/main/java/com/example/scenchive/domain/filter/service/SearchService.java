@@ -47,7 +47,7 @@ public class SearchService {
             for (Perfume perfume : perfumes) {
                 String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
                 String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
-                SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(),
+                SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(),
                         perfumeImage, brand.getId(), brand.getBrandName(), brand.getBrandName_kr());
                 searchPerfumeDtos.add(searchPerfumeDto);
             }
@@ -65,7 +65,7 @@ public class SearchService {
             Brand brand=brandRepository.findById(perfume.getBrandId()).get();
             String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
             String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
-            SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getPerfumeId(), perfume.getPerfumeName(),
+            SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getPerfumeId(), perfume.getPerfumeName(), perfume.getPerfume_kr(),
                     perfumeImage, perfume.getBrandId(), brand.getBrandName(), brand.getBrandName_kr());
             perfumes.add(searchPerfumeDto);
         }
@@ -82,7 +82,7 @@ public class SearchService {
             for (Perfume perfume : perfumes) {
                 String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
                 String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
-                SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(),
+                SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(),
                         perfumeImage, brand.getId(), brand.getBrandName(), brand.getBrandName_kr());
                 searchPerfumeDtos.add(searchPerfumeDto);
             }
@@ -125,7 +125,7 @@ public class SearchService {
                 String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
                 String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
                 if (brand != null) {
-                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(),
+                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(),
                             perfumeImage, brand.getId(), brand.getBrandName(), brand.getBrandName_kr());
                     searchPerfumeDtos.add(searchPerfumeDto);
                 } else {
@@ -141,7 +141,7 @@ public class SearchService {
                 String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
                 String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
                 if (brand != null) {
-                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(),
+                    SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(),
                             perfumeImage, brand.getId(), brand.getBrandName(), brand.getBrandName_kr());
                     searchPerfumeDtos.add(searchPerfumeDto);
                 } else {
