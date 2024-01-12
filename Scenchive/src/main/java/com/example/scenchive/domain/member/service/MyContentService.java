@@ -42,7 +42,7 @@ public class MyContentService {
         }
 
         for (Comment comment : comments) {
-            MyCommentDto commentDto = new MyCommentDto(comment.getId(), comment.getContent());
+            MyCommentDto commentDto = new MyCommentDto(comment.getId(), comment.getContent(), comment.getBoard().getId(), comment.getBoard().getTitle(), comment.getModified_at());
             commentDtos.add(commentDto);
         }
 
