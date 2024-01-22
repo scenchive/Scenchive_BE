@@ -90,6 +90,7 @@ public class NotificationService {
         NotificationDto dto = new NotificationDto();
         dto.setId(notification.getId());
         dto.setBoardId(notification.getBoard().getId());
+        dto.setBoardTitle(notification.getBoard().getTitle());
         dto.setMessage(notification.getMessage());
         LocalDateTime created_at=notification.getCreatedAt();
         String replyDate=created_at.format(formatter);

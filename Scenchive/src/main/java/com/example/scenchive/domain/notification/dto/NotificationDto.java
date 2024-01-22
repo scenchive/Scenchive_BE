@@ -9,6 +9,7 @@ import lombok.Setter;
 public class NotificationDto {
     private Long id;
     private Long boardId;
+    private String boardTitle;
     private String message;
     private String createdAt;
     private boolean check;
