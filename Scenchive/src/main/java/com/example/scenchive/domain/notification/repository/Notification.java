@@ -1,6 +1,7 @@
 package com.example.scenchive.domain.notification.repository;
 
 import com.example.scenchive.domain.BaseTimeEntity;
+import com.example.scenchive.domain.board.repository.Board;
 import com.example.scenchive.domain.member.repository.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -22,6 +23,10 @@ public class Notification {
     @JoinColumn(name = "user_id")
     private Member member;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private Board board;
+
     @Column(nullable = false)
     private String message;
 
@@ -35,8 +40,9 @@ public class Notification {
     }
 
     @Builder
-    public Notification(Member member, String message, boolean memberCheck, LocalDateTime createdAt) {
+    public Notification(Member member, Board board, String message, boolean memberCheck, LocalDateTime createdAt) {
         this.member = member;
+        this.board=board;
         this.message = message;
         this.memberCheck = memberCheck;
         this.createdAt = createdAt;

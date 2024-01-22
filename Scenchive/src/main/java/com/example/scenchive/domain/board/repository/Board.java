@@ -3,6 +3,7 @@ package com.example.scenchive.domain.board.repository;
 import com.example.scenchive.domain.BaseTimeEntity;
 import com.example.scenchive.domain.comment.repository.Comment;
 import com.example.scenchive.domain.member.repository.Member;
+import com.example.scenchive.domain.notification.repository.Notification;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,6 +43,9 @@ public class Board extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board")
+    private List<Notification> notificationList=new ArrayList<>();
 
     //연관관계 메서드
     public void addMember(Member member){

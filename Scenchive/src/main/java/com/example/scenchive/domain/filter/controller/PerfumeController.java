@@ -150,4 +150,10 @@ public class PerfumeController {
     public PerfumeFullInfoDto perfumeFullInfo(@PathVariable("perfumeId") Long perfumeId) {
         return perfumeService.getPerfumeFullInfo(perfumeId);
     }
+
+    //메인화면: 비로그인한 사용자의 경우 랜덤 향수 6개 반환
+    @GetMapping("/randomperfume")
+    public List<MainPerfumeDto> getRandomPerfumes() {
+        return personalService.getRandomPerfumes();
+    }
 }

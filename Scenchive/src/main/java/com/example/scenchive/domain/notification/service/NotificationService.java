@@ -1,5 +1,6 @@
 package com.example.scenchive.domain.notification.service;
 
+import com.example.scenchive.domain.board.repository.Board;
 import com.example.scenchive.domain.member.repository.Member;
 import com.example.scenchive.domain.member.repository.MemberRepository;
 import com.example.scenchive.domain.notification.dto.NotificationDto;
@@ -31,9 +32,10 @@ public class NotificationService {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     //알림 생성 메소드
-    public void createNotification(Member member, String message, LocalDateTime created_at){
+    public void createNotification(Member member, Board board, String message, LocalDateTime created_at){
         Notification notification=Notification.builder()
                 .member(member)
+                .board(board)
                 .message(message)
                 .memberCheck(false)
                 .createdAt(created_at)
@@ -87,6 +89,7 @@ public class NotificationService {
     private NotificationDto mapToDto(Notification notification) {
         NotificationDto dto = new NotificationDto();
         dto.setId(notification.getId());
+        dto.setBoardId(notification.getBoard().getId());
         dto.setMessage(notification.getMessage());
         LocalDateTime created_at=notification.getCreatedAt();
         String replyDate=created_at.format(formatter);
