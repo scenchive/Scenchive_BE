@@ -7,7 +7,7 @@ import com.example.scenchive.domain.filter.utils.DeduplicationUtils;
 import com.example.scenchive.domain.member.repository.*;
 import com.example.scenchive.domain.review.repository.ReviewRepository;
 import com.example.scenchive.domain.review.service.ReviewService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class PersonalService {
     private final UserTagRepository userTagRepository;
     private final PerfumeTagRepository perfumeTagRepository;
@@ -24,20 +25,7 @@ public class PersonalService {
     private final PTagRepository pTagRepository;
     private final ReviewService reviewService;
     private final ReviewRepository reviewRepository;
-
-    @Autowired
-    public PersonalService(UserTagRepository userTagRepository, PerfumeTagRepository perfumeTagRepository,
-                           MemberRepository memberRepository, BrandRepository brandRepository,
-                           PTagRepository pTagRepository, ReviewService reviewService,
-                           ReviewRepository reviewRepository) {
-        this.userTagRepository = userTagRepository;
-        this.perfumeTagRepository = perfumeTagRepository;
-        this.memberRepository = memberRepository;
-        this.brandRepository = brandRepository;
-        this.pTagRepository = pTagRepository;
-        this.reviewService=reviewService;
-        this.reviewRepository=reviewRepository;
-    }
+    private final PerfumeRepository perfumeRepository;
 
 
    //향수 프로필 화면 : 사용자 Id를 넘겨주면 추천 향수 리스트를 반환
@@ -139,5 +127,52 @@ public class PersonalService {
         //perfumes=perfumes.stream().sorted(Comparator.comparing(MainPerfumeDto::getRatingAvg).reversed()).collect(Collectors.toList());
         perfumes=perfumes.stream().skip(0).limit(3).collect(Collectors.toList());
         return perfumes;
+    }
+
+    //메인화면: 비로그인한 사용자의 경우 랜덤 향수 6개 반환
+    @Transactional(readOnly = true)
+    public List<MainPerfumeDto> getRandomPerfumes(){
+
+        //랜덤 숫자 6개 뽑기
+        Set<Integer> randomValues = new HashSet<>();
+        while (randomValues.size() != 6) {
+            int randomVal = (int) (Math.random() * (16023) - 1) + 1; //1~16022
+            randomValues.add(randomVal);
+        }
+
+        // Perfume 키워드 일치 횟수 저장 맵 생성
+        Map<Long, Integer> perfumeKeywordMatches = new HashMap<>();
+
+        Iterator<Integer> iterator = randomValues.iterator();
+        List<MainPerfumeDto> perfumeList=new ArrayList<>();
+
+        while (iterator.hasNext()){
+            long randomV = (long) iterator.next();
+            Perfume perfume=perfumeRepository.findById(randomV).get();
+            String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
+            String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
+            Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
+            String brandName = (brand != null) ? brand.getBrandName() : null;
+            String brandName_kr = (brand != null) ? brand.getBrandName_kr() : null;
+
+            double ratingAvg=0.0;
+
+            if (reviewRepository.findByPerfumeIdOrderByCreatedAtDesc(perfume.getId()).size()!=0){
+                ratingAvg=reviewService.calculatePerfumeRating(perfume.getId()).getRatingAvg();
+            }
+
+            MainPerfumeDto mainPerfumeDto = new MainPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(), perfumeImage, brandName, brandName_kr, ratingAvg);
+            if(!perfumeList.contains(mainPerfumeDto)) {
+                perfumeList.add(mainPerfumeDto);
+            }
+        }
+        perfumeList = DeduplicationUtils.deduplication(perfumeList, MainPerfumeDto::getPerfumeName);
+
+        perfumeList.sort(Comparator
+                .<MainPerfumeDto, Integer>comparing(dto -> perfumeKeywordMatches.getOrDefault(dto.getId(), 0))
+                .reversed()
+                .thenComparing(Comparator.comparing(MainPerfumeDto::getRatingAvg).reversed()));
+
+        return perfumeList;
     }
 }

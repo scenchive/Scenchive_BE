@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class NotificationDto {
     private Long id;
+    private Long boardId;
     private String message;
     private String createdAt;
     private boolean check;
