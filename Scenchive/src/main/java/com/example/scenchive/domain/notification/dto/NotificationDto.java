@@ -14,4 +14,15 @@ public class NotificationDto {
     private String createdAt;
     private boolean check;
 
+    public NotificationDto(Long id, Long boardId, String boardTitle, String message, String createdAt, boolean check) {
+        this.id = id;
+        this.boardId = boardId;
+        this.boardTitle = boardTitle;
+        this.message = message;
+        this.createdAt = createdAt;
+        this.check = check;
+    }
+
+    public NotificationDto() {
+    }
 }

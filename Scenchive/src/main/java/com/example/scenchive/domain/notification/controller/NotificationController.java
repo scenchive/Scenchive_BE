@@ -9,6 +9,8 @@ import com.example.scenchive.domain.notification.dto.ResponseNotificationDto;
 import com.example.scenchive.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,9 +33,9 @@ public class NotificationController {
 
     //유저별 알림 목록 조회
     @GetMapping("/notification")
-    public ResponseNotificationDto getNotifications() {
+    public ResponseNotificationDto getNotifications(@PageableDefault(size=10) Pageable pageable) {
         Member member = memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get();
-        return notificationService.getNotifications(member);
+        return notificationService.getNotifications(pageable, member);
     }
 
     //알림 클릭
