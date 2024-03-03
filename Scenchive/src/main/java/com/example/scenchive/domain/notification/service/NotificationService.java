@@ -8,12 +8,14 @@ import com.example.scenchive.domain.notification.dto.ResponseNotificationDto;
 import com.example.scenchive.domain.notification.repository.Notification;
 import com.example.scenchive.domain.notification.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,12 +67,25 @@ public class NotificationService {
     }
 
     //알림 조회 메소드
-    public ResponseNotificationDto getNotifications(Member member) {
+    public ResponseNotificationDto getNotifications(Pageable pageable, Member member) {
         List<Notification> notifications = notificationRepository.findByMemberOrderByCreatedAtDesc(member);
-        System.out.println("notifications = " + notifications);
+
         List<NotificationDto> notificationDtoList= notifications.stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
+
+        List<NotificationDto> pagingNotifications=new ArrayList<>();
+
+        int startIndex = (int) pageable.getOffset();
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), notificationDtoList.size());
+
+        List<NotificationDto> paginatedNotifications = new ArrayList<>(notificationDtoList).subList(startIndex, endIndex);
+
+        for(NotificationDto notification : paginatedNotifications){NotificationDto
+                notificationDto=new NotificationDto(notification.getId(), notification.getBoardId(), notification.getBoardTitle(), notification.getMessage(), notification.getCreatedAt(), notification.isCheck());
+            pagingNotifications.add(notificationDto);
+        }
+
         int readNotification=0;
         int unreadNotifications=0;
         for(NotificationDto notificationDto:notificationDtoList){
@@ -81,9 +96,11 @@ public class NotificationService {
                 unreadNotifications+=1;
             }
         }
-        ResponseNotificationDto responseNotificationDto=new ResponseNotificationDto(readNotification, unreadNotifications, notificationDtoList);
+        ResponseNotificationDto responseNotificationDto=new ResponseNotificationDto(readNotification, unreadNotifications, pagingNotifications);
         return responseNotificationDto;
     }
+
+
 
     //notification 엔티티 -> notification Dto
     private NotificationDto mapToDto(Notification notification) {
