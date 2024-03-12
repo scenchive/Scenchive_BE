@@ -52,7 +52,9 @@ public class CommentService {
 
         //댓글이 달린 게시물을 작성한 유저에게 알림 생성
         Member boardMember=board.getMember();
-        notificationService.createNotification(boardMember, board, content, comment.getCreated_at());
+        if (member!=boardMember){
+            notificationService.createNotification(boardMember, board, content, comment.getCreated_at());
+        }
 
         return mapToDto(comment);
     }
@@ -76,7 +78,9 @@ public class CommentService {
 
         //대댓글이 달린 댓글을 작성한 유저에게 알림 생성
         Member parentMember=parentComment.getMember();
-        notificationService.createNotification(parentMember, board, content, reply.getCreated_at());
+        if (member!=parentMember){
+            notificationService.createNotification(parentMember, board, content, reply.getCreated_at());
+        }
 
         return mapToDto(reply);
     }
