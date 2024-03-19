@@ -10,13 +10,15 @@ public class PerfumeFullInfoDto {
     private String perfumeImage; // 향수 이미지
     private String brandName; // 브랜드 이름
     private String brandName_kr; // 브랜드 이름 (한글)
+    private String brandImage;
 
-    public PerfumeFullInfoDto(Long id, String perfumeName, String perfume_kr, String perfumeImage, String brandName, String brandName_kr) {
+    public PerfumeFullInfoDto(Long id, String perfumeName, String perfume_kr, String perfumeImage, String brandName, String brandName_kr, String brandImage) {
         this.id = id;
         this.perfumeName = perfumeName;
         this.perfume_kr=perfume_kr;
         this.perfumeImage = perfumeImage;
         this.brandName = brandName;
         this.brandName_kr = brandName_kr;
+        this.brandImage=brandImage;
     }
 }
