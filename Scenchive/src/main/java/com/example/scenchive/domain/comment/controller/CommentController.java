@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/comments")
+@CrossOrigin(origins = {"http://localhost:3000", "https://scenchive.github.io/"}, allowCredentials = "true", allowedHeaders = "Authorization")
 public class CommentController {
     private final CommentService commentService;
 

@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:3000", "https://scenchive.github.io/"}, allowCredentials = "true", allowedHeaders = "Authorization")
 public class NotificationController {
     private final NotificationService notificationService;
     private final MemberRepository memberRepository;

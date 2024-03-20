@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(origins="http://10.0.2.15:8081")
+@CrossOrigin(origins = {"http://localhost:3000", "https://scenchive.github.io/"}, allowCredentials = "true", allowedHeaders = "Authorization")
 public class MemberController {
     private final MemberService memberService;
 

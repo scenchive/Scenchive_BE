@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 //
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(origins="http://10.0.2.15:8081")
+@CrossOrigin(origins = {"http://localhost:3000", "https://scenchive.github.io/"}, allowCredentials = "true", allowedHeaders = "Authorization")
 public class LoginController {
     private final LoginService loginService;
 
