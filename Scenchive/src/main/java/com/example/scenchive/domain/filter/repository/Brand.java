@@ -20,4 +20,7 @@ public class Brand {
 
     @Column(name="brand_kr")
     private String brandName_kr;
+
+    @Column(name="brand_url")
+    private String brandUrl;
 }
