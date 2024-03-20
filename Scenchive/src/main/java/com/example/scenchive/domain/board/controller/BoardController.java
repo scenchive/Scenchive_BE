@@ -14,6 +14,7 @@ import java.util.List;
 //
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = {"http://localhost:3000", "https://scenchive.github.io/"}, allowCredentials = "true", allowedHeaders = "Authorization")
 public class BoardController {
 
     private final BoardService boardService;
