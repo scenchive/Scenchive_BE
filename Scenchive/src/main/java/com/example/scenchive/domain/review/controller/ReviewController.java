@@ -42,7 +42,7 @@ public class ReviewController {
     }
 
     // 향수별 리뷰 조회
-    @GetMapping("/review/{perfumeId}")
+    @GetMapping("/reviews/{perfumeId}")
     public List<ReviewListResponseDto> getReview(@PathVariable("perfumeId") Long perfumeId, Model model) {
         model.addAttribute("perfumereview", reviewService.findByPerfumeId(perfumeId));
         return reviewService.findByPerfumeId(perfumeId);
