@@ -48,7 +48,7 @@ public class SearchService {
                 String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
                 String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
                 SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(),
-                        perfumeImage, brand.getId(), brand.getBrandName(), brand.getBrandName_kr());
+                        perfumeImage, brand.getId(), brand.getBrandName(), brand.getBrandName_kr(), brand.getBrandUrl());
                 searchPerfumeDtos.add(searchPerfumeDto);
             }
         }
@@ -66,7 +66,7 @@ public class SearchService {
             String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
             String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
             SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getPerfumeId(), perfume.getPerfumeName(), perfume.getPerfume_kr(),
-                    perfumeImage, perfume.getBrandId(), brand.getBrandName(), brand.getBrandName_kr());
+                    perfumeImage, perfume.getBrandId(), brand.getBrandName(), brand.getBrandName_kr(), brand.getBrandUrl());
             perfumes.add(searchPerfumeDto);
         }
 
@@ -83,7 +83,7 @@ public class SearchService {
                 String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
                 String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
                 SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(),
-                        perfumeImage, brand.getId(), brand.getBrandName(), brand.getBrandName_kr());
+                        perfumeImage, brand.getId(), brand.getBrandName(), brand.getBrandName_kr(), brand.getBrandUrl());
                 searchPerfumeDtos.add(searchPerfumeDto);
             }
         }
@@ -126,7 +126,7 @@ public class SearchService {
                 String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
                 if (brand != null) {
                     SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(),
-                            perfumeImage, brand.getId(), brand.getBrandName(), brand.getBrandName_kr());
+                            perfumeImage, brand.getId(), brand.getBrandName(), brand.getBrandName_kr(), brand.getBrandUrl());
                     searchPerfumeDtos.add(searchPerfumeDto);
                 } else {
                     throw new NullPointerException("검색하신 향수나 브랜드가 없습니다.");
@@ -142,7 +142,7 @@ public class SearchService {
                 String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
                 if (brand != null) {
                     SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(),
-                            perfumeImage, brand.getId(), brand.getBrandName(), brand.getBrandName_kr());
+                            perfumeImage, brand.getId(), brand.getBrandName(), brand.getBrandName_kr(), brand.getBrandUrl());
                     searchPerfumeDtos.add(searchPerfumeDto);
                 } else {
                     throw new NullPointerException("검색하신 향수나 브랜드가 없습니다.");
