@@ -1,7 +1,6 @@
 package com.example.scenchive.domain.filter.service;
 
 import com.example.scenchive.domain.filter.dto.BrandDto;
-import com.example.scenchive.domain.filter.dto.PerfumeDto;
 import com.example.scenchive.domain.filter.dto.SearchListDto;
 import com.example.scenchive.domain.filter.dto.SearchPerfumeDto;
 import com.example.scenchive.domain.filter.repository.Brand;
@@ -9,18 +8,15 @@ import com.example.scenchive.domain.filter.repository.BrandRepository;
 import com.example.scenchive.domain.filter.repository.Perfume;
 import com.example.scenchive.domain.filter.repository.PerfumeRepository;
 import com.example.scenchive.domain.filter.utils.DeduplicationUtils;
-import lombok.RequiredArgsConstructor;
+import com.example.scenchive.domain.member.exception.BrandSearchException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional(readOnly = true)
 @Service
@@ -102,7 +98,10 @@ public class SearchService {
         List<Perfume> perfumes = perfumeRepository.findByPerfumeNameContainingIgnoreCase(name); //검색어 포함된 향수 리스트
         List<Brand> brands = new ArrayList<>();
 
-        if (name.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")){
+        if (name.matches(".*[\\[\\]].*")){
+            return new SearchListDto("잘못된 문자가 입력되었습니다.");
+        }
+        else if (name.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")){
             brands = brandRepository.findByBrandNameKrContainingIgnoreCase(name);
         } else {
             brands = brandRepository.findByBrandNameContainingIgnoreCase(name); //검색어 포함된 브랜드 리스트
