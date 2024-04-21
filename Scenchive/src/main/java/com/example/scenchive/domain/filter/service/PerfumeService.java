@@ -51,12 +51,21 @@ public class PerfumeService {
         // 주어진 키워드 id들로 PerfumeTag 리스트 조회
         List<PerfumeTag> perfumeTags = perfumeTagRepository.findByPtagIn(keywordIds);
         // perfume_id 오름차순으로 조회
-        Set<Perfume> uniquePerfumes = new TreeSet<>((p1, p2) -> p1.getId().compareTo(p2.getId())); // Set: 다중 키워드로 인해 중복된 향수가 있는 경우 제거
+        //Set<Perfume> uniquePerfumes = new TreeSet<>((p1, p2) -> p1.getId().compareTo(p2.getId())); // Set: 다중 키워드로 인해 중복된 향수가 있는 경우 제거
 
+        // 모든 태그가 있는 향수를 찾기 위해 태그 개수를 세어 일치하는 향수를 찾음
+        Map<Perfume, Long> tagCountMap = new HashMap<>();
         for (PerfumeTag perfumeTag : perfumeTags) {
             Perfume perfume = perfumeTag.getPerfume();
-            uniquePerfumes.add(perfume);
+            Long count = tagCountMap.getOrDefault(perfume, 0L);
+            tagCountMap.put(perfume, count + 1);
         }
+
+        // 모든 태그를 가진 향수들을 Set으로 필터링
+        Set<Perfume> uniquePerfumes = tagCountMap.entrySet().stream()
+                .filter(entry -> entry.getValue() == keywordIds.size()) // 모든 태그가 있는 경우 필터링
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
 
         List<PerfumeDto> perfumes = new ArrayList<>();
 
@@ -99,12 +108,20 @@ public class PerfumeService {
     // 키워드 필터링 결과로 나온 전체 향수 개수 구하기
     public int getTotalPerfumeCount(List<PTag> keywordIds) {
         List<PerfumeTag> perfumeTags = perfumeTagRepository.findByPtagIn(keywordIds);
-        Set<Perfume> uniquePerfumes = new HashSet<>();
+        //Set<Perfume> uniquePerfumes = new HashSet<>();
 
+        Map<Perfume, Long> tagCountMap = new HashMap<>();
         for (PerfumeTag perfumeTag : perfumeTags) {
             Perfume perfume = perfumeTag.getPerfume();
-            uniquePerfumes.add(perfume);
+            Long count = tagCountMap.getOrDefault(perfume, 0L);
+            tagCountMap.put(perfume, count + 1);
         }
+
+        // 모든 태그를 가진 향수들을 Set으로 필터링
+        Set<Perfume> uniquePerfumes = tagCountMap.entrySet().stream()
+                .filter(entry -> entry.getValue() == keywordIds.size()) // 모든 태그가 있는 경우 필터링
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
         return uniquePerfumes.size();
     }
 
