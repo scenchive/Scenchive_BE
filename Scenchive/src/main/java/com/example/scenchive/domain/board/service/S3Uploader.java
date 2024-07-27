@@ -51,6 +51,16 @@ public class S3Uploader {
         return uploadImageUrl;      // 업로드된 파일의 S3 URL 주소 반환
     }
 
+    public String upload(MultipartFile multipartFile, String dirName, String name) throws IOException { //name 안에 향수, 브랜드 이름 입력
+        String imgName = name.replaceAll("[^\\w]", "");
+        String fileName = dirName + "/" + imgName;
+        File uploadFile = convert(multipartFile)
+                .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File 전환 실패"));
+        String uploadImageUrl = putS3(uploadFile, fileName);
+        removeNewFile(uploadFile);
+        return uploadImageUrl;
+    }
+
     //S3 버킷에 이미지 업로드
     private String putS3(File uploadFile, String fileName) {
         amazonS3Client.putObject(

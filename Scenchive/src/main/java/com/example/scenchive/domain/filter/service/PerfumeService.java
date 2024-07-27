@@ -1,8 +1,7 @@
 package com.example.scenchive.domain.filter.service;
 
-import com.example.scenchive.domain.filter.dto.PTagDto;
-import com.example.scenchive.domain.filter.dto.PerfumeDto;
-import com.example.scenchive.domain.filter.dto.PerfumeFullInfoDto;
+import com.example.scenchive.domain.board.service.S3Uploader;
+import com.example.scenchive.domain.filter.dto.*;
 import com.example.scenchive.domain.filter.repository.*;
 import com.example.scenchive.domain.info.repository.PerfumenoteRepository;
 import com.example.scenchive.domain.info.repository.PerfumescentRepository;
@@ -12,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,13 +28,14 @@ public class PerfumeService {
     private PerfumenoteRepository perfumenoteRepository;
     private ReviewRepository reviewRepository;
     private final ReviewService reviewService;
+    private final S3Uploader s3Uploader;
 
 
     @Autowired
     public PerfumeService(PerfumeTagRepository perfumeTagRepository, PerfumeRepository perfumeRepository,
                           BrandRepository brandRepository, PTagRepository pTagRepository,
                           PerfumescentRepository perfumescentRepository, PerfumenoteRepository perfumenoteRepository,
-                          ReviewRepository reviewRepository, ReviewService reviewService) {
+                          ReviewRepository reviewRepository, ReviewService reviewService, S3Uploader s3Uploader) {
 
         this.perfumeTagRepository = perfumeTagRepository;
         this.perfumeRepository = perfumeRepository;
@@ -43,6 +45,7 @@ public class PerfumeService {
         this.perfumenoteRepository = perfumenoteRepository;
         this.reviewRepository=reviewRepository;
         this.reviewService=reviewService;
+        this.s3Uploader=s3Uploader;
     }
 
     @Transactional(readOnly = true)
@@ -179,5 +182,53 @@ public class PerfumeService {
         }).orElse(null);
 
         return perfumeDto;
+    }
+
+    //브랜드 저장
+    @Transactional
+    public Brand saveBrand(BrandRegDto dto, MultipartFile image) {
+        Brand brand = new Brand(dto.getBrandName(), dto.getBrandName_kr());
+        String imageUrl = null;
+
+        if (image != null && !image.isEmpty()) {
+            try{
+                imageUrl = s3Uploader.upload(image, "brand", dto.getBrandName()); //brand 이름의 디렉토리 생성 후 그 안에 파일 저장
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        return brandRepository.save(brand);
+    }
+
+    //브랜드 삭제
+    @Transactional
+    public void deleteBrandById(Long id) {
+        brandRepository.deleteBrandById(id);
+    }
+
+    // 향수 추가
+    @Transactional
+    public Perfume savePerfume(PerfumeSaveDto dto, MultipartFile image) {
+        String imageUrl = null;
+
+        if (image != null && !image.isEmpty()) {
+            try{
+                imageUrl = s3Uploader.upload(image, "perfume", dto.getPerfumeName()); //brand 이름의 디렉토리 생성 후 그 안에 파일 저장
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        Brand brand = brandRepository.findBrandByBrandName(dto.getBrandName());
+        Perfume perfume = new Perfume(dto.getPerfumeName(), dto.getPerfume_kr(), brand.getId());
+        return perfumeRepository.save(perfume);
+    }
+
+    //향수 삭제
+    @Transactional
+    public void deletePerfumeById(Long id) {
+        perfumeRepository.deleteById(id);
     }
 }

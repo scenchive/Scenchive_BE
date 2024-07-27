@@ -1,6 +1,7 @@
 package com.example.scenchive.domain.filter.repository;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,9 +9,21 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "brand" )
 public class Brand {
+    public Brand(String brandName, String brandName_kr, String brandUrl) {
+        this.brandName = brandName;
+        this.brandName_kr = brandName_kr;
+        this.brandUrl = brandUrl;
+    }
+
+    public Brand(String brandName, String brandName_kr) {
+        this.brandName = brandName;
+        this.brandName_kr = brandName_kr;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
