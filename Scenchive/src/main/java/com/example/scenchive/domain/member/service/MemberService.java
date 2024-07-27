@@ -92,9 +92,19 @@ public class MemberService {
         }
 
         // 권한정보 생성
-        Authority authority = Authority.builder()
-                .authorityName("ROLE_USER") // ROLE_USER 라는 권한
-                .build();
+        Authority authority = null;
+        //관리자인 경우
+        if(memberForm.getEmail().equals("admin@naver.com")) {
+            authority = Authority.builder()
+                    .authorityName("ROLE_ADMIN") // ROLE_USER 라는 권한
+                    .build();
+        }
+        //일반 유저인 경우
+        else {
+            authority = Authority.builder()
+                    .authorityName("ROLE_USER") // ROLE_USER 라는 권한
+                    .build();
+        }
 
         String imageUrl = null;
 

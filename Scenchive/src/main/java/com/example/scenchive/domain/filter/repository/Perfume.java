@@ -29,6 +29,12 @@ public class Perfume {
     @JoinColumn(name = "brand_id")
     private Long brandId;
 
+    public Perfume(String perfumeName, String perfume_kr, Long brandId) {
+        this.perfumeName = perfumeName;
+        this.perfume_kr = perfume_kr;
+        this.brandId = brandId;
+    }
+
     public Perfume(Long id) {
         this.id = id;
     }

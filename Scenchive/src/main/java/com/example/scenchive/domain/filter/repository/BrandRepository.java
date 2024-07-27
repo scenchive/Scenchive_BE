@@ -18,4 +18,9 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
     @Query("SELECT b FROM Brand b WHERE LOWER(b.brandName_kr) LIKE LOWER(CONCAT('%', :brandname, '%'))")
     List<Brand> findByBrandNameKrContainingIgnoreCase(@Param("brandname") String brandname);
 
+    void deleteBrandById(Long id);
+    Brand save(Brand brand);
+
+    Brand findBrandByBrandName(String brandName);
+
 }

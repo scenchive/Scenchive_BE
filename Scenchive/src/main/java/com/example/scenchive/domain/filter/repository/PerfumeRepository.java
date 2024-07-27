@@ -13,5 +13,8 @@ public interface PerfumeRepository extends JpaRepository<Perfume, Long> {
 
     List<Perfume> findByBrandId(Long brandId);
 
+    void deleteById(Long Id);
 
+    @Query(value = "insert into perfume (brand_id, perfume_name, perfume_kr) values (:brandId, :perfumeName, :perfumekr)", nativeQuery = true)
+    Perfume save(@Param("brandId") Long brandId, @Param("perfumeName") String perfumeName, @Param("perfumekr") String perfumekr);
 }
