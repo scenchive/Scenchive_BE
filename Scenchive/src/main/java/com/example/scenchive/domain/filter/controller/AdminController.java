@@ -1,11 +1,13 @@
 package com.example.scenchive.domain.filter.controller;
 
-import com.example.scenchive.domain.filter.dto.BrandDto;
 import com.example.scenchive.domain.filter.dto.BrandRegDto;
 import com.example.scenchive.domain.filter.dto.PerfumeSaveDto;
 import com.example.scenchive.domain.filter.repository.Brand;
 import com.example.scenchive.domain.filter.repository.Perfume;
 import com.example.scenchive.domain.filter.service.PerfumeService;
+import com.example.scenchive.domain.info.dto.PerfumescentDto;
+import com.example.scenchive.domain.info.repository.Perfumescent;
+import com.example.scenchive.domain.info.service.NotesService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin(origins = {"http://localhost:3000", "https://scenchive.github.io/"}, allowCredentials = "true", allowedHeaders = "Authorization")
 public class AdminController {
     private final PerfumeService perfumeService;
-    public AdminController(PerfumeService perfumeService) {
+    private final NotesService notesService;
+    public AdminController(PerfumeService perfumeService, NotesService notesService) {
         this.perfumeService = perfumeService;
+        this.notesService = notesService;
     }
 
     //브랜드 추가
@@ -55,6 +59,19 @@ public class AdminController {
             return error();
         }
     }
+
+    // 노트 추가
+    @PostMapping("/master/note")
+    public ResponseEntity<?> saveNotes(@RequestBody PerfumescentDto dto) {
+        try {
+            //Perfumescent perfumescent = notesService.createNotes(dto);
+            PerfumescentDto savedDto = notesService.createNotes(dto);
+            return new ResponseEntity<>(savedDto, HttpStatus.OK);
+        } catch (Exception e) {
+            return error();
+        }
+    }
+
     //향수 삭제
     @DeleteMapping("/master/perfume")
 //    @PreAuthorize("hasAnyRole('ADMIN')")
