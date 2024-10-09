@@ -57,6 +57,9 @@ dependencies {
     implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.0'
 
    // implementation 'net.bytebuddy:byte-buddy:1.11.15'
+
+    // email
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
 }
 
 tasks.named('test') {
