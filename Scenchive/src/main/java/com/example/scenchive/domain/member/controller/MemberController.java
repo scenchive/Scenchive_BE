@@ -41,6 +41,11 @@ public class MemberController {
         return memberService.checkEmail(checkEmailDto);
     }
 
+//    @PostMapping("/member/email")
+//    public String checkEmail(@Valid @RequestBody CheckEmailDto checkEmailDto){
+//        return memberService.checkEmail(checkEmailDto);
+//    }
+
     @GetMapping("/member/name")
     public String checkName(@Valid @RequestBody CheckNameDto checkNameDto){
         return memberService.checkName(checkNameDto);
