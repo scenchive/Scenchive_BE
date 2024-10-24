@@ -5,6 +5,7 @@ import com.example.scenchive.domain.member.service.VerificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -19,13 +20,21 @@ public class EmailController {
     // 이메일로 인증 코드 전송
     @PostMapping("/email/send")
     public ResponseEntity<String> sendVerificationCode(@RequestBody Map<String, String> request){
-        String email = request.get("email");
-        emailService.sendVerificationCode(email);
-        return ResponseEntity.ok("인증 코드가 전송되었습니다.");
+        try {
+            String email = request.get("email");
+            emailService.sendVerificationCode(email);
+            return ResponseEntity.ok("인증 코드가 전송되었습니다.");
+        } catch (MailException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이메일 전송에 실패했습니다.");
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다.");
+        }
     }
 
     @PostMapping("/email/verify")
-    public ResponseEntity<String> verifyCode(@RequestParam String email, @RequestParam String code){
+    public ResponseEntity<String> verifyCode(@RequestBody Map<String, String> request){
+        String email = request.get("email");
+        String code = request.get("code");
         boolean isVerified = verificationService.verifyCode(email, code);
         if(isVerified){
             return ResponseEntity.ok("이메일 인증이 완료되었습니다.");

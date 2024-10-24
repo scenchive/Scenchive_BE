@@ -13,13 +13,11 @@ import java.util.Random;
 @Service
 @RequiredArgsConstructor
 public class EmailService {
+    // Redis와 통신을 위한 템플릿
+    // 이메일과 인증 코드를 <키, 값> 쌍으로 저장하는 데 사용
     private final RedisTemplate<String, String> redisTemplate;
+    // 스프링 이메일 전송
     private final JavaMailSender javaMailSender;
-
-/*    public EmailService(RedisTemplate<String, String> redisTemplate, JavaMailSender javaMailSender){
-        this.redisTemplate = redisTemplate;
-        this.javaMailSender = javaMailSender;
-    }*/
 
     // 랜덤 코드 생성
     private String generateVerificationCode(){
@@ -44,7 +42,7 @@ public class EmailService {
     public void sendVerificationCode(String email){
         String verificationCode = generateVerificationCode();
         redisTemplate.opsForValue().set(email, verificationCode, Duration.ofMinutes(5));
-
+        sendEmail(email, verificationCode);
     }
 
     // 이메일 전송
