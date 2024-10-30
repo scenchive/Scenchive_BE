@@ -1,12 +1,14 @@
 package com.example.scenchive.domain.member.service;
 
 import com.example.scenchive.domain.board.service.S3Uploader;
+import com.example.scenchive.domain.member.dto.ChangePasswordDto;
 import com.example.scenchive.domain.member.dto.CheckNameDto;
 import com.example.scenchive.domain.member.dto.ProfileDto;
 import com.example.scenchive.domain.member.dto.UtagDto;
 import com.example.scenchive.domain.member.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,15 +27,17 @@ public class ProfileService {
     private final UtagRepository utagRepository;
     private final UtagTypeRepository utagTypeRepository;
     private final S3Uploader s3Uploader;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public ProfileService(UserTagRepository userTagRepository, MemberRepository memberRepository, UtagRepository utagRepository,
-                          UtagTypeRepository utagTypeRepository, S3Uploader s3Uploader) {
+                          UtagTypeRepository utagTypeRepository, S3Uploader s3Uploader, PasswordEncoder passwordEncoder) {
         this.userTagRepository = userTagRepository;
         this.memberRepository=memberRepository;
         this.utagRepository=utagRepository;
         this.utagTypeRepository=utagTypeRepository;
         this.s3Uploader=s3Uploader;
+        this.passwordEncoder=passwordEncoder;
     }
 
     //향수 프로필 화면 : 사용자 정보 조회
@@ -148,6 +152,19 @@ public class ProfileService {
         Member member = memberRepository.findById(userId).get();
         member.updateName(checkNameDto.getName());
         return "닉네임이 변경되었습니다.";
+    }
+
+    // 비밀번호 변경
+    @Transactional
+    public String changePassword(Long userId, ChangePasswordDto changePasswordDto){
+        Member member = memberRepository.findById(userId).get();
+
+        if (!passwordEncoder.matches(changePasswordDto.getCurrentPassword(), member.getPassword())) {
+            return "비밀번호가 일치하지 않습니다.";
+        }
+
+        member.updatePassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+        return "비밀번호가 변경되었습니다.";
     }
 
 }
