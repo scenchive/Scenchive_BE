@@ -1,8 +1,6 @@
 package com.example.scenchive.domain.member.controller;
 
-import com.example.scenchive.domain.member.dto.CheckNameDto;
-import com.example.scenchive.domain.member.dto.ProfileDto;
-import com.example.scenchive.domain.member.dto.UtagDto;
+import com.example.scenchive.domain.member.dto.*;
 import com.example.scenchive.domain.member.repository.MemberRepository;
 import com.example.scenchive.domain.member.repository.UserTag;
 import com.example.scenchive.domain.member.service.MemberService;
@@ -76,5 +74,11 @@ public class ProfileController {
     public String changeName(@Valid @RequestBody CheckNameDto checkNameDto){
         Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
         return profileService.changeName(userId, checkNameDto);
+    }
+
+    @PutMapping("/member/password")
+    public String changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto) {
+        Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
+        return profileService.changePassword(userId, changePasswordDto);
     }
 }

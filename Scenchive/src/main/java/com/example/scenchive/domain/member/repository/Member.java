@@ -115,4 +115,10 @@ public class Member {
     public void updateName(String name){
         this.name=name;
     }
+
+    public void updatePassword(String password) {
+        System.out.println(this.password);
+        this.password = password;
+        System.out.println(this.password);
+    }
 }
