@@ -63,6 +63,9 @@ public class MemberController {
     // 비밀번호 찾기 - 임시 비밀번호 설정
     @PostMapping("/member/find/password")
     public ResponseEntity<String> findPassword(@Valid @RequestBody CheckEmailDto checkEmailDto) {
+        if (memberService.checkEmail(checkEmailDto).equals("가입 가능한 이메일입니다.")) {
+            return new ResponseEntity<>("해당 정보로 가입된 회원이 없습니다.", HttpStatus.NOT_FOUND);
+        }
         return emailService.sendRandomPassword(checkEmailDto.getEmail());
     }
 
