@@ -1,6 +1,7 @@
 package com.example.scenchive.domain.member.service;
 
 import com.example.scenchive.domain.board.service.S3Uploader;
+import com.example.scenchive.domain.member.dto.ChangePasswordDto;
 import com.example.scenchive.domain.member.dto.CheckEmailDto;
 import com.example.scenchive.domain.member.dto.CheckNameDto;
 import com.example.scenchive.domain.member.dto.MemberForm;
@@ -135,6 +136,13 @@ public class MemberService {
         MemberForm.from(memberRepository.save(member));
 
         return ResponseEntity.ok("회원가입이 성공적으로 완료되었습니다.");
+    }
+
+    // 임시 비밀번호로 변경
+    @Transactional
+    public void changePassword(Long userId, String randomPassword){
+        Member member = memberRepository.findById(userId).get();
+        member.updatePassword(passwordEncoder.encode(randomPassword));
     }
 
     //메인 화면 : 사용자 닉네임 반환

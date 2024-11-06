@@ -3,6 +3,7 @@ package com.example.scenchive.domain.member.controller;
 import com.example.scenchive.domain.member.dto.CheckEmailDto;
 import com.example.scenchive.domain.member.dto.CheckNameDto;
 import com.example.scenchive.domain.member.dto.MemberForm;
+import com.example.scenchive.domain.member.service.EmailService;
 import com.example.scenchive.domain.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin(origins = {"http://localhost:3000", "https://scenchive.github.io/"}, allowCredentials = "true", allowedHeaders = "Authorization")
 public class MemberController {
     private final MemberService memberService;
+    private final EmailService emailService;
 
     //회원가입
     //@Valid 검증 기능이 동작하지 않음..수정 필요
@@ -56,6 +58,15 @@ public class MemberController {
             @RequestPart(required = false) MultipartFile image, @Valid @RequestPart("memberForm") MemberForm memberForm
     ) {
         return memberService.signup(image, memberForm);
+    }
+
+    // 비밀번호 찾기 - 임시 비밀번호 설정
+    @PostMapping("/member/find/password")
+    public ResponseEntity<String> findPassword(@Valid @RequestBody CheckEmailDto checkEmailDto) {
+        if (memberService.checkEmail(checkEmailDto).equals("가입 가능한 이메일입니다.")) {
+            return new ResponseEntity<>("해당 정보로 가입된 회원이 없습니다.", HttpStatus.NOT_FOUND);
+        }
+        return emailService.sendRandomPassword(checkEmailDto.getEmail());
     }
 
     @GetMapping("/username")
