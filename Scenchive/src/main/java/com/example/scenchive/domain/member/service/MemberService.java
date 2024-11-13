@@ -62,7 +62,7 @@ public class MemberService {
         if (memberRepository.findByEmail(checkEmailDto.getEmail()).orElse(null) != null) {
             return "이미 가입되어 있는 이메일입니다.";
         }
-        return "가입 가능한 이메일입니다.";
+        return "사용 가능한 이메일입니다.";
     }
 
     @Transactional
@@ -70,7 +70,7 @@ public class MemberService {
         if (memberRepository.findByName(checkNameDto.getName()).orElse(null) != null) {
             return "이미 가입되어 있는 닉네임입니다.";
         }
-        return "가입 가능한 닉네임입니다.";
+        return "사용 가능한 닉네임입니다.";
     }
 
 
