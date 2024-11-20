@@ -1,5 +1,6 @@
 package com.example.scenchive.domain.member.controller;
 
+import com.amazonaws.Response;
 import com.example.scenchive.domain.member.dto.*;
 import com.example.scenchive.domain.member.repository.MemberRepository;
 import com.example.scenchive.domain.member.repository.UserTag;
@@ -9,6 +10,7 @@ import com.example.scenchive.jwt.TokenProvider;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -69,14 +71,31 @@ public class ProfileController {
         return profileService.profileKeywordEdit(userId, utagDtoList);
     }
 
-    //토큰을 넘겨주면 향수 프로필 유저 닉네임 수정
-    @PutMapping("/member/name")
-    public String changeName(@Valid @RequestBody CheckNameDto checkNameDto){
-        Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
-        return profileService.changeName(userId, checkNameDto);
+    // 마이페이지 - 토큰 넘겨주면 닉네임 중복 확인
+    @PostMapping("/name")
+    public ResponseEntity<String> checkNameProfile(@Valid @RequestBody CheckNameDto checkNameDto){
+        if(profileService.isNameAvailable(checkNameDto.getName())){
+            return ResponseEntity.ok("사용 가능한 닉네임입니다.");
+        }
+        else{
+            return ResponseEntity.status(409).body("이미 존재하는 닉네임입니다.");
+        }
     }
 
-    @PutMapping("/member/password")
+    //토큰을 넘겨주면 향수 프로필 유저 닉네임 변경
+    @PutMapping("/name")
+    public ResponseEntity<String> changeName(@Valid @RequestBody CheckNameDto checkNameDto){
+        Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
+        String result= profileService.changeName(userId, checkNameDto);
+        if(result.equals("이미 존재하는 닉네임입니다.")){
+            return ResponseEntity.status(409).body(result);
+        }
+        else{
+            return ResponseEntity.ok(result);
+        }
+    }
+
+    @PutMapping("/password")
     public String changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto) {
         Long userId=memberRepository.findByEmail(memberService.getMyUserWithAuthorities().getEmail()).get().getId();
         return profileService.changePassword(userId, changePasswordDto);
