@@ -122,6 +122,18 @@ public class PerfumeController {
         return responseDto;
     }
 
+    // 노트별 향으로 향수 리스트 조회
+    @GetMapping("/noteperfume")
+    public BrandPerfumeResponseDto notePerfume(@RequestParam("note") String note,
+                                               @RequestParam("scent") String scent,
+                                               @PageableDefault(size = 10) Pageable pageable) {
+        List<SearchPerfumeDto> searchPerfumeDtos = searchService.notePerfume(note, scent, pageable);
+        long totalNotePerfumeCount = searchService.getTotalNotePerfumeCount();
+
+        BrandPerfumeResponseDto responseDto = new BrandPerfumeResponseDto(totalNotePerfumeCount, searchPerfumeDtos);
+        return responseDto;
+    }
+
 
     //개별 향수 노트 정보 조회
     @GetMapping("/notesinfo/{perfumeId}")

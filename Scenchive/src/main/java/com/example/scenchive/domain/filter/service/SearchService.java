@@ -8,7 +8,10 @@ import com.example.scenchive.domain.filter.repository.BrandRepository;
 import com.example.scenchive.domain.filter.repository.Perfume;
 import com.example.scenchive.domain.filter.repository.PerfumeRepository;
 import com.example.scenchive.domain.filter.utils.DeduplicationUtils;
-import com.example.scenchive.domain.member.exception.BrandSearchException;
+import com.example.scenchive.domain.info.repository.Perfumenote;
+import com.example.scenchive.domain.info.repository.PerfumenoteRepository;
+import com.example.scenchive.domain.info.repository.Perfumescent;
+import com.example.scenchive.domain.info.repository.PerfumescentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,11 +27,69 @@ public class SearchService {
 
     private final PerfumeRepository perfumeRepository;
     private final BrandRepository brandRepository;
+    private final PerfumenoteRepository perfumenoteRepository;
+    private final PerfumescentRepository perfumescentRepository;
+    private int totalNotePerfumeCount = 0;
 
     @Autowired
-    public SearchService(PerfumeRepository perfumeRepository, BrandRepository brandRepository) {
+    public SearchService(PerfumeRepository perfumeRepository, BrandRepository brandRepository,
+                         PerfumenoteRepository perfumenoteRepository, PerfumescentRepository perfumescentRepository) {
         this.perfumeRepository = perfumeRepository;
         this.brandRepository = brandRepository;
+        this.perfumenoteRepository = perfumenoteRepository;
+        this.perfumescentRepository = perfumescentRepository;
+    }
+
+    // 노트별 향으로 향수 리스트 조회
+    public List<SearchPerfumeDto> notePerfume(String note, String scent, Pageable pageable) {
+        Long noteId = switch (note) {
+            case "탑노트" -> 1L;
+            case "미들노트" -> 2L;
+            default -> 3L;
+        };
+        Perfumenote perfumenote = perfumenoteRepository.findById(noteId).get(); // (탑/미들/베이스)노트 정보
+
+        // 주어진 노트로 향과 함께 향수 리스트 조회
+        List<Perfumescent> perfumeScents = perfumescentRepository.findByPerfumenoteAndScentKrContaining(perfumenote, scent);
+
+        // 검색 결과 저장할 리스트
+        List<SearchPerfumeDto> searchedPerfumes = new ArrayList<>();
+
+        for (Perfumescent perfumescent : perfumeScents) {
+            Perfume perfume = perfumescent.getPerfume();    // 향수 정보
+            Brand brand = brandRepository.findById(perfume.getBrandId()).get(); // 브랜드 정보
+
+            // 이미지
+            String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
+            String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
+            String cleanedFileName2 = brand.getBrandName().replaceAll("[^\\w]", "");
+            String brandImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/brand/" + cleanedFileName2 + ".jpg";
+
+            SearchPerfumeDto searchPerfumeDto = new SearchPerfumeDto(
+                perfume.getId(),
+                perfume.getPerfumeName(),
+                perfume.getPerfume_kr(),
+                perfumeImage,
+                perfume.getBrandId(),
+                brand.getBrandName(),
+                brand.getBrandName_kr(),
+                brandImage
+            );
+
+            searchedPerfumes.add(searchPerfumeDto);
+        }
+
+        totalNotePerfumeCount = searchedPerfumes.size();
+
+        // 페이징 처리
+        int startIndex = (int) pageable.getOffset();
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), searchedPerfumes.size());
+
+        return searchedPerfumes.subList(startIndex, endIndex);
+    }
+
+    public int getTotalNotePerfumeCount() {
+        return totalNotePerfumeCount;
     }
 
     // 검색화면 : 브랜드별 향수 리스트 조회
