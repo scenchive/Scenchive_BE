@@ -65,6 +65,7 @@ public class MemberService {
         return "사용 가능한 이메일입니다.";
     }
 
+    // 회원가입 용 닉네임 중복 확인
     @Transactional
     public String checkName(CheckNameDto checkNameDto){
         if (memberRepository.findByName(checkNameDto.getName()).orElse(null) != null) {

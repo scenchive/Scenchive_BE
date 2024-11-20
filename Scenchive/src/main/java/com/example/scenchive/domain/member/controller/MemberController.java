@@ -59,6 +59,7 @@ public class MemberController {
 //        return memberService.checkName(checkNameDto);
 //    }
 
+    // 회원가입 시 닉네임 중복 조회
     @PostMapping("/member/name")
     public ResponseEntity<String> checkName(@Valid @RequestBody CheckNameDto checkNameDto){
         String result = memberService.checkName(checkNameDto);

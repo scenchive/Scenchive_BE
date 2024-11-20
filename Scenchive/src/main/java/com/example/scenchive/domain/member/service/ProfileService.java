@@ -143,10 +143,15 @@ public class ProfileService {
         return "update";
     }
 
-    //향수 프로필: 닉네임 변경
+    // 마이페이지용 닉네임 중복 확인
+    public boolean isNameAvailable(String name){
+        return !memberRepository.existsByName(name);
+    }
+
+    // 마이페이지용 닉네임 변경
     @Transactional
     public String changeName(Long userId, CheckNameDto checkNameDto){
-        if (memberRepository.findByName(checkNameDto.getName()).orElse(null) != null) {
+        if(!isNameAvailable(checkNameDto.getName())){
             return "이미 존재하는 닉네임입니다.";
         }
         Member member = memberRepository.findById(userId).get();
