@@ -67,7 +67,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/signup", "/login", "/survey", "/member/**",
-                        "/randomperfume", "/search", "/brandperfume", "/perfumes/**",
+                        "/randomperfume", "/search", "/brandperfume", "/noteperfume", "/perfumes/**",
                         "/reviews/**", "/perfumerating/**", "/product/search", "/notesinfo/**", "/fullinfo/**", "/email/**").permitAll()
                 .requestMatchers("/master/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
