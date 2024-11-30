@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @Service
@@ -41,16 +43,29 @@ public class SearchService {
     }
 
     // 노트별 향으로 향수 리스트 조회
-    public List<SearchPerfumeDto> notePerfume(String note, String scent, Pageable pageable) {
-        Long noteId = switch (note) {
-            case "탑노트" -> 1L;
-            case "미들노트" -> 2L;
-            default -> 3L;
-        };
-        Perfumenote perfumenote = perfumenoteRepository.findById(noteId).get(); // (탑/미들/베이스)노트 정보
+    public List<SearchPerfumeDto> notePerfume(String topNote, String middleNote, String baseNote, Pageable pageable) {
+        Perfumenote topPerfumenote = perfumenoteRepository.findById(1L).get(); // 탑노트 정보
+        Perfumenote middlePerfumenote = perfumenoteRepository.findById(2L).get(); // 미들노트 정보
+        Perfumenote basePerfumenote = perfumenoteRepository.findById(3L).get(); // 베이스노트 정보
 
-        // 주어진 노트로 향과 함께 향수 리스트 조회
-        List<Perfumescent> perfumeScents = perfumescentRepository.findByPerfumenoteAndScentKrContaining(perfumenote, scent);
+        List<Perfumescent> perfumeScents;
+        if (!topNote.isEmpty() && !middleNote.isEmpty() && !baseNote.isEmpty()) {   // 탑, 미들, 베이스
+            perfumeScents = perfumescentRepository.find3ByScentKrContaining(topPerfumenote, topNote,
+                                                                            middlePerfumenote, middleNote,
+                                                                            basePerfumenote, baseNote);
+        } else if (!topNote.isEmpty() && !middleNote.isEmpty()) {   // 탑, 미들
+            perfumeScents = perfumescentRepository.find2ByScentKrContaining(topPerfumenote, topNote, middlePerfumenote, middleNote);
+        } else if (!topNote.isEmpty() && !baseNote.isEmpty()) { // 탑, 베이스
+            perfumeScents = perfumescentRepository.find2ByScentKrContaining(topPerfumenote, topNote, basePerfumenote, baseNote);
+        } else if (!middleNote.isEmpty() && !baseNote.isEmpty()) {  // 미들, 베이스
+            perfumeScents = perfumescentRepository.find2ByScentKrContaining(middlePerfumenote, middleNote, basePerfumenote, baseNote);
+        } else if (!topNote.isEmpty()) {    // 탑
+            perfumeScents = perfumescentRepository.findByPerfumenoteAndScentKrContaining(topPerfumenote, topNote);
+        } else if (!middleNote.isEmpty()) { // 미들
+            perfumeScents = perfumescentRepository.findByPerfumenoteAndScentKrContaining(middlePerfumenote, middleNote);
+        } else {    // 베이스
+            perfumeScents = perfumescentRepository.findByPerfumenoteAndScentKrContaining(basePerfumenote, baseNote);
+        }
 
         // 검색 결과 저장할 리스트
         List<SearchPerfumeDto> searchedPerfumes = new ArrayList<>();
