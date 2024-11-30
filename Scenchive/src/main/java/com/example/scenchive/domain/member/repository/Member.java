@@ -1,21 +1,17 @@
 package com.example.scenchive.domain.member.repository;
 
 import com.example.scenchive.domain.board.repository.Board;
-import com.example.scenchive.domain.member.dto.AuthorityDto;
-import com.example.scenchive.domain.member.dto.MemberForm;
+import com.example.scenchive.domain.filter.repository.PerfumeCollected;
 import com.example.scenchive.domain.notification.repository.Notification;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -77,6 +73,9 @@ public class Member {
 
     @OneToMany(mappedBy="member")
     private List<Notification> notificationList=new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<PerfumeCollected> collectedPerfumes = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "member", cascade = ALL, orphanRemoval = true)
 //    private List<Comment> commentList = new ArrayList<>();
