@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,6 +48,45 @@ public class PerfumeCollectedController {
         try{
             perfumeCollectedService.removePerfumeFromCollection(perfumeId);
             return ResponseEntity.ok("향수가 보유 목록에서 삭제되었습니다.");
+        } catch(RuntimeException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    // 가장 많이 보유된 향수
+    @GetMapping("/main/most-collected/perfume")
+    public ResponseEntity<?> getMostCollectedPerfume() {
+        try {
+            List<Map<String, Object>> result = perfumeCollectedService.getMostCollectedPerfume();
+            return ResponseEntity.ok(result);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/main/most-collected/brand")
+    public ResponseEntity<?> getMostCollectedBrand() {
+        try {
+            List<Map<String, Object>> result = perfumeCollectedService.getMostCollectedBrand();
+            return ResponseEntity.ok(result);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    // 평균 향수 개수
+    @GetMapping("/main/average-perfume")
+    public ResponseEntity<Double> getAveragePerfumeCount(){
+        Double avgCount = perfumeCollectedService.getAveragePerfumeCount();
+        return ResponseEntity.ok(avgCount);
+    }
+
+    // 가장 많은 향수 보유자와 개수
+    @GetMapping("/main/most-collected/user")
+    public ResponseEntity<?> getUserWithMostCollectedPerfumes(){
+        try{
+            List<Map<String, Object>> result = perfumeCollectedService.getUserWithMostCollectedPerfumes();
+            return ResponseEntity.ok(result);
         } catch(RuntimeException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

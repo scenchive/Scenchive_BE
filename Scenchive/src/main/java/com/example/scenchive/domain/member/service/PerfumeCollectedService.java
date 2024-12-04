@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -97,10 +98,47 @@ public class PerfumeCollectedService {
                 }).collect(Collectors.toList());
     }
 
+    // 가장 많이 보유된 향수
+    public List<Map<String, Object>> getMostCollectedPerfume(){
+        List<Map<String, Object>> results = perfumeCollectedRepository.findMostCollectedPerfume();
+        if (results == null || results.isEmpty()) {
+            throw new RuntimeException("가장 많이 보유된 향수가 없습니다.");
+        }
+        return results;
+    }
+
+    // 가장 많이 보유된 향수 브랜드
+    public List<Map<String, Object>> getMostCollectedBrand() {
+        List<Map<String, Object>> results = perfumeCollectedRepository.findMostCollectedBrand();
+        if (results == null || results.isEmpty()) {
+            throw new RuntimeException("가장 많이 보유된 향수가 없습니다.");
+        }
+        return results;
+    }
+
+    // 유저 평균 향수 개수
+    public Double getAveragePerfumeCount(){
+        Double avgCount = perfumeCollectedRepository.findAveragePerfumeCount();
+        if(avgCount == null){
+            return 0.0;
+        }
+        return avgCount;
+    }
+
+    // 가장 많은 향수 보유 사용자
+    public List<Map<String, Object>> getUserWithMostCollectedPerfumes(){
+        List<Map<String, Object>> results = perfumeCollectedRepository.findUserWithMostCollectedPerfumes();
+        if(results.isEmpty()){
+            throw new RuntimeException("향수를 보유한 유저가 없습니다.");
+        }
+        return results;
+    }
+
     private Member getCurrentMember() {
         return memberRepository.findByEmail(
                 memberService.getMyUserWithAuthorities().getEmail()
         ).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "사용자 정보를 찾을 수 없습니다."));
     }
+
 
 }
