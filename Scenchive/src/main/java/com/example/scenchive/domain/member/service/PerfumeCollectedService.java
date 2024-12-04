@@ -111,7 +111,7 @@ public class PerfumeCollectedService {
     public List<Map<String, Object>> getMostCollectedBrand() {
         List<Map<String, Object>> results = perfumeCollectedRepository.findMostCollectedBrand();
         if (results == null || results.isEmpty()) {
-            throw new RuntimeException("가장 많이 보유된 향수가 없습니다.");
+            throw new RuntimeException("가장 많이 보유된 향수 브랜드가 없습니다.");
         }
         return results;
     }
