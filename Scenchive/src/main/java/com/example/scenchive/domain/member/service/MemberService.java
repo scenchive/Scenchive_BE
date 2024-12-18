@@ -119,9 +119,10 @@ public class MemberService {
             }
         }
 
-        if (imageUrl==null || imageUrl.isBlank()==true) {
-            imageUrl="https://scenchive.s3.ap-northeast-2.amazonaws.com/member/585a1429-2a79-4940-9488-6cea5bb9cb95.png"; // 이미지가 없을 경우 기본 이미지 반환
-        }
+        // 유저가 프로필 사진 업로드 안 했을 시 null 전달
+//        if (imageUrl==null || imageUrl.isBlank()==true) {
+//            imageUrl="https://scenchive.s3.ap-northeast-2.amazonaws.com/member/585a1429-2a79-4940-9488-6cea5bb9cb95.png"; // 이미지가 없을 경우 기본 이미지 반환
+//        }
 
 
         // 권한정보를 넣은 유저 생성

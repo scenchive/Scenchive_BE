@@ -1,16 +1,21 @@
 package com.example.scenchive.domain.review.service;
 
+import com.example.scenchive.domain.filter.repository.Brand;
+import com.example.scenchive.domain.filter.repository.BrandRepository;
 import com.example.scenchive.domain.filter.repository.Perfume;
+import com.example.scenchive.domain.filter.repository.PerfumeRepository;
 import com.example.scenchive.domain.member.repository.Member;
 import com.example.scenchive.domain.member.repository.MemberRepository;
 import com.example.scenchive.domain.member.service.MemberService;
 import com.example.scenchive.domain.review.dto.PerfumeRatingDto;
+import com.example.scenchive.domain.review.dto.PerfumeReviewCountDto;
 import com.example.scenchive.domain.review.dto.ReviewListResponseDto;
 import com.example.scenchive.domain.review.repository.RPerfumeTag;
 import com.example.scenchive.domain.review.dto.ReviewDto;
 import com.example.scenchive.domain.review.repository.RPerfumeTagRepository;
 import com.example.scenchive.domain.review.repository.Review;
 import com.example.scenchive.domain.review.repository.ReviewRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -25,13 +30,39 @@ public class ReviewService {
     private final RPerfumeTagRepository RPerfumeTagRepository;
     private final MemberRepository memberRepository;
     private final MemberService memberService;
+    private final PerfumeRepository perfumeRepository;
+    private final BrandRepository brandRepository;
 
     public ReviewService(ReviewRepository reviewRepository, RPerfumeTagRepository RPerfumeTagRepository,
-                         MemberRepository memberRepository, MemberService memberService) {
+                         MemberRepository memberRepository, MemberService memberService, PerfumeRepository perfumeRepository,
+                         BrandRepository brandRepository) {
         this.reviewRepository = reviewRepository;
         this.RPerfumeTagRepository = RPerfumeTagRepository;
         this.memberRepository=memberRepository;
         this.memberService=memberService;
+        this.perfumeRepository = perfumeRepository;
+        this.brandRepository = brandRepository;
+    }
+
+    // 리뷰 많은 향수 top 5
+    public List<PerfumeReviewCountDto> getTop5PerfumesByReviews(){
+        List<Object[]> results = reviewRepository.getTop5PerfumesReviewCount(PageRequest.of(0, 5));
+        return results.stream()
+                .map(result -> {
+                    Long perfumeId = (Long) result[0];
+                    long reviewCount = ((Number) result[1]).longValue();
+
+                    // Perfume 정보
+                    Perfume perfume = perfumeRepository.findById(perfumeId).orElseThrow(()-> new IllegalArgumentException("향수 정보를 찾을 수 없습니다. ID : "+perfumeId));
+                    Brand brand = brandRepository.findById(perfume.getBrandId()).orElseThrow(()-> new IllegalArgumentException("브랜드 정보를 찾을 수 없습니다. ID: "+ perfume.getBrandId()));
+
+                    return new PerfumeReviewCountDto(
+                            perfume.getId(),
+                            perfume.getPerfumeName(),
+                            brand.getBrandName(),
+                            reviewCount
+                    );
+                }).collect(Collectors.toList());
     }
 
     // 리뷰 등록 메서드

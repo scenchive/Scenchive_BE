@@ -1,6 +1,7 @@
 package com.example.scenchive.domain.review.repository;
 
 import com.example.scenchive.domain.filter.repository.Perfume;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,4 +32,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     // 계절별 투표수 카운트
     @Query("SELECT r.season, COUNT(r) FROM Review r WHERE r.perfumeId = :perfumeId GROUP BY r.season")
     List<Object[]> getSeasonCountsByPerfumeId(@Param("perfumeId") Long perfumeId);
+
+    // top 5 향수별 리뷰
+    @Query("SELECT r.perfumeId, COUNT(r.id) AS reviewCount, p.perfumeName, b.brandName "+
+            "FROM Review r JOIN Perfume p ON r.perfumeId = p.id JOIN Brand b ON p.brandId = b.id "+
+            "GROUP BY r.perfumeId, p.perfumeName, b.brandName ORDER BY reviewCount DESC, p.perfumeName ASC")
+    List<Object[]> getTop5PerfumesReviewCount(Pageable pageable);
 }
