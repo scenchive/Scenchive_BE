@@ -69,7 +69,7 @@ public class SecurityConfig {
                 .requestMatchers("/signup", "/login", "/survey", "/member/**",
                         "/randomperfume", "/search", "/brandperfume", "/perfumes/**",
                         "/reviews/**", "/perfumerating/**", "/product/search", "/notesinfo/**",
-                        "/fullinfo/**", "/email/**", "/main/**").permitAll()
+                        "/fullinfo/**", "/email/**", "/main/**", "/popular").permitAll()
                 .requestMatchers("/master/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
 
