@@ -48,4 +48,39 @@ public class PerfumeClickedService {
         }
     }
 
+    // 클릭 수 상위 5개 향수 반환
+    public List<SearchPerfumeDto> getTopList(SeasonName seasonName) {
+        Pageable top5 = PageRequest.of(0, TOP_RANK_COUNT); // 첫 번째 페이지, 5개 데이터
+
+        // 현재 계절 정보 가져오기
+        Season season = seasonRepository.findByName(seasonName).get();
+
+        // 계절 정보에 맞는 인기 향수 목록
+        List<PerfumeClickedMapping> topClickedPerfumes = perfumeClickedRepository.findBySeasonOrderByClickCountDesc(season, top5);
+
+        // 결과 저장할 리스트
+        List<SearchPerfumeDto> perfumeList = new ArrayList<>();
+
+        // SearchPerfumeDto 생성
+        for (PerfumeClickedMapping item : topClickedPerfumes) {
+            Perfume perfume = item.getPerfume();
+
+            // 향수 이미지
+            String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
+            String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
+
+            // 브랜드 정보
+            Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
+            Long brandId = (brand != null) ? brand.getId() : null;
+            String brandName = (brand != null) ? brand.getBrandName() : null;
+            String brandName_kr = (brand != null) ? brand.getBrandName_kr() : null;
+            String cleanedFileName2 = brand.getBrandName().replaceAll("[^\\w]", "");
+            String brandImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/brand/" + cleanedFileName2 + ".jpg";
+
+            perfumeList.add(new SearchPerfumeDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(), perfumeImage, brandId, brandName, brandName_kr, brandImage));
+        }
+
+        return perfumeList;
+    }
+
 }
