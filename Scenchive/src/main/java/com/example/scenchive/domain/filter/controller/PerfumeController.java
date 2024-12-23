@@ -10,10 +10,6 @@ import com.example.scenchive.domain.info.service.NotesService;
 import com.example.scenchive.domain.member.exception.BrandSearchException;
 import com.example.scenchive.domain.member.repository.MemberRepository;
 import com.example.scenchive.domain.member.service.MemberService;
-import com.example.scenchive.domain.rank.repository.Season;
-import com.example.scenchive.domain.rank.repository.SeasonName;
-import com.example.scenchive.domain.rank.service.PerfumeClickedService;
-import com.example.scenchive.domain.rank.service.SeasonService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
@@ -25,7 +21,6 @@ import com.example.scenchive.domain.filter.repository.PTag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -37,22 +32,17 @@ public class PerfumeController {
     private NotesService notesService;
     private MemberRepository memberRepository;
     private MemberService memberService;
-    private PerfumeClickedService perfumeClickedService;
-    private SeasonService seasonService;
 
     @Autowired
     public PerfumeController(PerfumeService perfumeService, PersonalService personalService,
                              SearchService searchService, NotesService notesService,
-                             MemberRepository memberRepository, MemberService memberService,
-                             PerfumeClickedService perfumeClickedService, SeasonService seasonService) {
+                             MemberRepository memberRepository, MemberService memberService) {
         this.perfumeService = perfumeService;
         this.personalService = personalService;
         this.searchService = searchService;
         this.notesService = notesService;
         this.memberRepository=memberRepository;
         this.memberService=memberService;
-        this.perfumeClickedService=perfumeClickedService;
-        this.seasonService=seasonService;
     }
 
 
@@ -161,13 +151,6 @@ public class PerfumeController {
     //향수 전체 정보 반환
     @GetMapping("/fullinfo/{perfumeId}")
     public PerfumeFullInfoDto perfumeFullInfo(@PathVariable("perfumeId") Long perfumeId) {
-        // 향수를 클릭하여 해당 향수의 상세페이지로 넘어가는 순간
-        // 1. 현재 계절 확인
-        int nowMonth = LocalDate.now().getMonthValue();
-        SeasonName seasonName = seasonService.getSeasonName(nowMonth);
-        // 2. 해당 향수의 클릭 수 증가
-        perfumeClickedService.updateClickCount(perfumeId, seasonName);
-
         return perfumeService.getPerfumeFullInfo(perfumeId);
     }
 
