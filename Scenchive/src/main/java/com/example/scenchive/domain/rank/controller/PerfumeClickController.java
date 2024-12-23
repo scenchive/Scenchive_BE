@@ -21,7 +21,7 @@ public class PerfumeClickController {
     private SeasonService seasonService;
 
     // 계절별 클릭 수 top5 향수 리스트 반환
-    @GetMapping("/popular")
+    @GetMapping("/main/popular-season")
     public List<SearchPerfumeDto> getPopularPerfumes() {
         int nowMonth = LocalDate.now().getMonthValue();
         SeasonName seasonName = seasonService.getSeasonName(nowMonth);
