@@ -156,7 +156,7 @@ public class PerfumeCollectedService {
         if(avgCount == null){
             return 0.0;
         }
-        return avgCount;
+        return Math.round(avgCount*100)/100.0;
     }
 
     // 가장 많은 향수 보유 사용자

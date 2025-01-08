@@ -55,7 +55,7 @@ public interface PerfumeCollectedRepository extends JpaRepository<PerfumeCollect
                     "FROM ( "+
                             " SELECT COUNT(pc.id) AS perfume_count "+
                             " FROM perfumecollected pc "+
-                            " GROUP BY pc.member_id "+
+                            " GROUP BY pc.user_id "+
                             ") AS user_perfume_counts", nativeQuery = true)
     Double findAveragePerfumeCount();
 
