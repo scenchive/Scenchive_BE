@@ -38,19 +38,37 @@ public class MemberController {
 //        return memberService.save(memberForm);
 //    }
 
-    @GetMapping("/member/email")
-    public String checkEmail(@Valid @RequestBody CheckEmailDto checkEmailDto){
-        return memberService.checkEmail(checkEmailDto);
-    }
-
-//    @PostMapping("/member/email")
+//    @GetMapping("/member/email")
 //    public String checkEmail(@Valid @RequestBody CheckEmailDto checkEmailDto){
 //        return memberService.checkEmail(checkEmailDto);
 //    }
 
-    @GetMapping("/member/name")
-    public String checkName(@Valid @RequestBody CheckNameDto checkNameDto){
-        return memberService.checkName(checkNameDto);
+    @PostMapping("/member/email")
+    public ResponseEntity<String> checkEmail(@Valid @RequestBody CheckEmailDto checkEmailDto){
+        String result = memberService.checkEmail(checkEmailDto);
+        if(result.equals("사용 가능한 이메일입니다.")){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+
+//    @GetMapping("/member/name")
+//    public String checkName(@Valid @RequestBody CheckNameDto checkNameDto){
+//        return memberService.checkName(checkNameDto);
+//    }
+
+    // 회원가입 시 닉네임 중복 조회
+    @PostMapping("/member/name")
+    public ResponseEntity<String> checkName(@Valid @RequestBody CheckNameDto checkNameDto){
+        String result = memberService.checkName(checkNameDto);
+        if(result.equals("사용 가능한 닉네임입니다.")){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.badRequest().body(result);
+        }
     }
 
     @PostMapping("/signup") // userDto를 파라미터로 받아서, signup 수행

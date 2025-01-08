@@ -62,15 +62,16 @@ public class MemberService {
         if (memberRepository.findByEmail(checkEmailDto.getEmail()).orElse(null) != null) {
             return "이미 가입되어 있는 이메일입니다.";
         }
-        return "가입 가능한 이메일입니다.";
+        return "사용 가능한 이메일입니다.";
     }
 
+    // 회원가입 용 닉네임 중복 확인
     @Transactional
     public String checkName(CheckNameDto checkNameDto){
         if (memberRepository.findByName(checkNameDto.getName()).orElse(null) != null) {
             return "이미 가입되어 있는 닉네임입니다.";
         }
-        return "가입 가능한 닉네임입니다.";
+        return "사용 가능한 닉네임입니다.";
     }
 
 
@@ -118,9 +119,10 @@ public class MemberService {
             }
         }
 
-        if (imageUrl==null || imageUrl.isBlank()==true) {
-            imageUrl="https://scenchive.s3.ap-northeast-2.amazonaws.com/member/585a1429-2a79-4940-9488-6cea5bb9cb95.png"; // 이미지가 없을 경우 기본 이미지 반환
-        }
+        // 유저가 프로필 사진 업로드 안 했을 시 null 전달
+//        if (imageUrl==null || imageUrl.isBlank()==true) {
+//            imageUrl="https://scenchive.s3.ap-northeast-2.amazonaws.com/member/585a1429-2a79-4940-9488-6cea5bb9cb95.png"; // 이미지가 없을 경우 기본 이미지 반환
+//        }
 
 
         // 권한정보를 넣은 유저 생성
