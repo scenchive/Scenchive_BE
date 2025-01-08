@@ -57,17 +57,32 @@ public class PerfumeCollectedController {
     @GetMapping("/main/most-collected/perfume")
     public ResponseEntity<?> getMostCollectedPerfume() {
         try {
-            List<Map<String, Object>> result = perfumeCollectedService.getMostCollectedPerfume();
+            Map<String, Object> result = perfumeCollectedService.getMostCollectedPerfume();
             return ResponseEntity.ok(result);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
+
+
+
+
+//    @GetMapping("/main/most-collected/perfume")
+//    public ResponseEntity<?> getMostCollectedPerfume() {
+//        try {
+//            List<Map<String, Object>> result = perfumeCollectedService.getMostCollectedPerfume();
+//            return ResponseEntity.ok(result);
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        }
+//    }
+
+    // 가장 많이 보유한 향수 브랜드
     @GetMapping("/main/most-collected/brand")
     public ResponseEntity<?> getMostCollectedBrand() {
         try {
-            List<Map<String, Object>> result = perfumeCollectedService.getMostCollectedBrand();
+            Map<String, Object> result = perfumeCollectedService.getMostCollectedBrand();
             return ResponseEntity.ok(result);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

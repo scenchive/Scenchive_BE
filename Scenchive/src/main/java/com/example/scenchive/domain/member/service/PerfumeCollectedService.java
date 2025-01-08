@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -99,21 +101,53 @@ public class PerfumeCollectedService {
     }
 
     // 가장 많이 보유된 향수
-    public List<Map<String, Object>> getMostCollectedPerfume(){
-        List<Map<String, Object>> results = perfumeCollectedRepository.findMostCollectedPerfume();
-        if (results == null || results.isEmpty()) {
+    public Map<String, Object> getMostCollectedPerfume() {
+        Object result = perfumeCollectedRepository.findTopCollectedPerfume();
+
+        if (result == null) {
             throw new RuntimeException("가장 많이 보유된 향수가 없습니다.");
         }
-        return results;
+
+        Object[] row = (Object[]) result;
+
+        Long perfumeId = row[0] != null ? Long.valueOf(row[0].toString()) : null;
+        String perfumeName = row[1] != null ? row[1].toString() : null;
+        String perfumeKr = row[2] != null ? row[2].toString() : null;
+        String perfumeImage = row[3] != null ? row[3].toString() : null;
+        String brandName = row[4] != null ? row[4].toString() : null;
+        String brandNameKr = row[5] != null ? row[5].toString() : null;
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("perfumeId", perfumeId);
+        resultMap.put("perfumeName", perfumeName);
+        resultMap.put("perfume_kr", perfumeKr);
+        resultMap.put("perfumeImage", perfumeImage);
+        resultMap.put("brandName", brandName);
+        resultMap.put("brandName_kr", brandNameKr);
+
+        return resultMap;
     }
 
-    // 가장 많이 보유된 향수 브랜드
-    public List<Map<String, Object>> getMostCollectedBrand() {
-        List<Map<String, Object>> results = perfumeCollectedRepository.findMostCollectedBrand();
-        if (results == null || results.isEmpty()) {
+    // 가장 많이 보유한 향수 브랜드
+    public Map<String, Object> getMostCollectedBrand() {
+        Object result = perfumeCollectedRepository.findTopCollectedBrand();
+
+        if (result == null) {
             throw new RuntimeException("가장 많이 보유된 향수 브랜드가 없습니다.");
         }
-        return results;
+        Object[] row = (Object[]) result;
+
+        Long brandId = row[0] != null ? Long.valueOf(row[0].toString()) : null;
+        String brandName = row[1] != null ? row[1].toString() : null;
+        String brandNameKr = row[2] != null ? row[2].toString() : null;
+        String brandImage = row[3] != null ? row[3].toString() : null;
+
+        return Map.of(
+                "brandId", brandId,
+                "brandName", brandName,
+                "brandName_kr", brandNameKr,
+                "brandImage", brandImage
+        );
     }
 
     // 유저 평균 향수 개수
