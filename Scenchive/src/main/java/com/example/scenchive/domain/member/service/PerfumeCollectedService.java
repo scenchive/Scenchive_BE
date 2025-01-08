@@ -142,6 +142,10 @@ public class PerfumeCollectedService {
         String brandNameKr = row[2] != null ? row[2].toString() : null;
         String brandImage = row[3] != null ? row[3].toString() : null;
 
+        if (brandImage != null) {
+            brandImage = brandImage.replaceAll("[^\\w]", "");
+        }
+
         return Map.of(
                 "brandId", brandId,
                 "brandName", brandName,
