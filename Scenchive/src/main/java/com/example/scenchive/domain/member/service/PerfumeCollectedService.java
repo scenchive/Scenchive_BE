@@ -113,7 +113,15 @@ public class PerfumeCollectedService {
         Long perfumeId = row[0] != null ? Long.valueOf(row[0].toString()) : null;
         String perfumeName = row[1] != null ? row[1].toString() : null;
         String perfumeKr = row[2] != null ? row[2].toString() : null;
-        String perfumeImage = row[3] != null ? row[3].toString() : null;
+
+        String cleanPerfumeName = (perfumeName != null) ? perfumeName.replaceAll("[^a-zA-Z0-9_]", "") : null;
+
+        String perfumeImage = null;
+        if (cleanPerfumeName != null) {
+            perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanPerfumeName + ".jpg";
+        }
+
+        //String perfumeImage = row[3] != null ? row[3].toString() : null;
         String brandName = row[4] != null ? row[4].toString() : null;
         String brandNameKr = row[5] != null ? row[5].toString() : null;
 
@@ -140,10 +148,13 @@ public class PerfumeCollectedService {
         Long brandId = row[0] != null ? Long.valueOf(row[0].toString()) : null;
         String brandName = row[1] != null ? row[1].toString() : null;
         String brandNameKr = row[2] != null ? row[2].toString() : null;
-        String brandImage = row[3] != null ? row[3].toString() : null;
+        //String brandImage = row[3] != null ? row[3].toString() : null;
+        String cleanBrand = (brandName != null) ? brandName.replaceAll("[^\\w]", "") : null;
 
-        if (brandImage != null) {
-            brandImage = brandImage.replaceAll("[^\\w]", "");
+        String brandImage = null;
+
+        if(cleanBrand != null){
+            brandImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/brand/"+cleanBrand + ".jpg";
         }
 
         return Map.of(
