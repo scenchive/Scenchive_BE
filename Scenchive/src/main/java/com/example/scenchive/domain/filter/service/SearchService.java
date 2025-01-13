@@ -1,6 +1,7 @@
 package com.example.scenchive.domain.filter.service;
 
 import com.example.scenchive.domain.filter.dto.BrandDto;
+import com.example.scenchive.domain.filter.dto.NoteRequestDto;
 import com.example.scenchive.domain.filter.dto.SearchListDto;
 import com.example.scenchive.domain.filter.dto.SearchPerfumeDto;
 import com.example.scenchive.domain.filter.repository.Brand;
@@ -43,29 +44,121 @@ public class SearchService {
     }
 
     // 노트별 향으로 향수 리스트 조회
-    public List<SearchPerfumeDto> notePerfume(String topNote, String middleNote, String baseNote, Pageable pageable) {
+    public List<SearchPerfumeDto> notePerfume(NoteRequestDto requestDto, Pageable pageable) {
+        List<String> topNoteList = requestDto.getTopNote();
+        List<String> middleNoteList = requestDto.getMiddleNote();
+        List<String> baseNoteList = requestDto.getBaseNote();
+
         Perfumenote topPerfumenote = perfumenoteRepository.findById(1L).get(); // 탑노트 정보
         Perfumenote middlePerfumenote = perfumenoteRepository.findById(2L).get(); // 미들노트 정보
         Perfumenote basePerfumenote = perfumenoteRepository.findById(3L).get(); // 베이스노트 정보
 
-        List<Perfumescent> perfumeScents;
-        if (!topNote.isEmpty() && !middleNote.isEmpty() && !baseNote.isEmpty()) {   // 탑, 미들, 베이스
-            perfumeScents = perfumescentRepository.find3ByScentKrContaining(topPerfumenote, topNote,
-                                                                            middlePerfumenote, middleNote,
-                                                                            basePerfumenote, baseNote);
-        } else if (!topNote.isEmpty() && !middleNote.isEmpty()) {   // 탑, 미들
-            perfumeScents = perfumescentRepository.find2ByScentKrContaining(topPerfumenote, topNote, middlePerfumenote, middleNote);
-        } else if (!topNote.isEmpty() && !baseNote.isEmpty()) { // 탑, 베이스
-            perfumeScents = perfumescentRepository.find2ByScentKrContaining(topPerfumenote, topNote, basePerfumenote, baseNote);
-        } else if (!middleNote.isEmpty() && !baseNote.isEmpty()) {  // 미들, 베이스
-            perfumeScents = perfumescentRepository.find2ByScentKrContaining(middlePerfumenote, middleNote, basePerfumenote, baseNote);
-        } else if (!topNote.isEmpty()) {    // 탑
-            perfumeScents = perfumescentRepository.findByPerfumenoteAndScentKrContaining(topPerfumenote, topNote);
-        } else if (!middleNote.isEmpty()) { // 미들
-            perfumeScents = perfumescentRepository.findByPerfumenoteAndScentKrContaining(middlePerfumenote, middleNote);
-        } else {    // 베이스
-            perfumeScents = perfumescentRepository.findByPerfumenoteAndScentKrContaining(basePerfumenote, baseNote);
+        List<Perfumescent> searchTopnoteList = new ArrayList<>();
+        List<Perfumescent> searchMiddlenoteList = new ArrayList<>();
+        List<Perfumescent> searchBasenoteList = new ArrayList<>();
+
+        List<Perfumescent> perfumeScents = new ArrayList<>();
+
+//        if (!topNoteList.isEmpty() && !middleNoteList.isEmpty() && !baseNoteList.isEmpty()) {
+        // 검색한 탑노트가 포함 되어있는 향수 리스트
+        for (int i = 0; i < topNoteList.size(); i++) {
+            searchTopnoteList = perfumescentRepository.findByPerfumenoteAndScentKrContaining(topPerfumenote, topNoteList.get(i));
         }
+
+        // 검색한 미들노트가 포함 되어있는 향수 리스트
+        for (int i = 0; i < middleNoteList.size(); i++) {
+            searchMiddlenoteList = perfumescentRepository.findByPerfumenoteAndScentKrContaining(middlePerfumenote, middleNoteList.get(i));
+        }
+
+        // 검색한 베이스노트가 포함 되어있는 향수 리스트
+        for (int i = 0; i < baseNoteList.size(); i++) {
+            searchBasenoteList = perfumescentRepository.findByPerfumenoteAndScentKrContaining(basePerfumenote, baseNoteList.get(i));
+//                        perfumeScents.addAll(perfumescentRepository.find3ByScentKrContaining(
+//                                topPerfumenote, topNoteList.get(i),
+//                                middlePerfumenote, middleNoteList.get(j),
+//                                basePerfumenote, baseNoteList.get(k)));
+        }
+
+        if (searchTopnoteList.size() > 0) {
+            perfumeScents.addAll(searchTopnoteList);
+        }
+
+        for (int i = 0; i < searchMiddlenoteList.size(); i++) {
+            Perfumescent middleScent = searchMiddlenoteList.get(i);
+            if (!perfumeScents.contains(middleScent)) {
+                perfumeScents.add(middleScent);
+            }
+        }
+
+        for (int i = 0; i < searchBasenoteList.size(); i++) {
+            Perfumescent baseScent = searchBasenoteList.get(i);
+            if (!perfumeScents.contains(baseScent)) {
+                perfumeScents.add(baseScent);
+            }
+        }
+//        if (searchTopnoteList != null) {
+//            for (int i = 0; i < searchTopnoteList.size(); i++) {
+//                Perfumescent topnote = searchTopnoteList.get(i);
+//                if (searchMiddlenoteList.contains(topnote) && searchBasenoteList.contains(topnote)) {
+//                    perfumeScents.add(topnote);
+//                }
+//            }
+//        } else if (searchMiddlenoteList != null) {
+//            for (int i = 0; i < searchMiddlenoteList.size(); i++) {
+//                Perfumescent middlenote = searchMiddlenoteList.get(i);
+//                if (searchBasenoteList.contains(middlenote)) {
+//                    perfumeScents.add(middlenote);
+//                }
+//            }
+//        }
+
+
+//        } else if (!topNoteList.isEmpty() && !middleNoteList.isEmpty()) {   // 탑, 미들
+//            for (int i = 0; i < topNoteList.size(); i++) {
+//                for (int j = 0; j < middleNoteList.size(); j++) {
+//                    perfumeScents.addAll(
+//                            perfumescentRepository.find2ByScentKrContaining(
+//                                    topPerfumenote, topNoteList.get(i),
+//                                    middlePerfumenote, middleNoteList.get(j)));
+//                }
+//            }
+//        } else if (!topNoteList.isEmpty() && !baseNoteList.isEmpty()) { // 탑, 베이스
+//            for (int i = 0; i < topNoteList.size(); i++) {
+//                for (int j = 0; j < baseNoteList.size(); j++) {
+//                    perfumeScents.addAll(
+//                            perfumescentRepository.find2ByScentKrContaining(
+//                                    topPerfumenote, topNoteList.get(i),
+//                                    basePerfumenote, baseNoteList.get(j)));
+//                }
+//            }
+//        } else if (!middleNoteList.isEmpty() && !baseNoteList.isEmpty()) {  // 미들, 베이스
+//            for (int i = 0; i < middleNoteList.size(); i++) {
+//                for (int j = 0; j < baseNoteList.size(); j++) {
+//                    perfumeScents.addAll(
+//                            perfumescentRepository.find2ByScentKrContaining(
+//                                    middlePerfumenote, middleNoteList.get(i),
+//                                    basePerfumenote, baseNoteList.get(j)));
+//                }
+//            }
+//        } else if (!topNoteList.isEmpty()) {    // 탑
+//            for (int i = 0; i < topNoteList.size(); i++) {
+//                perfumeScents.addAll(
+//                        perfumescentRepository.findByPerfumenoteAndScentKrContaining(
+//                                topPerfumenote, topNoteList.get(i)));
+//            }
+//        } else if (!middleNoteList.isEmpty()) { // 미들
+//            for (int i = 0; i < middleNoteList.size(); i++) {
+//                perfumeScents.addAll(
+//                        perfumescentRepository.findByPerfumenoteAndScentKrContaining(
+//                                middlePerfumenote, middleNoteList.get(i)));
+//            }
+//        } else if (!baseNoteList.isEmpty()) {    // 베이스
+//            for (int i = 0; i < baseNoteList.size(); i++) {
+//                perfumeScents.addAll(
+//                        perfumescentRepository.findByPerfumenoteAndScentKrContaining(
+//                                basePerfumenote, baseNoteList.get(i)));
+//            }
+//        }
 
         // 검색 결과 저장할 리스트
         List<SearchPerfumeDto> searchedPerfumes = new ArrayList<>();

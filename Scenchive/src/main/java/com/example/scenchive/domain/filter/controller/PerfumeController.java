@@ -136,17 +136,13 @@ public class PerfumeController {
     /**
      * 1. 탑&미들&베이스 중첩검색
      * 2. 하나의 검색어로 한글&영어 검색
-     * @param topNote 탑노트 향
-     * @param middleNote 미들노트 향
-     * @param baseNote 베이스노트 향
+     * @param requestDto 검색할 노트 정보가 담긴 DTO
      * @return
      */
-    @GetMapping("/noteperfume")
-    public BrandPerfumeResponseDto notePerfume(@RequestParam("top") String topNote,
-                                               @RequestParam("middle") String middleNote,
-                                               @RequestParam("base") String baseNote,
+    @PostMapping("/noteperfume")
+    public BrandPerfumeResponseDto notePerfume(@RequestPart("requestDto") NoteRequestDto requestDto,
                                                @PageableDefault(size = 10) Pageable pageable) {
-        List<SearchPerfumeDto> searchPerfumeDtos = searchService.notePerfume(topNote, middleNote, baseNote, pageable);
+        List<SearchPerfumeDto> searchPerfumeDtos = searchService.notePerfume(requestDto, pageable);
         long totalNotePerfumeCount = searchService.getTotalNotePerfumeCount();
 
         BrandPerfumeResponseDto responseDto = new BrandPerfumeResponseDto(totalNotePerfumeCount, searchPerfumeDtos);
