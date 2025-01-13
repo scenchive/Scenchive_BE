@@ -132,6 +132,23 @@ public class PerfumeController {
         return responseDto;
     }
 
+    // 검색화면: 노트별 향으로 향수 리스트 조회
+    /**
+     * 1. 탑&미들&베이스 중첩검색
+     * 2. 하나의 검색어로 한글&영어 검색
+     * @param requestDto 검색할 노트 정보가 담긴 DTO
+     * @return
+     */
+    @PostMapping("/noteperfume")
+    public BrandPerfumeResponseDto notePerfume(@RequestPart("requestDto") NoteRequestDto requestDto,
+                                               @PageableDefault(size = 10) Pageable pageable) {
+        List<SearchPerfumeDto> searchPerfumeDtos = searchService.notePerfume(requestDto, pageable);
+        long totalNotePerfumeCount = searchService.getTotalNotePerfumeCount();
+
+        BrandPerfumeResponseDto responseDto = new BrandPerfumeResponseDto(totalNotePerfumeCount, searchPerfumeDtos);
+        return responseDto;
+    }
+
 
     //개별 향수 노트 정보 조회
     @GetMapping("/notesinfo/{perfumeId}")
