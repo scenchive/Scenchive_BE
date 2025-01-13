@@ -85,10 +85,17 @@ public class PerfumeCollectedService {
         // 보유 향수 리스트 조회
         return perfumeCollectedRepository.findByMemberId(currentMember.getId())
                 .stream().map(perfumeCollected -> {
-                    BrandDto brandDto = BrandMapper.toBrandDto(
-                            brandRepository.findById(perfumeCollected.getPerfume().getId())
-                                    .orElseThrow(() -> new RuntimeException("브랜드 정보를 찾을 수 없습니다."))
-                    );
+                    Long brandId = perfumeCollected.getPerfume().getBrandId();
+                    if(brandId == null) throw new RuntimeException("Perfume에 연결된 Brand Id가 없습니다.");
+
+                    Brand brand = brandRepository.findById(brandId).orElseThrow(()-> new RuntimeException("브랜드 정보를 찾을 수 없습니다."));
+
+                    String cleanBrand = brand.getBrandName().replaceAll("[^\\w]", "");
+                    String brandImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/brand/" + cleanBrand + ".jpg";
+
+                    //BrandDto brandDto = BrandMapper.toBrandDto(brandRepository.findById(brandId).orElseThrow(()-> new RuntimeException("브랜드 정보를 찾을 수 없습니다.")));
+
+                    BrandDto brandDto = new BrandDto(brand.getId(), brand.getBrandName(), brand.getBrandName_kr(), brandImage);
 
                     return new PerfumeCollectedResponseDto(
                             perfumeCollected.getId(),
