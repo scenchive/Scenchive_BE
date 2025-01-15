@@ -5,9 +5,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class PerfumeReviewCountDto {
+public class PerfumeDetailsByReviewDto {
     private Long perfumeId;
     private String perfumeName;
+    private String perfumeKr;
+    private String perfumeImage;
     private String brandName;
-    private long reviewCount;
+    private String brandNameKr;
 }
