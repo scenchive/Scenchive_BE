@@ -1,5 +1,6 @@
 package com.example.scenchive.domain.rank.service;
 
+import com.example.scenchive.domain.filter.dto.SearchBrandDto;
 import com.example.scenchive.domain.filter.dto.SearchPerfumeDto;
 import com.example.scenchive.domain.filter.repository.Brand;
 import com.example.scenchive.domain.filter.repository.BrandRepository;
@@ -26,16 +27,25 @@ public class PerfumeClickedService {
     private PerfumeRepository perfumeRepository;
     private BrandRepository brandRepository;
     private SeasonRepository seasonRepository;
+    private BrandClickedRepository brandClickedRepository;
 
-    // 향수 클릭 시 클릭 수 증가
+    // 향수 클릭 시
+    // 1. 해당 향수 클릭 수 증가
+    // 2. 해당 향수의 브랜드 클릭 수 증가
     @Transactional
     public void updateClickCount(Long perfumeId, SeasonName seasonName) {
+        // 향수 정보 가져오기
         Perfume perfume = perfumeRepository.findById(perfumeId).get();
         PerfumeClicked perfumeClicked = perfumeClickedRepository.findByPerfume(perfume);
+
+        // 브랜드 정보 가져오기
+        Brand brand = brandRepository.findById(perfume.getBrandId()).get();
+        BrandClicked brandClicked = brandClickedRepository.findByBrand(brand);
 
         // 현재 계절 정보 가져오기
         Season season = seasonRepository.findByName(seasonName).get();
 
+        // 향수가 이전에 클릭되지 않았던 경우
         if (perfumeClicked == null
                 || perfumeClicked.getSeason().getName().getStartMonth() != season.getName().getStartMonth()) {
             perfumeClicked = new PerfumeClicked();
@@ -43,8 +53,16 @@ public class PerfumeClickedService {
             perfumeClicked.setClickCount(1); // 초기값 설정
             perfumeClicked.setSeason(season);
             perfumeClickedRepository.save(perfumeClicked);
-        } else {
+        } else {    // 향수가 이전에 클릭 됐었던 경우
             perfumeClicked.setClickCount(perfumeClicked.getClickCount() + 1);
+        }
+
+        // 해당 브랜드의 향수가 클릭된 적이 없었던 경우
+        if (brandClicked == null) {
+            brandClicked = new BrandClicked(brand);
+            brandClickedRepository.save(brandClicked);
+        } else {    // 해당 브랜드의 향수가 이전에 클릭 됐었던 경우
+            brandClicked.setClickCount(brandClicked.getClickCount() + 1);
         }
     }
 
@@ -81,6 +99,32 @@ public class PerfumeClickedService {
         }
 
         return perfumeList;
+    }
+
+    // 클릭 수 상위 5개 브랜드 반환
+    public List<SearchBrandDto> getTopBrandList() {
+        Pageable top5 = PageRequest.of(0, TOP_RANK_COUNT); // 첫 번째 페이지, 5개 데이터
+
+        // 인기 브랜드 목록
+        List<BrandClicked> topClickedBrands = brandClickedRepository.findAllByOrderByClickCountDesc(top5);
+
+        // 결과 저장할 리스트
+        List<SearchBrandDto> brandList = new ArrayList<>();
+
+        // SearchBrandDto 생성
+        for (BrandClicked item : topClickedBrands) {
+            // 브랜드 정보
+            Brand brand = item.getBrand();
+            Long brandId = (brand != null) ? brand.getId() : null;
+            String brandName = (brand != null) ? brand.getBrandName() : null;
+            String brandName_kr = (brand != null) ? brand.getBrandName_kr() : null;
+            String cleanedFileName2 = brand.getBrandName().replaceAll("[^\\w]", "");
+            String brandImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/brand/" + cleanedFileName2 + ".jpg";
+
+            brandList.add(new SearchBrandDto(brandId, brandName, brandName_kr, brandImage));
+        }
+
+        return brandList;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.scenchive.domain.rank.controller;
 
+import com.example.scenchive.domain.filter.dto.SearchBrandDto;
 import com.example.scenchive.domain.filter.dto.SearchPerfumeDto;
 import com.example.scenchive.domain.rank.repository.SeasonName;
 import com.example.scenchive.domain.rank.service.PerfumeClickedService;
@@ -26,5 +27,11 @@ public class PerfumeClickController {
         int nowMonth = LocalDate.now().getMonthValue();
         SeasonName seasonName = seasonService.getSeasonName(nowMonth);
         return perfumeClickedService.getTopList(seasonName);
+    }
+
+    // 클릭 수 top5 브랜드 반환
+    @GetMapping("/main/popular-brand")
+    public List<SearchBrandDto> getPopularBrands() {
+        return perfumeClickedService.getTopBrandList();
     }
 }
