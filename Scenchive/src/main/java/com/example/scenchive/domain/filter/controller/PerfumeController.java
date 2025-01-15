@@ -3,21 +3,15 @@ package com.example.scenchive.domain.filter.controller;
 import com.example.scenchive.domain.filter.dto.*;
 import com.example.scenchive.domain.filter.service.PersonalService;
 import com.example.scenchive.domain.filter.service.SearchService;
-import com.example.scenchive.domain.info.dto.NotesInfoDto;
 import com.example.scenchive.domain.info.dto.NotesInfoResponse;
-import com.example.scenchive.domain.info.repository.Perfumenote;
 import com.example.scenchive.domain.info.service.NotesService;
-import com.example.scenchive.domain.member.exception.BrandSearchException;
 import com.example.scenchive.domain.member.repository.MemberRepository;
 import com.example.scenchive.domain.member.service.MemberService;
-import com.example.scenchive.domain.rank.repository.Season;
 import com.example.scenchive.domain.rank.repository.SeasonName;
 import com.example.scenchive.domain.rank.service.PerfumeClickedService;
 import com.example.scenchive.domain.rank.service.SeasonService;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import com.example.scenchive.domain.filter.service.PerfumeService;
@@ -147,6 +141,12 @@ public class PerfumeController {
 
         BrandPerfumeResponseDto responseDto = new BrandPerfumeResponseDto(totalNotePerfumeCount, searchPerfumeDtos);
         return responseDto;
+    }
+
+    // 노트 정보 드랍다운 전달
+    @GetMapping("/noteValue")
+    public List<NoteValueDto> getNoteValue() {
+        return searchService.noteValue();
     }
 
 
