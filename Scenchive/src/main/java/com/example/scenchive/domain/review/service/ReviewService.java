@@ -59,10 +59,10 @@ public class ReviewService {
 
                     return new PerfumeDetailsDto(
                             perfume.getId(),
-                            brand.getBrandName_kr(),
                             brand.getBrandName(),
-                            perfume.getPerfumeName(),
+                            brand.getBrandName_kr(),
                             perfumeImage,
+                            perfume.getPerfumeName(),
                             perfume.getPerfume_kr()
                     );
                 }).collect(Collectors.toList());
