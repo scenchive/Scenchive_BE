@@ -1,5 +1,6 @@
 package com.example.scenchive.domain.rank.service;
 
+import com.example.scenchive.domain.filter.dto.SearchBrandDto;
 import com.example.scenchive.domain.filter.dto.SearchPerfumeDto;
 import com.example.scenchive.domain.filter.repository.Brand;
 import com.example.scenchive.domain.filter.repository.BrandRepository;
@@ -98,6 +99,32 @@ public class PerfumeClickedService {
         }
 
         return perfumeList;
+    }
+
+    // 클릭 수 상위 5개 브랜드 반환
+    public List<SearchBrandDto> getTopBrandList() {
+        Pageable top5 = PageRequest.of(0, TOP_RANK_COUNT); // 첫 번째 페이지, 5개 데이터
+
+        // 인기 브랜드 목록
+        List<BrandClicked> topClickedBrands = brandClickedRepository.findAllByOrderByClickCountDesc(top5);
+
+        // 결과 저장할 리스트
+        List<SearchBrandDto> brandList = new ArrayList<>();
+
+        // SearchBrandDto 생성
+        for (BrandClicked item : topClickedBrands) {
+            // 브랜드 정보
+            Brand brand = item.getBrand();
+            Long brandId = (brand != null) ? brand.getId() : null;
+            String brandName = (brand != null) ? brand.getBrandName() : null;
+            String brandName_kr = (brand != null) ? brand.getBrandName_kr() : null;
+            String cleanedFileName2 = brand.getBrandName().replaceAll("[^\\w]", "");
+            String brandImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/brand/" + cleanedFileName2 + ".jpg";
+
+            brandList.add(new SearchBrandDto(brandId, brandName, brandName_kr, brandImage));
+        }
+
+        return brandList;
     }
 
 }
