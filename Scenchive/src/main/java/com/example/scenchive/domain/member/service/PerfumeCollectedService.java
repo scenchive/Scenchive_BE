@@ -50,16 +50,19 @@ public class PerfumeCollectedService {
 
         PerfumeCollected savedPerfumeCollected = perfumeCollectedRepository.save(perfumeCollected);
 
-        BrandDto brandDto = BrandMapper.toBrandDto(
-                brandRepository.findById(perfume.getBrandId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "브랜드 정보를 찾을 수 없습니다."))
-        );
+        Brand brand = brandRepository.findById(perfume.getBrandId()).orElseThrow(()-> new RuntimeException("브랜드 정보를 찾을 수 없습니다."));
+
+        // perfume image 생성
+        String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
+        String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
 
         return new PerfumeCollectedResponseDto(
-                savedPerfumeCollected.getId(),
-                savedPerfumeCollected.getMember().getId(),
-                savedPerfumeCollected.getPerfume().getId(),
-                savedPerfumeCollected.getPerfume().getPerfumeName(),
-                brandDto
+                perfumeCollected.getPerfume().getId(),
+                perfumeCollected.getPerfume().getPerfumeName(),
+                perfumeCollected.getPerfume().getPerfume_kr(),
+                perfumeImage,
+                brand.getBrandName(),
+                brand.getBrandName_kr()
         );
     }
 
@@ -85,30 +88,34 @@ public class PerfumeCollectedService {
         // 보유 향수 리스트 조회
         return perfumeCollectedRepository.findByMemberId(currentMember.getId())
                 .stream().map(perfumeCollected -> {
-                    Long brandId = perfumeCollected.getPerfume().getBrandId();
-                    if(brandId == null) throw new RuntimeException("Perfume에 연결된 Brand Id가 없습니다.");
+
+                    Perfume perfume = perfumeCollected.getPerfume();
+                    Long brandId = perfume.getBrandId();
+                    if (brandId == null) {
+                        throw new RuntimeException("Perfume에 연결된 Brand Id가 없습니다.");
+                    }
 
                     Brand brand = brandRepository.findById(brandId).orElseThrow(()-> new RuntimeException("브랜드 정보를 찾을 수 없습니다."));
 
-                    String cleanBrand = brand.getBrandName().replaceAll("[^\\w]", "");
-                    String brandImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/brand/" + cleanBrand + ".jpg";
+                    //String cleanBrand = brand.getBrandName().replaceAll("[^\\w]", "");
+                    //String brandImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/brand/" + cleanBrand + ".jpg";
 
-                    //BrandDto brandDto = BrandMapper.toBrandDto(brandRepository.findById(brandId).orElseThrow(()-> new RuntimeException("브랜드 정보를 찾을 수 없습니다.")));
-
-                    BrandDto brandDto = new BrandDto(brand.getId(), brand.getBrandName(), brand.getBrandName_kr(), brandImage);
+                    String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
+                    String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
 
                     return new PerfumeCollectedResponseDto(
-                            perfumeCollected.getId(),
-                            perfumeCollected.getMember().getId(),
                             perfumeCollected.getPerfume().getId(),
                             perfumeCollected.getPerfume().getPerfumeName(),
-                            brandDto
+                            perfumeCollected.getPerfume().getPerfume_kr(),
+                            perfumeImage,
+                            brand.getBrandName(),
+                            brand.getBrandName_kr()
                     );
                 }).collect(Collectors.toList());
     }
 
     // 가장 많이 보유된 향수
-    public Map<String, Object> getMostCollectedPerfume() {
+    public PerfumeCollectedResponseDto getMostCollectedPerfume() {
         Object result = perfumeCollectedRepository.findTopCollectedPerfume();
 
         if (result == null) {
@@ -128,19 +135,12 @@ public class PerfumeCollectedService {
             perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanPerfumeName + ".jpg";
         }
 
-        //String perfumeImage = row[3] != null ? row[3].toString() : null;
         String brandName = row[4] != null ? row[4].toString() : null;
         String brandNameKr = row[5] != null ? row[5].toString() : null;
 
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("perfumeId", perfumeId);
-        resultMap.put("perfumeName", perfumeName);
-        resultMap.put("perfume_kr", perfumeKr);
-        resultMap.put("perfumeImage", perfumeImage);
-        resultMap.put("brandName", brandName);
-        resultMap.put("brandName_kr", brandNameKr);
-
-        return resultMap;
+        return new PerfumeCollectedResponseDto(
+                perfumeId, perfumeName, perfumeKr, perfumeImage, brandName, brandNameKr
+        );
     }
 
     // 가장 많이 보유한 향수 브랜드

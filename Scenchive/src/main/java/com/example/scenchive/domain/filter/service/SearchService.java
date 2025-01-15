@@ -353,18 +353,22 @@ public class SearchService {
     }
 
     // 노트 정보 가져오기
-    public List<NoteValueDto> noteValue() {
-        List<ScentAndScentKr> noteValueList = perfumescentRepository.findAllBy();
+    public List<NoteValueDto> noteValue(String noteValue, Pageable pageable) {
+        List<ScentAndScentKr> noteValueList = perfumescentRepository.findByScentContainingOrScentKrContaining(noteValue, noteValue);
 
         List<NoteValueDto> dtoList = new ArrayList<>();
         Set<String> scentSet = new HashSet<>(); //
+        Set<String> scentKrSet = new HashSet<>(); //
 
+        // 중복 값 제거
         for (ScentAndScentKr value: noteValueList) {
             String scent = value.getScent();
-            if (!scentSet.contains(scent)) {
+            String scentKr = value.getScentKr();
+            if (!scentSet.contains(scent) && !scentKrSet.contains(scentKr)) {
                 scentSet.add(scent);
+                scentKrSet.add(scentKr);
 
-                NoteValueDto noteDto = new NoteValueDto(value.getScent(), value.getScentKr());
+                NoteValueDto noteDto = new NoteValueDto(scent, scentKr);
                 dtoList.add(noteDto);
             }
         }
