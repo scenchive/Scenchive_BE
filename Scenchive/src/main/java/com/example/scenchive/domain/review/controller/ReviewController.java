@@ -1,10 +1,9 @@
 package com.example.scenchive.domain.review.controller;
 
 import com.example.scenchive.domain.review.dto.PerfumeRatingDto;
-import com.example.scenchive.domain.review.dto.PerfumeReviewCountDto;
+import com.example.scenchive.domain.review.dto.PerfumeDetailsDto;
 import com.example.scenchive.domain.review.dto.ReviewDto;
 import com.example.scenchive.domain.review.dto.ReviewListResponseDto;
-import com.example.scenchive.domain.review.repository.RPerfumeTagRepository;
 import com.example.scenchive.domain.review.service.ReviewService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -58,8 +57,8 @@ public class ReviewController {
 
     // 리뷰 많은 향수 top5
     @GetMapping("/main/top-reviewed-perfumes")
-    public ResponseEntity<List<PerfumeReviewCountDto>> getTop5ReviewedPerfumes(){
-        List<PerfumeReviewCountDto> topPerfumes = reviewService.getTop5PerfumesByReviews();
+    public ResponseEntity<List<PerfumeDetailsDto>> getTop5ReviewedPerfumes(){
+        List<PerfumeDetailsDto> topPerfumes = reviewService.getTop5PerfumesByReviews();
         return ResponseEntity.ok(topPerfumes);
     }
 }
