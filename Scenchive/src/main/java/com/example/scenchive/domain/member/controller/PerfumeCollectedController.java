@@ -57,10 +57,11 @@ public class PerfumeCollectedController {
     @GetMapping("/main/most-collected/perfume")
     public ResponseEntity<?> getMostCollectedPerfume() {
         try {
-            Map<String, Object> result = perfumeCollectedService.getMostCollectedPerfume();
+            //Map<String, Object> result = perfumeCollectedService.getMostCollectedPerfume();
+            PerfumeCollectedResponseDto result = perfumeCollectedService.getMostCollectedPerfume();
             return ResponseEntity.ok(result);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가장 많이 보유된 향수가 존재하지 않습니다.");
         }
     }
 

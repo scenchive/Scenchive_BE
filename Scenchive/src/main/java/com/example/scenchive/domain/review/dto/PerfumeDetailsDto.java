@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class PerfumeDetailsByReviewDto {
+public class PerfumeDetailsDto {
     private Long perfumeId;
     private String perfumeName;
     private String perfumeKr;
