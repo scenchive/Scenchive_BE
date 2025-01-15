@@ -145,8 +145,9 @@ public class PerfumeController {
 
     // 노트 정보 드랍다운 전달
     @GetMapping("/noteValue")
-    public List<NoteValueDto> getNoteValue() {
-        return searchService.noteValue();
+    public List<NoteValueDto> getNoteValue(@RequestParam("value") String noteName,
+                                           @PageableDefault(size = 10) Pageable pageable) {
+        return searchService.noteValue(noteName, pageable);
     }
 
 
