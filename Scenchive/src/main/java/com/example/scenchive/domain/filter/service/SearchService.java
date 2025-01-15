@@ -1,14 +1,12 @@
 package com.example.scenchive.domain.filter.service;
 
-import com.example.scenchive.domain.filter.dto.BrandDto;
-import com.example.scenchive.domain.filter.dto.NoteRequestDto;
-import com.example.scenchive.domain.filter.dto.SearchListDto;
-import com.example.scenchive.domain.filter.dto.SearchPerfumeDto;
+import com.example.scenchive.domain.filter.dto.*;
 import com.example.scenchive.domain.filter.repository.Brand;
 import com.example.scenchive.domain.filter.repository.BrandRepository;
 import com.example.scenchive.domain.filter.repository.Perfume;
 import com.example.scenchive.domain.filter.repository.PerfumeRepository;
 import com.example.scenchive.domain.filter.utils.DeduplicationUtils;
+import com.example.scenchive.domain.info.dto.ScentAndScentKr;
 import com.example.scenchive.domain.info.repository.Perfumenote;
 import com.example.scenchive.domain.info.repository.PerfumenoteRepository;
 import com.example.scenchive.domain.info.repository.Perfumescent;
@@ -19,10 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Transactional(readOnly = true)
 @Service
@@ -355,5 +350,25 @@ public class SearchService {
 
         SearchListDto searchListDto = new SearchListDto(brandDtoslen, brandDtos, searchPerfumeDtosLen, searchPerfumeDtos);
         return searchListDto;
+    }
+
+    // 노트 정보 가져오기
+    public List<NoteValueDto> noteValue() {
+        List<ScentAndScentKr> noteValueList = perfumescentRepository.findAllBy();
+
+        List<NoteValueDto> dtoList = new ArrayList<>();
+        Set<String> scentSet = new HashSet<>(); //
+
+        for (ScentAndScentKr value: noteValueList) {
+            String scent = value.getScent();
+            if (!scentSet.contains(scent)) {
+                scentSet.add(scent);
+
+                NoteValueDto noteDto = new NoteValueDto(value.getScent(), value.getScentKr());
+                dtoList.add(noteDto);
+            }
+        }
+
+        return dtoList;
     }
 }
