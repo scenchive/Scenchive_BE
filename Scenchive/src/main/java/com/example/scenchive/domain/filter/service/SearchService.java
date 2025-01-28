@@ -373,6 +373,10 @@ public class SearchService {
             }
         }
 
-        return dtoList;
+        // 페이징 처리
+        int startIndex = (int) pageable.getOffset();
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), dtoList.size());
+
+        return dtoList.subList(startIndex, endIndex);
     }
 }
