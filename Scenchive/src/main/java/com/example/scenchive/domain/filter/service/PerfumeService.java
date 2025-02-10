@@ -30,7 +30,7 @@ public class PerfumeService {
     private final ReviewService reviewService;
     private final S3Uploader s3Uploader;
 
-    private final String bucket = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/";
+    private final String bucket = "https://s3.ap-northeast-2.amazonaws.com/scenchive2.0/perfume/";
 
 
     @Autowired
