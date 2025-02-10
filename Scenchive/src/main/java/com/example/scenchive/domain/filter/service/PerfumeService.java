@@ -30,6 +30,8 @@ public class PerfumeService {
     private final ReviewService reviewService;
     private final S3Uploader s3Uploader;
 
+    private final String bucket = "https://s3.ap-northeast-2.amazonaws.com/scenchive2.0/perfume/";
+
 
     @Autowired
     public PerfumeService(PerfumeTagRepository perfumeTagRepository, PerfumeRepository perfumeRepository,
@@ -86,7 +88,7 @@ public class PerfumeService {
             }
 
             String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
-            String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
+            String perfumeImage = bucket + cleanedFileName + ".jpg";
             Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
             String brandName = (brand != null) ? brand.getBrandName() : null;
             String brandName_kr = (brand != null) ? brand.getBrandName_kr() : null;
@@ -166,7 +168,7 @@ public class PerfumeService {
         Optional<Perfume> optionalPerfume  = perfumeRepository.findById(perfumeId);
         PerfumeFullInfoDto perfumeDto = optionalPerfume.map(perfume -> {
             String cleanedFileName = perfume.getPerfumeName().replaceAll("[^\\w]", "");
-            String perfumeImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/perfume/" + cleanedFileName + ".jpg";
+            String perfumeImage = bucket + cleanedFileName + ".jpg";
             Brand brand = brandRepository.findById(perfume.getBrandId()).orElse(null);
 
             String brandImageFile=null;
@@ -174,7 +176,7 @@ public class PerfumeService {
 
             if(brand!=null){
                 brandImageFile = brand.getBrandName().replaceAll("[^\\w]", "");
-                brandImage = "https://scenchive.s3.ap-northeast-2.amazonaws.com/brand/" + brandImageFile + ".jpg";
+                brandImage = bucket + brandImageFile + ".jpg";
             }
 
             return new PerfumeFullInfoDto(perfume.getId(), perfume.getPerfumeName(), perfume.getPerfume_kr(), perfumeImage,
