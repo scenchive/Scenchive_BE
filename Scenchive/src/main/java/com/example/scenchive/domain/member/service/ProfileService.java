@@ -29,7 +29,7 @@ public class ProfileService {
     private final S3Uploader s3Uploader;
     private final PasswordEncoder passwordEncoder;
 
-    private final String basic_pic = "https://scenchive.s3.ap-northeast-2.amazonaws.com/member/585a1429-2a79-4940-9488-6cea5bb9cb95.png";
+    private final String basic_pic = "https://s3.ap-northeast-2.amazonaws.com/scenchive2.0/member/585a1429-2a79-4940-9488-6cea5bb9cb95.png";
 
     @Autowired
     public ProfileService(UserTagRepository userTagRepository, MemberRepository memberRepository, UtagRepository utagRepository,
