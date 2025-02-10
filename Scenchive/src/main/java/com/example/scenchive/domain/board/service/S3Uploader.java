@@ -67,7 +67,8 @@ public class S3Uploader {
                 new PutObjectRequest(bucket, fileName, uploadFile)
                         .withCannedAcl(CannedAccessControlList.PublicRead)	// PublicRead 권한으로 업로드 됨
         );
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        //return amazonS3Client.getUrl(bucket, fileName).toString();
+        return "https://s3." + amazonS3Client.getRegionName() + ".amazonaws.com/" + bucket + "/" + fileName;
     }
 
     //로컬에 있는 이미지 삭제
