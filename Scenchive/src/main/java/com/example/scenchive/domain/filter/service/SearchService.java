@@ -29,7 +29,7 @@ public class SearchService {
     private final PerfumescentRepository perfumescentRepository;
     private int totalNotePerfumeCount = 0;
 
-    private final String bucket = "https://scenchive.s3.ap-northeast-2.amazonaws.com/";
+    private final String bucket = "https://s3.ap-northeast-2.amazonaws.com/scenchive2.0/";
 
     @Autowired
     public SearchService(PerfumeRepository perfumeRepository, BrandRepository brandRepository,
