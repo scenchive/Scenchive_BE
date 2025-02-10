@@ -195,6 +195,19 @@ public class SearchService {
         return totalNotePerfumeCount;
     }
 
+    public int getTotalNoteCount(String noteValue){
+        List<ScentAndScentKr> noteValueList = perfumescentRepository.findByScentContainingOrScentKrContaining(noteValue, noteValue);
+        Set<String> scentSet = new HashSet<>();
+        Set<String> scentKrSet = new HashSet<>();
+
+        for(ScentAndScentKr value : noteValueList){
+            scentSet.add(value.getScent());
+            scentKrSet.add(value.getScentKr());
+        }
+
+        return scentSet.size();
+    }
+
     // 검색화면 : 브랜드별 향수 리스트 조회
     public List<SearchPerfumeDto> brandPerfume(String name, Pageable pageable){
         // 주어진 브랜드 이름으로 brand 리스트 조회

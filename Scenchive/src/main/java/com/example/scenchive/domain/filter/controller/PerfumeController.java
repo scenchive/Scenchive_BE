@@ -20,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000", "https://scenchive.github.io/"}, allowCredentials = "true", allowedHeaders = "Authorization")
@@ -144,12 +146,22 @@ public class PerfumeController {
     }
 
     // 노트 정보 드랍다운 전달
+//    @GetMapping("/noteValue")
+//    public List<NoteValueDto> getNoteValue(@RequestParam("value") String noteName,
+//                                           @PageableDefault(size = 10) Pageable pageable) {
+//        return searchService.noteValue(noteName, pageable);
+//    }
     @GetMapping("/noteValue")
-    public List<NoteValueDto> getNoteValue(@RequestParam("value") String noteName,
-                                           @PageableDefault(size = 10) Pageable pageable) {
-        return searchService.noteValue(noteName, pageable);
-    }
+    public Map<String, Object> getNoteValue(@RequestParam("value") String noteName,
+                                            @PageableDefault(size=10) Pageable pageable){
+        List<NoteValueDto> noteValues = searchService.noteValue(noteName, pageable);
+        int totalNoteValueCount = searchService.getTotalNoteCount(noteName);
+        Map<String, Object> response = new HashMap<>();
+        response.put("totalNoteValueCount", totalNoteValueCount);
+        response.put("notes", noteValues);
 
+        return response;
+    }
 
     //개별 향수 노트 정보 조회
     @GetMapping("/notesinfo/{perfumeId}")
