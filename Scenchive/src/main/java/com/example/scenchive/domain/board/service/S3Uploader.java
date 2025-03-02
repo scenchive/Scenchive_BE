@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -93,12 +95,29 @@ public class S3Uploader {
         return Optional.empty();
     }
 
-    public void fileDelete(String fileName){
+    public void fileDelete(String fileUrl){
         try{
-            amazonS3Client.deleteObject(this.bucket, fileName.substring(50));
+            // fileUrl에서 S3의 파일 경로만 추출
+            String fileName = extractFileNameFromUrl(fileUrl);
+
+            amazonS3Client.deleteObject(this.bucket, fileName);
         }
         catch(AmazonServiceException e){
             System.err.println(e.getErrorMessage());
+        }
+    }
+
+    // URL에서 파일명만 추출하는 메서드
+    private String extractFileNameFromUrl(String fileUrl) {
+        // 업로드한 URL 형식: https://s3.[region].amazonaws.com/[bucket]/[fileName]
+        try {
+            URI uri = new URI(fileUrl);
+            String path = uri.getPath(); // "/[bucket]/[fileName]" 형태
+
+            // 버킷 이름 제거하고 파일명만 반환
+            return path.substring(path.indexOf(this.bucket) + this.bucket.length() + 1);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid file URL format: " + fileUrl);
         }
     }
 
