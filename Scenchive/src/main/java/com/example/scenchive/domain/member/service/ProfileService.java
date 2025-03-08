@@ -29,6 +29,8 @@ public class ProfileService {
     private final S3Uploader s3Uploader;
     private final PasswordEncoder passwordEncoder;
 
+    //private final String basic_pic = "https://s3.ap-northeast-2.amazonaws.com/scenchive2.0/member/585a1429-2a79-4940-9488-6cea5bb9cb95.png";
+
     @Autowired
     public ProfileService(UserTagRepository userTagRepository, MemberRepository memberRepository, UtagRepository utagRepository,
                           UtagTypeRepository utagTypeRepository, S3Uploader s3Uploader, PasswordEncoder passwordEncoder) {
@@ -58,7 +60,7 @@ public class ProfileService {
 
         if(!image.isEmpty()){ //입력한 사진이 있는 경우
             try{
-                if(userImage == null){ //원래 사진이 기본 사진인 경우
+                if(userImage == null || userImage.isEmpty()){ //원래 사진이 기본 사진인 경우
                     userImage=s3Uploader.upload(image, "member");   //입력한 사진 저장
                 }
                 else{ //원래 사진이 기본 사진이 아닌 경우
@@ -79,7 +81,7 @@ public class ProfileService {
     public void deleteImage(Long userId){
         Member member = memberRepository.findById(userId).get();
         String userImage=member.getImageUrl();
-        if(userImage!=null){
+        if(userImage != null || !userImage.isEmpty()){   // 이미지가 존재하는 경우
             s3Uploader.fileDelete(userImage);
         }
         member.deleteImage(userImage);
