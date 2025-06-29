@@ -42,7 +42,8 @@ public class Perfume {
     @OneToMany(mappedBy = "perfume")
     private List<perfumeMarked> perfumeMarkedList=new ArrayList<>();
 
-    @OneToMany(mappedBy = "perfume")
+///     @OneToMany(mappedBy = "perfume")
+    @OneToMany(mappedBy = "perfume", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Perfumescent> perfumescentList=new ArrayList<>();
 
     @OneToMany(mappedBy = "perfume")

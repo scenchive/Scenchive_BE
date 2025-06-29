@@ -1,11 +1,8 @@
 package com.example.scenchive.domain.member.controller;
 
-import com.amazonaws.Response;
+import com.example.scenchive.domain.filter.dto.MyTopNotesResponseDto;
 import com.example.scenchive.domain.filter.dto.PerfumeCollectedRequestDto;
 import com.example.scenchive.domain.filter.dto.PerfumeCollectedResponseDto;
-import com.example.scenchive.domain.filter.repository.BrandRepository;
-import com.example.scenchive.domain.member.repository.MemberRepository;
-import com.example.scenchive.domain.member.service.MemberService;
 import com.example.scenchive.domain.member.service.PerfumeCollectedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,6 +38,12 @@ public class PerfumeCollectedController {
         }
 
         return ResponseEntity.ok(responseDtos);
+    }
+
+    @GetMapping("/user/my-top-notes")
+    public ResponseEntity<MyTopNotesResponseDto> getTopNotes() {
+        MyTopNotesResponseDto dto = perfumeCollectedService.getMyTop3NotesFromDB();
+        return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/user/perfume-collect/{perfumeId}")

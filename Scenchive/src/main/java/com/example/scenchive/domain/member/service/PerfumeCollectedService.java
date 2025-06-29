@@ -1,16 +1,17 @@
 package com.example.scenchive.domain.member.service;
 
-import com.example.scenchive.domain.filter.dto.BrandDto;
-import com.example.scenchive.domain.filter.dto.PerfumeCollectedRequestDto;
-import com.example.scenchive.domain.filter.dto.PerfumeCollectedResponseDto;
+import com.example.scenchive.domain.filter.dto.*;
 import com.example.scenchive.domain.filter.repository.*;
 import com.example.scenchive.domain.filter.utils.BrandMapper;
+import com.example.scenchive.domain.info.repository.Perfumenote;
+import com.example.scenchive.domain.info.repository.Perfumescent;
 import com.example.scenchive.domain.member.repository.Member;
 import com.example.scenchive.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
@@ -113,6 +114,29 @@ public class PerfumeCollectedService {
                     );
                 }).collect(Collectors.toList());
     }
+
+    // 가장 선호하는 노트 Top3(보유 향수 기반) 조회
+    public MyTopNotesResponseDto getMyTop3NotesFromDB() {
+        Member currentMember = getCurrentMember();
+        Long memberId = currentMember.getId();
+
+        List<NoteWithCountDto> top = getTop3NotesByType(memberId, "top");
+        List<NoteWithCountDto> middle = getTop3NotesByType(memberId, "middle");
+        List<NoteWithCountDto> base = getTop3NotesByType(memberId, "base");
+
+        return new MyTopNotesResponseDto(top, middle, base);
+    }
+
+    private List<NoteWithCountDto> getTop3NotesByType(Long memberId, String noteType){
+        return perfumeCollectedRepository.findMyTop3Notes(memberId, noteType).stream()
+                .map(row -> new NoteWithCountDto(
+                        (String) row[0],
+                        (String) row[1],
+                        ((Number) row[2]).intValue()
+                ))
+                .collect(Collectors.toList());
+    }
+
 
     // 가장 많이 보유된 향수
     public PerfumeCollectedResponseDto getMostCollectedPerfume() {
