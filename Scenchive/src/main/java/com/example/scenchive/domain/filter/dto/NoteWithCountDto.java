@@ -7,7 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class NoteValueDto {
+public class NoteWithCountDto {
     private String scent;
     private String scentKr;
+    private int count;
 }

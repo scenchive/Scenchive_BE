@@ -2,6 +2,7 @@ package com.example.scenchive.domain.filter.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,6 +20,27 @@ public interface PerfumeCollectedRepository extends JpaRepository<PerfumeCollect
 
     // 특정 사용자와 특정 향수 확인
     Optional<PerfumeCollected> findByMemberIdAndPerfumeId(Long memberId, Long perfumeId);
+
+    // 가장 선호하는 노트 Top3(보유 향수 기반) 조회
+    @Query(value = """
+        SELECT scent, scent_kr, count
+        FROM (
+            SELECT ps.scent, ps.scent_kr, COUNT(*) AS count
+            FROM perfumescent ps
+            JOIN perfumenote pn ON ps.note_id = pn.id
+            WHERE ps.perfume_id IN (
+                SELECT perfume_id
+                FROM perfumecollected
+                WHERE user_id = :memberId
+            )
+            AND pn.note_name = :noteType
+            GROUP BY ps.scent, ps.scent_kr
+        ) AS sub
+        ORDER BY count DESC
+        LIMIT 3
+    """, nativeQuery = true)
+
+    List<Object[]> findMyTop3Notes(@Param("memberId") Long memberId, @Param("noteType") String noteType);
 
     // 가장 많이 보유된 향수
     @Query(value = "SELECT p.id AS perfumeId, p.perfume_name AS perfumeName, p.perfume_kr AS perfumeKr, " +
