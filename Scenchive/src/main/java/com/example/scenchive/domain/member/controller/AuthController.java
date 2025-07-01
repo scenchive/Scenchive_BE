@@ -4,6 +4,7 @@ import com.example.scenchive.domain.member.dto.LoginForm;
 import com.example.scenchive.domain.member.dto.TokenDto;
 import com.example.scenchive.jwt.JwtFilter;
 import com.example.scenchive.jwt.TokenProvider;
+import io.swagger.v3.oas.annotations.Operation;
 import org.apache.el.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -38,6 +39,7 @@ public class AuthController {
         this.redisTemplate = redisTemplate;
     }
 
+    @Operation(summary = "공개 API", security = {})
     @PostMapping("/login")
     public ResponseEntity<TokenDto> authorize(@Validated @RequestBody LoginForm loginForm) {
 

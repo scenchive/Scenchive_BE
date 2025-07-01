@@ -69,7 +69,7 @@ public class SecurityConfig {
                 .requestMatchers("/signup", "/login", "/survey", "/member/**",
                         "/randomperfume", "/search", "/brandperfume", "/perfumes/**",
                         "/reviews/**", "/perfumerating/**", "/product/search", "/notesinfo/**",
-                        "/fullinfo/**", "/email/**", "/main/**", "/noteperfume/**", "/noteValue").permitAll()
+                        "/fullinfo/**", "/email/**", "/main/**", "/noteperfume/**", "/noteValue",  "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/master/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
 

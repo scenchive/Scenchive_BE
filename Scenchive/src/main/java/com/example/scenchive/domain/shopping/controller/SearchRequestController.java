@@ -2,6 +2,7 @@ package com.example.scenchive.domain.shopping.controller;
 
 import com.example.scenchive.domain.shopping.dto.ItemDto;
 import com.example.scenchive.domain.shopping.utils.NaverShopSearch;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import java.util.List;
 public class SearchRequestController {
     private final NaverShopSearch naverShopSearch;
 
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/product/search")
     public List<ItemDto> getItems(@RequestParam String query) {
         String resultString = naverShopSearch.search(query);

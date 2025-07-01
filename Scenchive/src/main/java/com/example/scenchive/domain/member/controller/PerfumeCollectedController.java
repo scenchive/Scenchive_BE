@@ -4,6 +4,7 @@ import com.example.scenchive.domain.filter.dto.MyTopNotesResponseDto;
 import com.example.scenchive.domain.filter.dto.PerfumeCollectedRequestDto;
 import com.example.scenchive.domain.filter.dto.PerfumeCollectedResponseDto;
 import com.example.scenchive.domain.member.service.PerfumeCollectedService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +58,7 @@ public class PerfumeCollectedController {
     }
 
     // 가장 많이 보유된 향수
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/main/most-collected/perfume")
     public ResponseEntity<?> getMostCollectedPerfume() {
         try {
@@ -69,6 +71,7 @@ public class PerfumeCollectedController {
     }
 
     // 가장 많이 보유한 향수 브랜드
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/main/most-collected/brand")
     public ResponseEntity<?> getMostCollectedBrand() {
         try {
@@ -80,6 +83,7 @@ public class PerfumeCollectedController {
     }
 
     // 평균 향수 개수
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/main/average-perfume")
     public ResponseEntity<Double> getAveragePerfumeCount(){
         Double avgCount = perfumeCollectedService.getAveragePerfumeCount();
@@ -87,6 +91,7 @@ public class PerfumeCollectedController {
     }
 
     // 가장 많은 향수 보유자와 개수
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/main/most-collected/user")
     public ResponseEntity<?> getUserWithMostCollectedPerfumes(){
         try{
