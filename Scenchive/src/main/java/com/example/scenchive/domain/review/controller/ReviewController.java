@@ -5,6 +5,7 @@ import com.example.scenchive.domain.review.dto.PerfumeDetailsDto;
 import com.example.scenchive.domain.review.dto.ReviewDto;
 import com.example.scenchive.domain.review.dto.ReviewListResponseDto;
 import com.example.scenchive.domain.review.service.ReviewService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,7 @@ public class ReviewController {
     }
 
     // 향수별 리뷰 조회
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/reviews/{perfumeId}")
     public List<ReviewListResponseDto> getReview(@PathVariable("perfumeId") Long perfumeId, Model model) {
         model.addAttribute("perfumereview", reviewService.findByPerfumeId(perfumeId));
@@ -49,6 +51,7 @@ public class ReviewController {
     }
 
     // 향수별 평점평균 조회
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/perfumerating/{perfumeId}")
     public ResponseEntity<PerfumeRatingDto> getPerfumeRating(@PathVariable("perfumeId") Long perfumeId) {
         PerfumeRatingDto ratingDto = reviewService.calculatePerfumeRating(perfumeId);
@@ -56,6 +59,7 @@ public class ReviewController {
     }
 
     // 리뷰 많은 향수 top5
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/main/top-reviewed-perfumes")
     public ResponseEntity<List<PerfumeDetailsDto>> getTop5ReviewedPerfumes(){
         List<PerfumeDetailsDto> topPerfumes = reviewService.getTop5PerfumesByReviews();

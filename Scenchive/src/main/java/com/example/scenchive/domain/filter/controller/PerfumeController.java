@@ -10,6 +10,7 @@ import com.example.scenchive.domain.member.service.MemberService;
 import com.example.scenchive.domain.rank.repository.SeasonName;
 import com.example.scenchive.domain.rank.service.PerfumeClickedService;
 import com.example.scenchive.domain.rank.service.SeasonService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,7 @@ public class PerfumeController {
     }
 
 
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/perfumes/recommend")
     public PerfumeResponseDto recommendPerfumes(@RequestParam("keywordId") List<PTag> keywordIds,
                                               @PageableDefault(size = 10) Pageable pageable) { // 향수 10개씩 반환
@@ -65,11 +67,13 @@ public class PerfumeController {
     }
 
     //필터 추천 : 키워드 조회
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/perfumes/recommend/type")
     List<PTagDto> getTypeKeyword(){
         return perfumeService.getTypeKeyword();
     }
 
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/perfumes/recommend/tpo")
     List<PTagDto> getTPOKeyword(){
         return perfumeService.getTPOKeyword();
@@ -108,6 +112,7 @@ public class PerfumeController {
 
 
     //검색화면 : 향수 및 브랜드 조회
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/search")
     public SearchListDto searchName(@RequestParam("name") String name,
                                              @PageableDefault(size = 10) Pageable pageable){
@@ -118,6 +123,7 @@ public class PerfumeController {
     }
 
     //검색화면 : 브랜드별 향수 리스트 조회
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/brandperfume")
     public BrandPerfumeResponseDto brandPerfume(@RequestParam("name") String name,
                                                @PageableDefault(size = 10) Pageable pageable){
@@ -135,6 +141,7 @@ public class PerfumeController {
      * @param requestDto 검색할 노트 정보가 담긴 DTO
      * @return
      */
+    @Operation(summary = "공개 API", security = {})
     @PostMapping("/noteperfume")
     public BrandPerfumeResponseDto notePerfume(@RequestPart("requestDto") NoteRequestDto requestDto,
                                                @PageableDefault(size = 10) Pageable pageable) {
@@ -151,6 +158,7 @@ public class PerfumeController {
 //                                           @PageableDefault(size = 10) Pageable pageable) {
 //        return searchService.noteValue(noteName, pageable);
 //    }
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/noteValue")
     public Map<String, Object> getNoteValue(@RequestParam("value") String noteName,
                                             @PageableDefault(size=10) Pageable pageable){
@@ -164,6 +172,7 @@ public class PerfumeController {
     }
 
     //개별 향수 노트 정보 조회
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/notesinfo/{perfumeId}")
     public ResponseEntity<NotesInfoResponse> getPerfumeNotesInfo(@PathVariable("perfumeId") Long perfumeId) {
 
@@ -189,6 +198,7 @@ public class PerfumeController {
     }
 
     //향수 전체 정보 반환
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/fullinfo/{perfumeId}")
     public PerfumeFullInfoDto perfumeFullInfo(@PathVariable("perfumeId") Long perfumeId) {
         // 향수를 클릭하여 해당 향수의 상세페이지로 넘어가는 순간
@@ -202,6 +212,7 @@ public class PerfumeController {
     }
 
     //메인화면: 비로그인한 사용자의 경우 랜덤 향수 6개 반환
+    @Operation(summary = "공개 API", security = {})
     @GetMapping("/randomperfume")
     public List<MainPerfumeDto> getRandomPerfumes() {
         return personalService.getRandomPerfumes();

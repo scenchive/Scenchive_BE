@@ -2,6 +2,7 @@ package com.example.scenchive.domain.member.controller;
 
 import com.example.scenchive.domain.member.service.EmailService;
 import com.example.scenchive.domain.member.service.VerificationService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ public class EmailController {
     private final VerificationService verificationService;
 
     // 이메일로 인증 코드 전송
+    @Operation(summary = "공개 API", security = {})
     @PostMapping("/email/send")
     public ResponseEntity<String> sendVerificationCode(@RequestBody Map<String, String> request){
         try {
@@ -31,6 +33,7 @@ public class EmailController {
         }
     }
 
+    @Operation(summary = "공개 API", security = {})
     @PostMapping("/email/verify")
     public ResponseEntity<String> verifyCode(@RequestBody Map<String, String> request){
         String email = request.get("email");

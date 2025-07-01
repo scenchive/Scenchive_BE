@@ -5,6 +5,7 @@ import com.example.scenchive.domain.member.dto.CheckNameDto;
 import com.example.scenchive.domain.member.dto.MemberForm;
 import com.example.scenchive.domain.member.service.EmailService;
 import com.example.scenchive.domain.member.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import javassist.bytecode.DuplicateMemberException;
@@ -44,6 +45,7 @@ public class MemberController {
 //    }
 
     @PostMapping("/member/email")
+    @Operation(summary = "공개 API", security = {})
     public ResponseEntity<String> checkEmail(@Valid @RequestBody CheckEmailDto checkEmailDto){
         String result = memberService.checkEmail(checkEmailDto);
         if(result.equals("사용 가능한 이메일입니다.")){
@@ -61,6 +63,7 @@ public class MemberController {
 
     // 회원가입 시 닉네임 중복 조회
     @PostMapping("/member/name")
+    @Operation(summary = "공개 API", security = {})
     public ResponseEntity<String> checkName(@Valid @RequestBody CheckNameDto checkNameDto){
         String result = memberService.checkName(checkNameDto);
         if(result.equals("사용 가능한 닉네임입니다.")){
@@ -71,6 +74,7 @@ public class MemberController {
         }
     }
 
+    @Operation(summary = "공개 API", security = {})
     @PostMapping("/signup") // userDto를 파라미터로 받아서, signup 수행
     public ResponseEntity<?> signup(
             @RequestPart(required = false) MultipartFile image, @Valid @RequestPart("memberForm") MemberForm memberForm
@@ -79,6 +83,7 @@ public class MemberController {
     }
 
     // 비밀번호 찾기 - 임시 비밀번호 설정
+    @Operation(summary = "공개 API", security = {})
     @PostMapping("/member/find/password")
     public ResponseEntity<String> findPassword(@Valid @RequestBody CheckEmailDto checkEmailDto) {
         if (memberService.checkEmail(checkEmailDto).equals("가입 가능한 이메일입니다.")) {
