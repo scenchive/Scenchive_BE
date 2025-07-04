@@ -36,5 +36,5 @@ jobs:
           ECR_REPOSITORY: 745173969277.dkr.ecr.ap-northeast-2.amazonaws.com/scenchive/image
           IMAGE_TAG: latest
         run: |
-          docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
+          docker build -f Scenchive/Dockerfile -t $ECR_REPOSITORY:$IMAGE_TAG Scenchive
           docker push $ECR_REPOSITORY:$IMAGE_TAG
