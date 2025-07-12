@@ -6,5 +6,5 @@ RUN gradle build -x test
 
 # 2단계: Run Stage
 FROM openjdk:17-jdk-slim
-COPY --from=build /home/gradle/app/build/libs/*.jar app.jar
+COPY --from=build /home/gradle/app/build/libs/*.jar /app/
 ENTRYPOINT ["java", "-jar", "/app.jar"]
